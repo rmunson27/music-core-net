@@ -35,7 +35,7 @@ public static class NoteLetters
 /// <summary>
 /// Represents the classification of a musical note using a letter of the alphabet, from A to G.
 /// </summary>
-public enum NoteLetter
+public enum NoteLetter : byte
 {
     /// <summary>
     /// Represents an 'A' note.

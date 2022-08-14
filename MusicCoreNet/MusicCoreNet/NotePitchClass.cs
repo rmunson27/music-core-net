@@ -9,7 +9,7 @@ namespace Rem.Music;
 /// <summary>
 /// Represents the pitch class of a note, up to octave difference.
 /// </summary>
-public enum NotePitchClass
+public enum NotePitchClass : byte
 {
     /// <summary>
     /// Represents notes that are enharmonically equivalent to an 'A' note.
