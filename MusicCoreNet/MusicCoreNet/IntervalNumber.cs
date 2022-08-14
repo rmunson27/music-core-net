@@ -9,11 +9,7 @@ namespace Rem.Music;
 /// <summary>
 /// Represents the number of a perfectable interval.
 /// </summary>
-/// <remarks>
-/// The underlying values of this type are stored in circle-of-fifths order with respect to <see cref="Unison"/> being
-/// set to 0.
-/// </remarks>
-public enum PerfectableIntervalNumber : sbyte
+public enum PerfectableIntervalNumber : byte
 {
     /// <summary>
     /// Represents a unison.
@@ -23,22 +19,18 @@ public enum PerfectableIntervalNumber : sbyte
     /// <summary>
     /// Represents a fourth.
     /// </summary>
-    Fourth = -1,
+    Fourth = 4,
 
     /// <summary>
     /// Represents a fifth.
     /// </summary>
-    Fifth = 1,
+    Fifth = 5,
 }
 
 /// <summary>
 /// Represents the number of a non-perfectable interval.
 /// </summary>
-/// <remarks>
-/// The underlying values of this type are stored in circle-of-fifths order with respect to
-/// <see cref="PerfectableIntervalNumber.Unison"/> being set to 0.
-/// </remarks>
-public enum NonPerfectableIntervalNumber : sbyte
+public enum NonPerfectableIntervalNumber : byte
 {
     /// <summary>
     /// Represents a second.
@@ -48,16 +40,16 @@ public enum NonPerfectableIntervalNumber : sbyte
     /// <summary>
     /// Represents a third.
     /// </summary>
-    Third = 4,
+    Third = 3,
 
     /// <summary>
     /// Represents a sixth.
     /// </summary>
-    Sixth = 3,
+    Sixth = 6,
 
     /// <summary>
     /// Represents a seventh.
     /// </summary>
-    Seventh = 5,
+    Seventh = 7,
 }
 
