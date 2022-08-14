@@ -61,9 +61,7 @@
 		<PackageReference Include="Rem.Core.Attributes" Version="1.2.1" />
 		<PackageReference Include="Rem.Core.ComponentModel" Version="1.1.1.1" />
 		<PackageReference Include="Rem.Core.Utilities.Enums" Version="1.0.0" />
-		<PackageReference Include="Rem.Core.Utilities.FluentThrower" Version="1.0.0">
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
+		<PackageReference Include="Rem.Core.Utilities.FluentThrower" Version="1.0.0" />
 	</ItemGroup>
 
 </Project>
