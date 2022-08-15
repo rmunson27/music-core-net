@@ -21,17 +21,18 @@ public readonly record struct PerfectableIntervalQuality
 
     #region Properties And Fields
     /// <summary>
-    /// Internally represents the value of the quality.
+    /// Represents this quality as an index based on <see cref="Perfect"/>.
     /// </summary>
-    private readonly int _numericalValue;
+    public int PerfectBasedIndex { get; }
     #endregion
 
     #region Constructor
-    private PerfectableIntervalQuality(int NumericalValue) { _numericalValue = NumericalValue; }
+    private PerfectableIntervalQuality(int PerfectBasedIndex) { this.PerfectBasedIndex = PerfectBasedIndex; }
     #endregion
 
     #region Methods
     #region Factory
+    #region Name
     /// <summary>
     /// Creates a new <see cref="PerfectableIntervalQuality"/> representing an augmented interval with the
     /// given degree.
@@ -57,6 +58,17 @@ public readonly record struct PerfectableIntervalQuality
         => new(-Throw.IfArgNotPositive(Degree, nameof(Degree)));
     #endregion
 
+    #region Index
+    /// <summary>
+    /// Creates a new <see cref="PerfectableIntervalQuality"/> from the <see cref="Perfect"/>-relative integer index
+    /// passed in.
+    /// </summary>
+    /// <param name="Index"></param>
+    /// <returns></returns>
+    public static PerfectableIntervalQuality FromPerfectBasedIndex(int Index) => new(Index);
+    #endregion
+    #endregion
+
     #region Classification
     /// <summary>
     /// Gets whether or not this interval quality represents an augmented interval, setting the
@@ -68,7 +80,7 @@ public readonly record struct PerfectableIntervalQuality
     {
         if (IsAugmented())
         {
-            Degree = _numericalValue;
+            Degree = PerfectBasedIndex;
             return true;
         }
         else
@@ -82,13 +94,13 @@ public readonly record struct PerfectableIntervalQuality
     /// Gets whether or not this interval quality represents an augmented interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsAugmented() => _numericalValue > 0;
+    public bool IsAugmented() => PerfectBasedIndex > 0;
 
     /// <summary>
     /// Gets whether or not this interval quality represents a perfect interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsPerfect() => _numericalValue == 0;
+    public bool IsPerfect() => PerfectBasedIndex == 0;
 
     /// <summary>
     /// Gets whether or not this interval quality represents a diminished interval, setting the
@@ -100,7 +112,7 @@ public readonly record struct PerfectableIntervalQuality
     {
         if (IsDiminished())
         {
-            Degree = -_numericalValue;
+            Degree = -PerfectBasedIndex;
             return true;
         }
         else
@@ -114,7 +126,26 @@ public readonly record struct PerfectableIntervalQuality
     /// Gets whether or not this interval quality represents a diminished interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsDiminished() => _numericalValue < 0;
+    public bool IsDiminished() => PerfectBasedIndex < 0;
+    #endregion
+
+    #region Computation
+    /// <summary>
+    /// Returns an interval quality equivalent to this one shifted by a given integer degree.
+    /// </summary>
+    /// <remarks>
+    /// Positive <paramref name="degree"/> values will cause the result to be more augmented, whereas negative
+    /// <paramref name="degree"/> values will cause the result to be more diminished.
+    /// </remarks>
+    /// <param name="degree"></param>
+    /// <returns></returns>
+    public PerfectableIntervalQuality Shift(int degree) => new(degree + PerfectBasedIndex);
+
+    /// <summary>
+    /// Returns an interval quality equivalent to the inversion of the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public PerfectableIntervalQuality Inversion() => new(-PerfectBasedIndex);
     #endregion
     #endregion
 }
@@ -138,17 +169,18 @@ public readonly record struct NonPerfectableIntervalQuality
 
     #region Properties And Fields
     /// <summary>
-    /// Internally represents the value of the quality.
+    /// Represents this quality as an index based on <see cref="Major"/>.
     /// </summary>
-    private readonly int _numericalValue;
+    public int MajorBasedIndex { get; }
     #endregion
 
     #region Constructor
-    private NonPerfectableIntervalQuality(int NumericalValue) { _numericalValue = NumericalValue; }
+    private NonPerfectableIntervalQuality(int NumericalValue) { MajorBasedIndex = NumericalValue; }
     #endregion
 
     #region Methods
     #region Factory
+    #region Name
     /// <summary>
     /// Creates a new <see cref="NonPerfectableIntervalQuality"/> representing an augmented interval with the
     /// given degree.
@@ -174,6 +206,36 @@ public readonly record struct NonPerfectableIntervalQuality
         => new(-Throw.IfArgNotPositive(Degree, nameof(Degree)) - 1);
     #endregion
 
+    #region Index
+    /// <summary>
+    /// Creates a new <see cref="NonPerfectableIntervalQuality"/> from the <see cref="Major"/>-relative integer index
+    /// passed in.
+    /// </summary>
+    /// <param name="Index"></param>
+    /// <returns></returns>
+    public static NonPerfectableIntervalQuality FromMajorBasedIndex(int Index) => new(Index);
+    #endregion
+    #endregion
+
+    #region Computation
+    /// <summary>
+    /// Returns an interval quality equivalent to this one shifted by a given integer degree.
+    /// </summary>
+    /// <remarks>
+    /// Positive <paramref name="degree"/> values will cause the result to be more augmented, whereas negative
+    /// <paramref name="degree"/> values will cause the result to be more diminished.
+    /// </remarks>
+    /// <param name="degree"></param>
+    /// <returns></returns>
+    public NonPerfectableIntervalQuality Shift(int degree) => new(degree + MajorBasedIndex);
+
+    /// <summary>
+    /// Returns an interval quality equivalent to the inversion of the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public NonPerfectableIntervalQuality Inversion() => new(-MajorBasedIndex - 1);
+    #endregion
+
     #region Classification
     /// <summary>
     /// Gets whether or not this interval quality represents an augmented interval, setting the
@@ -185,7 +247,7 @@ public readonly record struct NonPerfectableIntervalQuality
     {
         if (IsAugmented())
         {
-            Degree = _numericalValue;
+            Degree = MajorBasedIndex;
             return true;
         }
         else
@@ -199,19 +261,19 @@ public readonly record struct NonPerfectableIntervalQuality
     /// Gets whether or not this interval quality represents an augmented interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsAugmented() => _numericalValue > 0;
+    public bool IsAugmented() => MajorBasedIndex > 0;
 
     /// <summary>
     /// Gets whether or not this interval quality represents a major interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsMajor() => _numericalValue == 0;
+    public bool IsMajor() => MajorBasedIndex == 0;
 
     /// <summary>
     /// Gets whether or not this interval quality represents a minor interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsMinor() => _numericalValue == -1;
+    public bool IsMinor() => MajorBasedIndex == -1;
 
     /// <summary>
     /// Gets whether or not this interval quality represents a diminished interval, setting the
@@ -223,7 +285,7 @@ public readonly record struct NonPerfectableIntervalQuality
     {
         if (IsDiminished())
         {
-            Degree = -_numericalValue - 1;
+            Degree = -MajorBasedIndex - 1;
             return true;
         }
         else
@@ -237,7 +299,7 @@ public readonly record struct NonPerfectableIntervalQuality
     /// Gets whether or not this interval quality represents a diminished interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsDiminished() => _numericalValue < 0;
+    public bool IsDiminished() => MajorBasedIndex < 0;
     #endregion
     #endregion
 }

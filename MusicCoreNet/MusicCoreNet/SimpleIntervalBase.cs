@@ -21,7 +21,6 @@ public sealed record class PerfectableSimpleIntervalBase(
     PerfectableIntervalQuality Quality, PerfectableIntervalNumber Number) : SimpleIntervalBase
 {
     /// <inheritdoc/>
-    [Positive] public override int NumberIntValue => (int)Number;
 
     /// <summary>
     /// Gets or initializes the number of this interval.
@@ -75,7 +74,6 @@ public sealed record class NonPerfectableSimpleIntervalBase(
     NonPerfectableIntervalQuality Quality, NonPerfectableIntervalNumber Number) : SimpleIntervalBase
 {
     /// <inheritdoc/>
-    [Positive] public override int NumberIntValue => (int)Number;
 
     /// <summary>
     /// Gets or initializes the number of this interval.
