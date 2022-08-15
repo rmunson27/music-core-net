@@ -18,7 +18,7 @@ namespace Rem.Music;
 /// <paramref name="Number"/> was an unnamed enum value.
 /// </exception>
 public sealed record class PerfectableSimpleIntervalBase(
-    PerfectableIntervalQuality Quality, PerfectableIntervalNumber Number) : SimpleIntervalBase
+    [NamedEnum] PerfectableIntervalQuality Quality, PerfectableSimpleIntervalNumber Number) : SimpleIntervalBase
 {
     /// <inheritdoc/>
 
@@ -28,7 +28,7 @@ public sealed record class PerfectableSimpleIntervalBase(
     /// <exception cref="InvalidEnumPropertySetException">
     /// This property was initialized to an unnamed enum value.
     /// </exception>
-    public PerfectableIntervalNumber Number
+    [NamedEnum] public PerfectableSimpleIntervalNumber Number
     {
         get => _number;
         init => _number = Throw.IfEnumPropSetUnnamed(value);
@@ -71,7 +71,7 @@ public sealed record class PerfectableSimpleIntervalBase(
 /// <paramref name="Number"/> was an unnamed enum value.
 /// </exception>
 public sealed record class NonPerfectableSimpleIntervalBase(
-    NonPerfectableIntervalQuality Quality, NonPerfectableIntervalNumber Number) : SimpleIntervalBase
+    [NamedEnum] NonPerfectableIntervalQuality Quality, NonPerfectableSimpleIntervalNumber Number) : SimpleIntervalBase
 {
     /// <inheritdoc/>
 
@@ -81,7 +81,7 @@ public sealed record class NonPerfectableSimpleIntervalBase(
     /// <exception cref="InvalidEnumPropertySetException">
     /// This property was initialized to an unnamed enum value.
     /// </exception>
-    public NonPerfectableIntervalNumber Number
+    [NamedEnum] public NonPerfectableSimpleIntervalNumber Number
     {
         get => _number;
         init => _number = Throw.IfEnumPropSetUnnamed(value);
