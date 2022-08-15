@@ -14,7 +14,7 @@ public enum PerfectableIntervalNumber : byte
     /// <summary>
     /// Represents a unison.
     /// </summary>
-    Unison = 0,
+    Unison = 1,
 
     /// <summary>
     /// Represents a fourth.
