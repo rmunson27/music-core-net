@@ -33,8 +33,8 @@ public static class IntervalNumbers
 
     internal static IntervalPerfectability GetPerfectabilityFromUnisonBasedIndex(int index) => index switch
     {
-        -1 or 0 or 1 => Perfectable,
-        2 or 3 or 5 or 6 => NonPerfectable,
+        >= -1 and <= 1 => Perfectable,
+        >= 2 and <= 5 => NonPerfectable,
         _ => throw new Exception("Bug - should not happen ever."),
     };
 }
