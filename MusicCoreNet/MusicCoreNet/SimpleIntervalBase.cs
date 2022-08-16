@@ -169,6 +169,13 @@ public sealed record class NonPerfectableSimpleIntervalBase(
 /// </remarks>
 public abstract record class SimpleIntervalBase
 {
+    #region Constants
+    /// <summary>
+    /// A <see cref="SimpleIntervalBase"/> representing a perfect unison.
+    /// </summary>
+    public static readonly PerfectableSimpleIntervalBase PerfectUnison = Intervals.Perfect().Unison();
+    #endregion
+
     #region Properties
     /// <summary>
     /// Gets an integer representing the number of the interval.
