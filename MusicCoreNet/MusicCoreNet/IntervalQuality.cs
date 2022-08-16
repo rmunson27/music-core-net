@@ -8,6 +8,27 @@ using System.Threading.Tasks;
 namespace Rem.Music;
 
 /// <summary>
+/// General static functionality relating to interval qualities.
+/// </summary>
+public static class IntervalQuality
+{
+    /// <summary>
+    /// Gets a minor interval quality.
+    /// </summary>
+    public static NonPerfectableIntervalQuality Minor => NonPerfectableIntervalQuality.Minor;
+
+    /// <summary>
+    /// Gets a perfect interval quality.
+    /// </summary>
+    public static PerfectableIntervalQuality Perfect => PerfectableIntervalQuality.Perfect;
+
+    /// <summary>
+    /// Gets a major interval quality.
+    /// </summary>
+    public static NonPerfectableIntervalQuality Major => NonPerfectableIntervalQuality.Major;
+}
+
+/// <summary>
 /// Represents the quality of a perfectable interval.
 /// </summary>
 public readonly record struct PerfectableIntervalQuality

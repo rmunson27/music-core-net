@@ -42,7 +42,7 @@ public class IntervalQualityTest
         Assert.IsTrue(randomDiminished.IsDiminished(out diminishedDegree));
         Assert.AreEqual(randomDegree, diminishedDegree);
 
-        Assert.IsTrue(PerfectableIntervalQuality.Perfect.IsPerfect());
+        Assert.IsTrue(IntervalQuality.Perfect.IsPerfect());
 
         Assert.IsTrue(singleAugmented.IsAugmented());
         Assert.IsTrue(singleAugmented.IsAugmented(out augmentedDegree));
@@ -79,8 +79,8 @@ public class IntervalQualityTest
         Assert.IsTrue(randomDiminished.IsDiminished(out diminishedDegree));
         Assert.AreEqual(randomDegree, diminishedDegree);
 
-        Assert.IsTrue(NonPerfectableIntervalQuality.Minor.IsMinor());
-        Assert.IsTrue(NonPerfectableIntervalQuality.Major.IsMajor());
+        Assert.IsTrue(IntervalQuality.Minor.IsMinor());
+        Assert.IsTrue(IntervalQuality.Major.IsMajor());
 
         Assert.IsTrue(singleAugmented.IsAugmented());
         Assert.IsTrue(singleAugmented.IsAugmented(out augmentedDegree));
