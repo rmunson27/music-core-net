@@ -90,5 +90,22 @@ public class IntervalQualityTest
         Assert.IsTrue(randomAugmented.IsAugmented(out augmentedDegree));
         Assert.AreEqual(randomDegree, augmentedDegree);
     }
+
+    /// <summary>
+    /// Tests inversion of a non-perfectable interval quality.
+    /// </summary>
+    [TestMethod, TestCategory(nameof(NonPerfectableIntervalQuality))]
+    public void TestNonPerfectableInversion()
+    {
+        Assert.AreEqual(IntervalQuality.Major, IntervalQuality.Minor.Inversion());
+        Assert.AreEqual(IntervalQuality.Perfect, IntervalQuality.Perfect.Inversion());
+        Assert.AreEqual(IntervalQuality.Minor, IntervalQuality.Major.Inversion());
+
+        var randomDegree = Random.Next(1, 10);
+        var randomDiminished = NonPerfectableIntervalQuality.Diminished(randomDegree);
+        var randomAugmented = NonPerfectableIntervalQuality.Augmented(randomDegree);
+        Assert.AreEqual(randomDiminished, randomAugmented.Inversion());
+        Assert.AreEqual(randomAugmented, randomDiminished.Inversion());
+    }
     #endregion
 }
