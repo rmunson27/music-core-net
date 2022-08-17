@@ -21,8 +21,12 @@ namespace Rem.Music;
 public sealed record class PerfectableSimpleIntervalBase(
     [NamedEnum] PerfectableIntervalQuality Quality, PerfectableSimpleIntervalNumber Number) : SimpleIntervalBase
 {
+    #region Properties And Fields
     /// <inheritdoc/>
     [Positive] public override int NumberValue => (int)Number;
+
+    /// <inheritdoc/>
+    public override int HalfSteps => Number.PerfectHalfSteps() + Quality.PerfectBasedIndex;
 
     /// <inheritdoc/>
     private protected override int QualityPerfectOrMajorBasedIndex => Quality.PerfectBasedIndex;
@@ -39,7 +43,10 @@ public sealed record class PerfectableSimpleIntervalBase(
         init => _number = Throw.IfEnumPropSetUnnamed(value);
     }
     private readonly PerfectableSimpleIntervalNumber _number = Throw.IfEnumArgUnnamed(Number, nameof(Number));
+    #endregion
 
+    #region Methods
+    #region Classification
     /// <inheritdoc/>
     public override bool IsAugmented([NonZero] out int Degree) => Quality.IsAugmented(out Degree);
 
@@ -51,7 +58,9 @@ public sealed record class PerfectableSimpleIntervalBase(
 
     /// <inheritdoc/>
     public override bool IsDiminished() => Quality.IsDiminished();
+    #endregion
 
+    #region Equality
     /// <summary>
     /// Determines if this object is equal to another object of the same type.
     /// </summary>
@@ -65,7 +74,9 @@ public sealed record class PerfectableSimpleIntervalBase(
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode() => HashCode.Combine(Quality, Number);
+    #endregion
 
+    #region Arithmetic
     private protected override SimpleIntervalBase InversionInternal() => Inversion();
 
     /// <summary>
@@ -82,6 +93,8 @@ public sealed record class PerfectableSimpleIntervalBase(
     /// </summary>
     /// <returns></returns>
     public new PerfectableSimpleIntervalBase Inversion() => new(Quality.Inversion(), Number.Inversion());
+    #endregion
+    #endregion
 }
 
 /// <summary>
@@ -95,8 +108,12 @@ public sealed record class PerfectableSimpleIntervalBase(
 public sealed record class NonPerfectableSimpleIntervalBase(
     [NamedEnum] NonPerfectableIntervalQuality Quality, NonPerfectableSimpleIntervalNumber Number) : SimpleIntervalBase
 {
+    #region Properties And Fields
     /// <inheritdoc/>
     [Positive] public override int NumberValue => (int)Number;
+
+    /// <inheritdoc/>
+    public override int HalfSteps => Number.MajorHalfSteps() + Quality.MajorBasedIndex;
 
     /// <inheritdoc/>
     private protected override int QualityPerfectOrMajorBasedIndex => Quality.MajorBasedIndex;
@@ -113,7 +130,10 @@ public sealed record class NonPerfectableSimpleIntervalBase(
         init => _number = Throw.IfEnumPropSetUnnamed(value);
     }
     private readonly NonPerfectableSimpleIntervalNumber _number = Throw.IfEnumArgUnnamed(Number, nameof(Number));
+    #endregion
 
+    #region Methods
+    #region Classification
     /// <inheritdoc/>
     public override bool IsAugmented([NonZero] out int Degree) => Quality.IsAugmented(out Degree);
 
@@ -125,7 +145,9 @@ public sealed record class NonPerfectableSimpleIntervalBase(
 
     /// <inheritdoc/>
     public override bool IsDiminished() => Quality.IsDiminished();
+    #endregion
 
+    #region Equality
     /// <summary>
     /// Determines if this object is equal to another object of the same type.
     /// </summary>
@@ -139,7 +161,9 @@ public sealed record class NonPerfectableSimpleIntervalBase(
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode() => HashCode.Combine(Quality, Number);
+    #endregion
 
+    #region Arithmetic
     private protected override SimpleIntervalBase InversionInternal() => Inversion();
 
     /// <summary>
@@ -156,6 +180,8 @@ public sealed record class NonPerfectableSimpleIntervalBase(
     /// </summary>
     /// <returns></returns>
     public new NonPerfectableSimpleIntervalBase Inversion() => new(Quality.Inversion(), Number.Inversion());
+    #endregion
+    #endregion
 }
 
 /// <summary>
@@ -184,6 +210,11 @@ public abstract record class SimpleIntervalBase
     /// For a simple example, accessing this property on a second will yield 2.
     /// </remarks>
     [Positive] public abstract int NumberValue { get; }
+
+    /// <summary>
+    /// Gets the number of half steps spanning the simple interval represented by this object.
+    /// </summary>
+    public abstract int HalfSteps { get; }
 
     /// <summary>
     /// Gets the <see cref="PerfectableIntervalQuality.PerfectBasedIndex"/> or

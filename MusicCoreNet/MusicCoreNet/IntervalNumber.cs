@@ -44,6 +44,7 @@ public static class IntervalNumbers
 /// </summary>
 public static class SimpleIntervalNumbers
 {
+    #region Perfectable
     /// <summary>
     /// Gets the <see cref="PerfectableSimpleIntervalNumber"/> that is the inversion of the current instance.
     /// </summary>
@@ -56,9 +57,29 @@ public static class SimpleIntervalNumbers
             Unison => Unison,
             Fourth => Fifth,
             Fifth => Fourth,
-            _ => throw new InvalidEnumArgumentException($"Undefined {nameof(PerfectableSimpleIntervalNumber)} value."),
+            _ => throw UndefinedPerfectable,
         };
 
+    /// <summary>
+    /// Gets the number of half steps spanning the major version of the current
+    /// <see cref="PerfectableSimpleIntervalNumber"/> passed in.
+    /// </summary>
+    /// <param name="pn"></param>
+    /// <returns></returns>
+    [return: NonNegative]
+    public static int PerfectHalfSteps(this PerfectableSimpleIntervalNumber pn) => pn switch
+    {
+        Unison => 0,
+        Fourth => 5,
+        Fifth => 7,
+        _ => throw UndefinedPerfectable,
+    };
+
+    private static InvalidEnumArgumentException UndefinedPerfectable
+        => new($"Undefined {nameof(PerfectableSimpleIntervalNumber)} value.");
+    #endregion
+
+    #region Non-Perfectable
     /// <summary>
     /// Gets the <see cref="NonPerfectableSimpleIntervalNumber"/> that is the inversion of the current instance.
     /// </summary>
@@ -72,8 +93,27 @@ public static class SimpleIntervalNumbers
             Third => Sixth,
             Sixth => Third,
             Seventh => Second,
-            _ => throw new InvalidEnumArgumentException($"Undefined {nameof(NonPerfectableSimpleIntervalNumber)} value."),
+            _ => throw UndefinedNonPerfectable,
         };
+
+    /// <summary>
+    /// Gets the number of half steps spanning the major version of the current
+    /// <see cref="NonPerfectableSimpleIntervalNumber"/> passed in.
+    /// </summary>
+    /// <param name="npn"></param>
+    /// <returns></returns>
+    [return: Positive] public static int MajorHalfSteps(this NonPerfectableSimpleIntervalNumber npn) => npn switch
+    {
+        Second => 2,
+        Third => 4,
+        Sixth => 9,
+        Seventh => 11,
+        _ => throw UndefinedNonPerfectable,
+    };
+
+    private static InvalidEnumArgumentException UndefinedNonPerfectable
+        => new($"Undefined {nameof(NonPerfectableSimpleIntervalNumber)} value.");
+    #endregion
 }
 
 /// <summary>
