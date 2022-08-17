@@ -11,6 +11,9 @@ namespace Rem.Music;
 /// <summary>
 /// Represents the class of a written note, independent of octave.
 /// </summary>
+/// <remarks>
+/// The default value of this struct represents A natural.
+/// </remarks>
 /// <param name="Letter">The letter of the note class to create.</param>
 /// <param name="Accidental">The accidental of the note class to create.</param>
 /// <exception cref="InvalidEnumArgumentException"><paramref name="Letter"/> was an unnamed enum value.</exception>

@@ -19,6 +19,7 @@ public static class NoteLetters
     /// </summary>
     /// <param name="letter"></param>
     /// <returns></returns>
+    /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
     public static NotePitchClass ToPitchClass(this NoteLetter letter) => letter switch
     {
         A => NotePitchClass.A,
@@ -28,7 +29,7 @@ public static class NoteLetters
         E => NotePitchClass.E,
         F => NotePitchClass.F,
         G => NotePitchClass.G,
-        _ => throw new InvalidEnumArgumentException($"Undefined {nameof(NoteLetter)} value."),
+        _ => throw Undefined,
     };
 
     /// <summary>
