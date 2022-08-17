@@ -232,6 +232,40 @@ public abstract record class SimpleIntervalBase
     #endregion
 
     #region Methods
+    #region Factory
+    /// <summary>
+    /// Creates a new <see cref="SimpleIntervalBase"/> spanning the number of half steps passed in with the simplest
+    /// possible interval quality.
+    /// </summary>
+    /// <param name="halfSteps"></param>
+    /// <returns>
+    /// The <see cref="SimpleIntervalBase"/> spanning <paramref name="halfSteps"/> half steps with the simplest
+    /// possible interval quality, or <see langword="null"/> if <paramref name="halfSteps"/> is equal to 6 (a tritone,
+    /// as this case is ambiguous between an augmented fourth and a diminished fifth).
+    /// </returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="halfSteps"/> was negative or greater than or equal to 12.
+    /// </exception>
+    public static SimpleIntervalBase? SimplestQualityWithHalfSteps([NonNegative, LessThanInteger(12)] int halfSteps)
+        => halfSteps switch
+        {
+            0 => PerfectUnison,
+            1 => Intervals.Minor().Second(),
+            2 => Intervals.Major().Second(),
+            3 => Intervals.Minor().Third(),
+            4 => Intervals.Major().Third(),
+            5 => Intervals.Perfect().Fourth(),
+            6 => null,
+            7 => Intervals.Perfect().Fifth(),
+            8 => Intervals.Minor().Sixth(),
+            9 => Intervals.Major().Sixth(),
+            10 => Intervals.Minor().Seventh(),
+            11 => Intervals.Major().Seventh(),
+            _ => throw new ArgumentOutOfRangeException(
+                    nameof(halfSteps), halfSteps, $"Parameter must be in the range [0, 11]."),
+        };
+    #endregion
+
     #region Classification
     /// <summary>
     /// Gets whether or not this interval is augmented, setting <paramref name="Degree"/> to the degree to which it
