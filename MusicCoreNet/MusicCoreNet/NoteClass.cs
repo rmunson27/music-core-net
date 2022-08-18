@@ -115,5 +115,13 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
         };
     }
     #endregion
+
+    #region Conversion
+    /// <summary>
+    /// Implicitly converts a <see cref="NoteLetter"/> to an instance of this type.
+    /// </summary>
+    /// <param name="letter"></param>
+    public static implicit operator NoteClass(NoteLetter letter) => new(letter);
+    #endregion
     #endregion
 }
