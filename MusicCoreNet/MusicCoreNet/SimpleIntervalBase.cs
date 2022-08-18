@@ -31,6 +31,16 @@ public sealed record class PerfectableSimpleIntervalBase(
     /// <inheritdoc/>
     private protected override int QualityPerfectOrMajorBasedIndex => Quality.PerfectBasedIndex;
 
+    private protected override IntervalQuality QualityInternal => Quality;
+
+    /// <summary>
+    /// Gets or initializes the quality of the interval represented by the current instance.
+    /// </summary>
+    public new PerfectableIntervalQuality Quality { get; init; } = Quality;
+
+    /// <inheritdoc/>
+    public override IntervalPerfectability Perfectability => Perfectable;
+
     /// <summary>
     /// Gets or initializes the number of this interval.
     /// </summary>
@@ -117,6 +127,16 @@ public sealed record class NonPerfectableSimpleIntervalBase(
 
     /// <inheritdoc/>
     private protected override int QualityPerfectOrMajorBasedIndex => Quality.MajorBasedIndex;
+
+    private protected override IntervalQuality QualityInternal => Quality;
+
+    /// <summary>
+    /// Gets or initializes the quality of the interval represented by the current instance.
+    /// </summary>
+    public new NonPerfectableIntervalQuality Quality { get; init; } = Quality;
+
+    /// <inheritdoc/>
+    public override IntervalPerfectability Perfectability => NonPerfectable;
 
     /// <summary>
     /// Gets or initializes the number of this interval.
@@ -212,9 +232,24 @@ public abstract record class SimpleIntervalBase
     [Positive] public abstract int NumberValue { get; }
 
     /// <summary>
+    /// Gets the quality of the interval represented by the current instance.
+    /// </summary>
+    public IntervalQuality Quality => QualityInternal;
+
+    /// <summary>
+    /// Allows subclasses to supply their own interval qualities with specific perfectability.
+    /// </summary>
+    private protected abstract IntervalQuality QualityInternal { get; }
+
+    /// <summary>
     /// Gets the number of half steps spanning the simple interval represented by this object.
     /// </summary>
     public abstract int HalfSteps { get; }
+
+    /// <summary>
+    /// Gets the perfectability of the current instance.
+    /// </summary>
+    public abstract IntervalPerfectability Perfectability { get; }
 
     /// <summary>
     /// Gets the <see cref="PerfectableIntervalQuality.PerfectBasedIndex"/> or

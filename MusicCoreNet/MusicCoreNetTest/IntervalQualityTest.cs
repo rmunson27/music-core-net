@@ -41,7 +41,7 @@ public class IntervalQualityTest
         Assert.IsTrue(randomDiminished.IsDiminished(out diminishedDegree));
         Assert.AreEqual(randomDegree, diminishedDegree);
 
-        Assert.IsTrue(IntervalQuality.Perfect.IsPerfect());
+        Assert.IsTrue(IntervalQualities.Perfect.IsPerfect());
 
         Assert.IsTrue(singleAugmented.IsAugmented());
         Assert.IsTrue(singleAugmented.IsAugmented(out augmentedDegree));
@@ -78,8 +78,8 @@ public class IntervalQualityTest
         Assert.IsTrue(randomDiminished.IsDiminished(out diminishedDegree));
         Assert.AreEqual(randomDegree, diminishedDegree);
 
-        Assert.IsTrue(IntervalQuality.Minor.IsMinor());
-        Assert.IsTrue(IntervalQuality.Major.IsMajor());
+        Assert.IsTrue(IntervalQualities.Minor.IsMinor());
+        Assert.IsTrue(IntervalQualities.Major.IsMajor());
 
         Assert.IsTrue(singleAugmented.IsAugmented());
         Assert.IsTrue(singleAugmented.IsAugmented(out augmentedDegree));
@@ -96,9 +96,9 @@ public class IntervalQualityTest
     [TestMethod, TestCategory(nameof(NonPerfectableIntervalQuality))]
     public void TestNonPerfectableInversion()
     {
-        Assert.AreEqual(IntervalQuality.Major, IntervalQuality.Minor.Inversion());
-        Assert.AreEqual(IntervalQuality.Perfect, IntervalQuality.Perfect.Inversion());
-        Assert.AreEqual(IntervalQuality.Minor, IntervalQuality.Major.Inversion());
+        Assert.AreEqual(IntervalQualities.Major, IntervalQualities.Minor.Inversion());
+        Assert.AreEqual(IntervalQualities.Perfect, IntervalQualities.Perfect.Inversion());
+        Assert.AreEqual(IntervalQualities.Minor, IntervalQualities.Major.Inversion());
 
         var randomDegree = Random.Next(1, 10);
         var randomDiminished = NonPerfectableIntervalQuality.Diminished(randomDegree);
