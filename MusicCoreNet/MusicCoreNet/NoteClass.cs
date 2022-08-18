@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,6 +20,7 @@ namespace Rem.Music;
 /// <exception cref="InvalidEnumArgumentException"><paramref name="Letter"/> was an unnamed enum value.</exception>
 public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental = default)
 {
+    #region Properties And Fields
     /// <summary>
     /// Gets or initializes the letter of this note class.
     /// </summary>
@@ -31,7 +33,68 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
         init => _letter = Throw.IfEnumPropSetUnnamed(value);
     }
     private readonly NoteLetter _letter = Throw.IfEnumArgUnnamed(Letter, nameof(Letter));
+    #endregion
 
+    #region Methods
+    #region Builder
+    /// <summary>
+    /// Gets a builder object that can be used to quickly create an 'A' <see cref="NoteClass"/> with a
+    /// given accidental.
+    /// </summary>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static NoteClassBuilder A() => new(NoteLetter.A);
+
+    /// <summary>
+    /// Gets a builder object that can be used to quickly create a 'B' <see cref="NoteClass"/> with a
+    /// given accidental.
+    /// </summary>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static NoteClassBuilder B() => new(NoteLetter.B);
+
+    /// <summary>
+    /// Gets a builder object that can be used to quickly create a 'C' <see cref="NoteClass"/> with a
+    /// given accidental.
+    /// </summary>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static NoteClassBuilder C() => new(NoteLetter.C);
+
+    /// <summary>
+    /// Gets a builder object that can be used to quickly create a 'D' <see cref="NoteClass"/> with a
+    /// given accidental.
+    /// </summary>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static NoteClassBuilder D() => new(NoteLetter.D);
+
+    /// <summary>
+    /// Gets a builder object that can be used to quickly create an 'E' <see cref="NoteClass"/> with a
+    /// given accidental.
+    /// </summary>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static NoteClassBuilder E() => new(NoteLetter.E);
+
+    /// <summary>
+    /// Gets a builder object that can be used to quickly create an 'F' <see cref="NoteClass"/> with a
+    /// given accidental.
+    /// </summary>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static NoteClassBuilder F() => new(NoteLetter.F);
+
+    /// <summary>
+    /// Gets a builder object that can be used to quickly create a 'G' <see cref="NoteClass"/> with a
+    /// given accidental.
+    /// </summary>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static NoteClassBuilder G() => new(NoteLetter.G);
+    #endregion
+
+    #region Arithmetic
     /// <summary>
     /// Gets the difference between the two <see cref="NoteClass"/> instances passed in as an instance
     /// of <see cref="SimpleIntervalBase"/>.
@@ -51,4 +114,6 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
                 => npi with { Quality = npi.Quality.Shift(lhs.Accidental.IntValue - rhs.Accidental.IntValue) },
         };
     }
+    #endregion
+    #endregion
 }
