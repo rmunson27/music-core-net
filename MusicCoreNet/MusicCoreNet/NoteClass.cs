@@ -46,9 +46,9 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
 #pragma warning restore CS8509
         {
             PerfectableSimpleIntervalBase pi
-                => pi with { Quality = pi.Quality.Shift(lhs.Accidental.AsInt - rhs.Accidental.AsInt) },
+                => pi with { Quality = pi.Quality.Shift(lhs.Accidental.IntValue - rhs.Accidental.IntValue) },
             NonPerfectableSimpleIntervalBase npi
-                => npi with { Quality = npi.Quality.Shift(lhs.Accidental.AsInt - rhs.Accidental.AsInt) },
+                => npi with { Quality = npi.Quality.Shift(lhs.Accidental.IntValue - rhs.Accidental.IntValue) },
         };
     }
 }

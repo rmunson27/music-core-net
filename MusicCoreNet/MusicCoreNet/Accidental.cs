@@ -30,7 +30,7 @@ public readonly record struct Accidental
     /// The value of this property will be positive if the current instance is sharp, zero if it is natural, and
     /// negative if it is flat.
     /// </remarks>
-    public int AsInt => _intValue;
+    public int IntValue => _intValue;
 
     /// <summary>
     /// Internally represents the value of the accidental.
