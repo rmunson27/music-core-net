@@ -49,6 +49,17 @@ public readonly record struct Accidental
     #region Methods
     #region Factory
     /// <summary>
+    /// Creates a new <see cref="Accidental"/> described by the magnitude and sign of the <see cref="int"/> passed in.
+    /// </summary>
+    /// <remarks>
+    /// The value returned will be a sharp if <paramref name="IntValue"/> is positive, natural if
+    /// <paramref name="IntValue"/> is zero, and flat if <paramref name="IntValue"/> is negative.
+    /// </remarks>
+    /// <param name="IntValue"></param>
+    /// <returns></returns>
+    public static Accidental FromIntValue(int IntValue) => new(IntValue);
+
+    /// <summary>
     /// Creates a new <see cref="Accidental"/> representing a sharp with the given integer degree.
     /// </summary>
     /// <param name="Degree"></param>
