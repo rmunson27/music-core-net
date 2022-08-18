@@ -19,7 +19,7 @@ namespace Rem.Music;
 /// <paramref name="Number"/> was an unnamed enum value.
 /// </exception>
 public sealed record class PerfectableSimpleIntervalBase(
-    [NamedEnum] PerfectableIntervalQuality Quality, PerfectableSimpleIntervalNumber Number) : SimpleIntervalBase
+    PerfectableIntervalQuality Quality, [NamedEnum] PerfectableSimpleIntervalNumber Number) : SimpleIntervalBase
 {
     #region Properties And Fields
     /// <inheritdoc/>
@@ -106,7 +106,7 @@ public sealed record class PerfectableSimpleIntervalBase(
 /// <paramref name="Number"/> was an unnamed enum value.
 /// </exception>
 public sealed record class NonPerfectableSimpleIntervalBase(
-    [NamedEnum] NonPerfectableIntervalQuality Quality, NonPerfectableSimpleIntervalNumber Number) : SimpleIntervalBase
+    NonPerfectableIntervalQuality Quality, [NamedEnum] NonPerfectableSimpleIntervalNumber Number) : SimpleIntervalBase
 {
     #region Properties And Fields
     /// <inheritdoc/>
