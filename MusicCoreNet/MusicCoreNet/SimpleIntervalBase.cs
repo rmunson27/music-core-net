@@ -318,6 +318,21 @@ public abstract record class SimpleIntervalBase
     #endregion
 
     #region Classification
+    #region Perfectability
+    /// <summary>
+    /// Gets whether or not this instance represents a perfectable interval.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPerfectable() => Perfectability == Perfectable;
+
+    /// <summary>
+    /// Gets whether or not this instance represents a non-perfectable interval.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsNonPerfectable() => Perfectability == NonPerfectable;
+    #endregion
+
+    #region Specific Qualities
     /// <summary>
     /// Gets whether or not this interval is augmented, setting <paramref name="Degree"/> to the degree to which it
     /// is if so.
@@ -345,6 +360,7 @@ public abstract record class SimpleIntervalBase
     /// </summary>
     /// <returns></returns>
     public abstract bool IsDiminished();
+    #endregion
     #endregion
 
     #region Arithmetic
