@@ -33,6 +33,7 @@ public static class IntervalQualities
 /// Represents a general interval quality that can be either perfectable or non-perfectable.
 /// </summary>
 public readonly record struct IntervalQuality
+    : IEquatable<PerfectableIntervalQuality>, IEquatable<NonPerfectableIntervalQuality>
 {
     #region Properties And Fields
     private readonly InternalQualityStruct InternalQuality;
@@ -210,6 +211,82 @@ public readonly record struct IntervalQuality
     public override int GetHashCode() => Perfectability == Perfectable
                                             ? InternalQuality.Perfectable.GetHashCode()
                                             : InternalQuality.NonPerfectable.GetHashCode();
+
+    #region Operators And Explicit `IEquatable` Implementations
+    #region Perfectable
+    /// <summary>
+    /// Determines if the qualities passed in are not equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator !=(IntervalQuality lhs, PerfectableIntervalQuality rhs) => !lhs.Equals(rhs);
+
+    /// <summary>
+    /// Determines if the qualities passed in are equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator ==(IntervalQuality lhs, PerfectableIntervalQuality rhs) => lhs.Equals(rhs);
+
+    /// <summary>
+    /// Determines if the qualities passed in are not equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator !=(PerfectableIntervalQuality lhs, IntervalQuality rhs) => !rhs.Equals(lhs);
+
+    /// <summary>
+    /// Determines if the qualities passed in are equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator ==(PerfectableIntervalQuality lhs, IntervalQuality rhs) => rhs.Equals(lhs);
+
+    /// <inheritdoc/>
+    public bool Equals(PerfectableIntervalQuality other) => IsPerfectable(out var pThis) && pThis == other;
+    #endregion
+
+    #region Non-Perfectable
+    /// <summary>
+    /// Determines if the qualities passed in are not equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator !=(IntervalQuality lhs, NonPerfectableIntervalQuality rhs) => !lhs.Equals(rhs);
+
+    /// <summary>
+    /// Determines if the qualities passed in are equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator ==(IntervalQuality lhs, NonPerfectableIntervalQuality rhs) => lhs.Equals(rhs);
+
+    /// <summary>
+    /// Determines if the qualities passed in are not equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator !=(NonPerfectableIntervalQuality lhs, IntervalQuality rhs) => !rhs.Equals(lhs);
+
+    /// <summary>
+    /// Determines if the qualities passed in are equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator ==(NonPerfectableIntervalQuality lhs, IntervalQuality rhs) => rhs.Equals(lhs);
+
+    /// <inheritdoc/>
+    public bool Equals(NonPerfectableIntervalQuality other) => IsNonPerfectable(out var pThis) && pThis == other;
+    #endregion
+    #endregion
     #endregion
 
     #region Conversion
