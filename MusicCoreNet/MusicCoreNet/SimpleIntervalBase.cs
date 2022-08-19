@@ -104,6 +104,14 @@ public sealed record class PerfectableSimpleIntervalBase(
     /// <returns></returns>
     public new PerfectableSimpleIntervalBase Inversion() => new(Quality.Inversion(), Number.Inversion());
     #endregion
+
+    #region ToString
+    /// <summary>
+    /// Gets a string that represents the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString() => $"{nameof(SimpleIntervalBase)} {{ Quality = {Quality}, Number = {Number} }}";
+    #endregion
     #endregion
 }
 
@@ -200,6 +208,14 @@ public sealed record class NonPerfectableSimpleIntervalBase(
     /// </summary>
     /// <returns></returns>
     public new NonPerfectableSimpleIntervalBase Inversion() => new(Quality.Inversion(), Number.Inversion());
+    #endregion
+
+    #region ToString
+    /// <summary>
+    /// Gets a string that represents the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString() => $"{nameof(SimpleIntervalBase)} {{ Quality = {Quality}, Number = {Number} }}";
     #endregion
     #endregion
 }
