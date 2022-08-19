@@ -36,12 +36,48 @@ public readonly record struct IntervalQuality
     : IEquatable<PerfectableIntervalQuality>, IEquatable<NonPerfectableIntervalQuality>
 {
     #region Properties And Fields
-    private readonly InternalQualityStruct InternalQuality;
+    /// <summary>
+    /// Gets an index that can be used to order <see cref="IntervalQuality"/> instances based on their positions in
+    /// the circle of fifths relative to <see cref="PerfectableIntervalQuality.Perfect"/>.
+    /// </summary>
+    /// <remarks>
+    /// Note that this is <i>not</i> equivalent to the behavior of the
+    /// <see cref="PerfectableIntervalQuality.PerfectBasedIndex"/> property, as non-perfectable qualities are included
+    /// in the ordering as well.
+    /// </remarks>
+    public int PerfectBasedIndex
+    {
+        get
+        {
+            if (IsPerfectable(out var pQuality))
+            {
+                // Expand the degrees of augmented or diminished to allow for the non-perfectable qualities to fit
+                // into the ordering
+                if (pQuality.IsAugmented(out var augDegree)) return augDegree * 2;
+                else if (pQuality.IsDiminished(out var dimDegree)) return -dimDegree * 2;
+
+                else return 0; // Must be perfect
+            }
+            else
+            {
+                var npQuality = InternalQuality.NonPerfectable;
+
+                // Expand the degrees of augmented or diminished to allow for the perfectable qualities to fit into
+                // the ordering
+                if (npQuality.IsAugmented(out var augDegree)) return augDegree * 2 + 1;
+                else if (npQuality.IsDiminished(out var dimDegree)) return -dimDegree * 2 - 1;
+
+                else return npQuality.IsMajor() ? 1 : -1;
+            }
+        }
+    }
 
     /// <summary>
     /// Gets the perfectability of this interval quality.
     /// </summary>
     public IntervalPerfectability Perfectability { get; }
+
+    private readonly InternalQualityStruct InternalQuality;
     #endregion
 
     #region Constructors

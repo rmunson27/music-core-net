@@ -16,6 +16,33 @@ public class IntervalQualityTest
     private static readonly Random Random = new();
     #endregion
 
+    #region General
+    /// <summary>
+    /// Tests the <see cref="IntervalQuality.PerfectBasedIndex"/> property.
+    /// </summary>
+    [TestMethod]
+    public void TestPerfectBasedIndex()
+    {
+        // This should be enough assertions for a pattern to be established
+        TestPerfectBasedIndexPair(-5, new(NonPerfectableIntervalQuality.Diminished(2)));
+        TestPerfectBasedIndexPair(-4, new(PerfectableIntervalQuality.Diminished(2)));
+        TestPerfectBasedIndexPair(-3, new(NonPerfectableIntervalQuality.Diminished()));
+        TestPerfectBasedIndexPair(-2, new(PerfectableIntervalQuality.Diminished()));
+        TestPerfectBasedIndexPair(-1, new(NonPerfectableIntervalQuality.Minor));
+        TestPerfectBasedIndexPair(0, new(PerfectableIntervalQuality.Perfect));
+        TestPerfectBasedIndexPair(1, new(NonPerfectableIntervalQuality.Major));
+        TestPerfectBasedIndexPair(2, new(PerfectableIntervalQuality.Augmented()));
+        TestPerfectBasedIndexPair(3, new(NonPerfectableIntervalQuality.Augmented()));
+        TestPerfectBasedIndexPair(4, new(PerfectableIntervalQuality.Augmented(2)));
+        TestPerfectBasedIndexPair(5, new(NonPerfectableIntervalQuality.Augmented(2)));
+    }
+
+    private static void TestPerfectBasedIndexPair(int expectedIndex, IntervalQuality actualQuality)
+    {
+        Assert.AreEqual(expectedIndex, actualQuality.PerfectBasedIndex);
+    }
+    #endregion
+
     #region Perfectable
     /// <summary>
     /// Tests the factory method construction and characterization of
