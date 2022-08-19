@@ -49,6 +49,7 @@ public static class CircleOfFifths
         0 => Unison,
         1 => Fifth,
         _ => throw new ArgumentOutOfRangeException(
+                nameof(index), index,
                 $"Index passed in did not represent a {nameof(PerfectableSimpleIntervalNumber)} value."),
     };
 
@@ -59,6 +60,7 @@ public static class CircleOfFifths
         4 => Third,
         5 => Seventh,
         _ => throw new ArgumentOutOfRangeException(
+                nameof(index), index,
                 $"Index passed in did not represent a {nameof(NonPerfectableSimpleIntervalNumber)} value."),
     };
 
