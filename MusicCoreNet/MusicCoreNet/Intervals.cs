@@ -65,6 +65,13 @@ public readonly record struct Interval(
     SimpleIntervalBase Base, [NonNegative] int AdditionalOctaves)
     : IDefaultableStruct
 {
+    #region Constants
+    /// <summary>
+    /// A <see cref="Interval"/> representing a perfect octave.
+    /// </summary>
+    public static readonly Interval PerfectOctave = new(SimpleIntervalBase.PerfectUnison, AdditionalOctaves: 1);
+    #endregion
+
     #region Properties And Fields
     /// <inheritdoc/>
     public bool IsDefault => _base is null;
