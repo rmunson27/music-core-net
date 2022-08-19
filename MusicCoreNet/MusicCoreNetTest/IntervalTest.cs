@@ -40,11 +40,11 @@ public class IntervalTest
     [TestMethod]
     public void TestSubtraction()
     {
-        TestSubtractionPair(Intervals.Major().Sixth(), Intervals.Perfect().Fourth(), Intervals.Major().Third());
-        TestSubtractionPair(
+        TestDifferencePair(Intervals.Major().Sixth(), Intervals.Perfect().Fourth(), Intervals.Major().Third());
+        TestDifferencePair(
             new(Intervals.Perfect().Unison(), AdditionalOctaves: 1),
             Intervals.Perfect().Fourth(), Intervals.Perfect().Fifth());
-        TestSubtractionPair(
+        TestDifferencePair(
             new(Intervals.Major().Second(), AdditionalOctaves: 4),
             new(Intervals.Perfect().Fourth(), AdditionalOctaves: 1),
             new(Intervals.Major().Sixth(), AdditionalOctaves: 2));
@@ -56,7 +56,7 @@ public class IntervalTest
             () => Intervals.Perfect().Fourth() - new Interval(Intervals.Perfect().Unison(), 1));
     }
 
-    private static void TestSubtractionPair(Interval lhs, Interval rhs1, Interval rhs2)
+    private static void TestDifferencePair(Interval lhs, Interval rhs1, Interval rhs2)
     {
         Assert.AreEqual(rhs2, lhs - rhs1);
         Assert.AreEqual(rhs1, lhs - rhs2);
