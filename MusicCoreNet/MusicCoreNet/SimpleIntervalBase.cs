@@ -275,13 +275,6 @@ public abstract record class SimpleIntervalBase
     private protected abstract int QualityPerfectOrMajorBasedIndex { get; }
     #endregion
 
-    #region Constructor
-    /// <summary>
-    /// Prevents this class from being extended outside of this assembly.
-    /// </summary>
-    private protected SimpleIntervalBase() { }
-    #endregion
-
     #region Methods
     #region Factory
     /// <summary>
