@@ -96,6 +96,20 @@ public sealed record class SignedInterval
     }
     #endregion
 
+    #region Conversion
+    /// <summary>
+    /// Implicitly converts a <see cref="Music.Interval"/> to a positive <see cref="SignedInterval"/>.
+    /// </summary>
+    /// <param name="interval"></param>
+    public static implicit operator SignedInterval(Interval interval) => new(interval, 1);
+
+    /// <summary>
+    /// Implicitly converts a <see cref="SimpleIntervalBase"/> to a positive <see cref="SignedInterval"/>.
+    /// </summary>
+    /// <param name="interval"></param>
+    public static implicit operator SignedInterval(SimpleIntervalBase interval) => new(interval, 1);
+    #endregion
+
     #region ToString
     /// <summary>
     /// Gets a string that represents the current instance.
