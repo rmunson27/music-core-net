@@ -193,6 +193,7 @@ public readonly record struct Interval(
     /// Gets a string that represents the current instance.
     /// </summary>
     /// <returns></returns>
+    [DoesNotReturnIfInstanceDefault]
     public override string ToString() => $"{nameof(Interval)} {{ Quality = {Quality}, Number = {Number} }}";
     #endregion
     #endregion
