@@ -107,6 +107,35 @@ public readonly record struct IntervalQuality
     #endregion
 
     #region Methods
+    #region Factory
+    /// <summary>
+    /// Creates a new <see cref="IntervalQuality"/> from a corresponding perfect-based circle of fifths index.
+    /// </summary>
+    /// <returns></returns>
+    /// <seealso cref="PerfectBasedIndex"/>
+    public static IntervalQuality FromPerfectBasedIndex(int Index)
+    {
+        // Handle the simple hard-codeable cases
+        switch (Index)
+        {
+            case -1: return NonPerfectableIntervalQuality.Minor;
+            case 0: return PerfectableIntervalQuality.Perfect;
+            case 1: return NonPerfectableIntervalQuality.Major;
+        }
+
+        if (Index < 0) // Diminished
+        {
+            if (Index % 2 == 0) return PerfectableIntervalQuality.Diminished(-Index / 2);
+            else return NonPerfectableIntervalQuality.Diminished((-Index - 1) / 2);
+        }
+        else // Augmented
+        {
+            if (Index % 2 == 0) return PerfectableIntervalQuality.Augmented(Index / 2);
+            else return NonPerfectableIntervalQuality.Augmented((Index - 1) / 2);
+        }
+    }
+    #endregion
+
     #region Classification
     #region Perfectability
     /// <summary>

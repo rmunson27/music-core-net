@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,28 +19,59 @@ public class IntervalQualityTest
 
     #region General
     /// <summary>
+    /// Pairs of interval qualities and integers with the relationship as follows:
+    /// <para/>
+    /// <c>Quality.PerfectBasedIndex == Index;</c>
+    /// <para/>
+    /// <c>IntervalQuality.FromPerfectBasedIndex(Index) == Quality;</c>
+    /// </summary>
+    /// <remarks>
+    /// This should be enough test cases for a pattern to be established.
+    /// </remarks>
+    private static readonly ImmutableArray<(IntervalQuality Quality, int Index)> GeneralPerfectBasedIndexPairs
+        = ImmutableArray.CreateRange(new (IntervalQuality, int)[]
+        {
+            (NonPerfectableIntervalQuality.Diminished(2), -5),
+            (PerfectableIntervalQuality.Diminished(2), -4),
+            (NonPerfectableIntervalQuality.Diminished(), -3),
+            (PerfectableIntervalQuality.Diminished(), -2),
+            (NonPerfectableIntervalQuality.Minor, -1),
+            (PerfectableIntervalQuality.Perfect, 0),
+            (NonPerfectableIntervalQuality.Major, 1),
+            (PerfectableIntervalQuality.Augmented(), 2),
+            (NonPerfectableIntervalQuality.Augmented(), 3),
+            (PerfectableIntervalQuality.Augmented(2), 4),
+            (NonPerfectableIntervalQuality.Augmented(2), 5),
+        });
+
+    /// <summary>
     /// Tests the <see cref="IntervalQuality.PerfectBasedIndex"/> property.
     /// </summary>
     [TestMethod]
     public void TestPerfectBasedIndex()
     {
-        // This should be enough assertions for a pattern to be established
-        TestPerfectBasedIndexPair(-5, new(NonPerfectableIntervalQuality.Diminished(2)));
-        TestPerfectBasedIndexPair(-4, new(PerfectableIntervalQuality.Diminished(2)));
-        TestPerfectBasedIndexPair(-3, new(NonPerfectableIntervalQuality.Diminished()));
-        TestPerfectBasedIndexPair(-2, new(PerfectableIntervalQuality.Diminished()));
-        TestPerfectBasedIndexPair(-1, new(NonPerfectableIntervalQuality.Minor));
-        TestPerfectBasedIndexPair(0, new(PerfectableIntervalQuality.Perfect));
-        TestPerfectBasedIndexPair(1, new(NonPerfectableIntervalQuality.Major));
-        TestPerfectBasedIndexPair(2, new(PerfectableIntervalQuality.Augmented()));
-        TestPerfectBasedIndexPair(3, new(NonPerfectableIntervalQuality.Augmented()));
-        TestPerfectBasedIndexPair(4, new(PerfectableIntervalQuality.Augmented(2)));
-        TestPerfectBasedIndexPair(5, new(NonPerfectableIntervalQuality.Augmented(2)));
+        foreach (var (Quality, Index) in GeneralPerfectBasedIndexPairs)
+        {
+            Assert.AreEqual(
+                Index, Quality.PerfectBasedIndex,
+                $"Invalid {nameof(Quality.PerfectBasedIndex)} result from"
+                    + $" ({(Quality.IsPerfectable() ? "Perfectable" : "Non-Perfectable")})"
+                    + $" interval quality '{Quality}'.");
+        }
     }
 
-    private static void TestPerfectBasedIndexPair(int expectedIndex, IntervalQuality actualQuality)
+    /// <summary>
+    /// Tests the <see cref="IntervalQuality.FromPerfectBasedIndex(int)"/> factory method.
+    /// </summary>
+    [TestMethod]
+    public void TestFromPerfectBasedIndex()
     {
-        Assert.AreEqual(expectedIndex, actualQuality.PerfectBasedIndex);
+        foreach (var (Quality, Index) in GeneralPerfectBasedIndexPairs)
+        {
+            Assert.AreEqual(
+                Quality, IntervalQuality.FromPerfectBasedIndex(Index),
+                $"Invalid {nameof(IntervalQuality.FromPerfectBasedIndex)} result from index {Index}.");
+        }
     }
     #endregion
 
