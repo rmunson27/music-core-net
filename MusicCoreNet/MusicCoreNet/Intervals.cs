@@ -145,7 +145,7 @@ public readonly record struct Interval(
     /// <exception cref="StructArgumentDefaultException">
     /// Either <paramref name="lhs"/> or <paramref name="rhs"/> was the default.
     /// </exception>
-    public static Interval operator +(Interval lhs, Interval rhs)
+    public static Interval operator +([NonDefaultableStruct] Interval lhs, [NonDefaultableStruct] Interval rhs)
     {
         Throw.IfStructArgDefault(lhs, nameof(lhs));
         Throw.IfStructArgDefault(rhs, nameof(rhs));
@@ -172,7 +172,7 @@ public readonly record struct Interval(
     /// <para/>
     /// This will occur if <paramref name="lhs"/> is less than <paramref name="rhs"/>.
     /// </exception>
-    public static Interval operator -(Interval lhs, Interval rhs)
+    public static Interval operator -([NonDefaultableStruct] Interval lhs, [NonDefaultableStruct] Interval rhs)
     {
         Throw.IfStructArgDefault(lhs, nameof(lhs));
         Throw.IfStructArgDefault(rhs, nameof(rhs));
