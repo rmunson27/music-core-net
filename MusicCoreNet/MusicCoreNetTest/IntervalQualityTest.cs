@@ -50,6 +50,9 @@ public class IntervalQualityTest
         Assert.IsTrue(randomAugmented.IsAugmented());
         Assert.IsTrue(randomAugmented.IsAugmented(out augmentedDegree));
         Assert.AreEqual(randomDegree, augmentedDegree);
+
+        Assert.IsFalse(IntervalQualities.Perfect.IsDiminished());
+        Assert.IsFalse(IntervalQualities.Perfect.IsAugmented());
     }
     #endregion
 
@@ -88,6 +91,11 @@ public class IntervalQualityTest
         Assert.IsTrue(randomAugmented.IsAugmented());
         Assert.IsTrue(randomAugmented.IsAugmented(out augmentedDegree));
         Assert.AreEqual(randomDegree, augmentedDegree);
+
+        Assert.IsFalse(IntervalQualities.Major.IsDiminished());
+        Assert.IsFalse(IntervalQualities.Major.IsAugmented());
+        Assert.IsFalse(IntervalQualities.Minor.IsDiminished());
+        Assert.IsFalse(IntervalQualities.Minor.IsAugmented());
     }
 
     /// <summary>

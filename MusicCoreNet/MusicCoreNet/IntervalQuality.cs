@@ -586,7 +586,7 @@ public readonly record struct NonPerfectableIntervalQuality
     /// Gets whether or not this interval quality represents a diminished interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsDiminished() => MajorBasedIndex < 0;
+    public bool IsDiminished() => MajorBasedIndex < -1;
     #endregion
 
     #region ToString
