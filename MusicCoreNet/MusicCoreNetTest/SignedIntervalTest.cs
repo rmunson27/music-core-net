@@ -56,4 +56,58 @@ public class SignedIntervalTest
         Assert.AreEqual(pos, -neg);
         Assert.AreEqual(neg, -pos);
     }
+
+    /// <summary>
+    /// Tests addition of <see cref="SignedInterval"/> instances.
+    /// </summary>
+    [TestMethod]
+    public void TestAddition()
+    {
+        TestAdditionPair(Intervals.Major().Sixth(), Intervals.Minor().Third(), Interval.PerfectOctave);
+        TestAdditionPair(
+            new Interval(Intervals.Major().Second(), AdditionalOctaves: 1),
+            SignedInterval.Negative(Intervals.Perfect().Fourth()),
+            Intervals.Major().Sixth());
+        TestAdditionPair(
+            Intervals.Minor().Second(),
+            SignedInterval.Negative(Intervals.Perfect().Fifth()),
+            SignedInterval.Negative(Intervals.Augmented().Fourth()));
+        TestAdditionPair(
+            Intervals.Perfect().Fourth(),
+            SignedInterval.Negative(new(Intervals.Perfect().Fourth(), AdditionalOctaves: 1)),
+            SignedInterval.Negative(Interval.PerfectOctave));
+    }
+
+    private static void TestAdditionPair(SignedInterval first, SignedInterval second, SignedInterval expectedResult)
+    {
+        Assert.AreEqual(expectedResult, first + second);
+        Assert.AreEqual(expectedResult, second + first);
+    }
+
+    /// <summary>
+    /// Tests subtraction of <see cref="SignedInterval"/> instances.
+    /// </summary>
+    [TestMethod]
+    public void TestSubtraction()
+    {
+        TestDifferencePair(Interval.PerfectOctave, Intervals.Major().Sixth(), Intervals.Minor().Third());
+        TestDifferencePair(
+            Intervals.Major().Sixth(),
+            new Interval(Intervals.Major().Second(), AdditionalOctaves: 1),
+            SignedInterval.Negative(Intervals.Perfect().Fourth()));
+        TestDifferencePair(
+            SignedInterval.Negative(Intervals.Augmented().Fourth()),
+            Intervals.Minor().Second(),
+            SignedInterval.Negative(Intervals.Perfect().Fifth()));
+        TestDifferencePair(
+            SignedInterval.Negative(Interval.PerfectOctave),
+            Intervals.Perfect().Fourth(),
+            SignedInterval.Negative(new(Intervals.Perfect().Fourth(), AdditionalOctaves: 1)));
+    }
+
+    private static void TestDifferencePair(SignedInterval lhs, SignedInterval rhs1, SignedInterval rhs2)
+    {
+        Assert.AreEqual(rhs1, lhs - rhs2);
+        Assert.AreEqual(rhs2, lhs - rhs1);
+    }
 }

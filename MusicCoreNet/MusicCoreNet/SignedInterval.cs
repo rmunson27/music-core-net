@@ -3,6 +3,7 @@ using Rem.Core.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -83,6 +84,68 @@ public sealed record class SignedInterval
     #endregion
 
     #region Arithmetic
+    /// <summary>
+    /// Computes the difference between the two <see cref="SignedInterval"/> instances passed in.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException">
+    /// Either <paramref name="lhs"/> or <paramref name="rhs"/> was <see langword="null"/>.
+    /// </exception>
+    public static SignedInterval operator -(SignedInterval lhs, SignedInterval rhs)
+    {
+        Throw.IfArgNull(lhs, nameof(lhs));
+        Throw.IfArgNull(rhs, nameof(rhs));
+
+        return lhs._sign == rhs._sign
+                ? SubtractRelativeToLeftHandSign(lhs, rhs)
+                : new(lhs.Interval + rhs.Interval, lhs._sign);
+    }
+
+    /// <summary>
+    /// Computes the sum of the two <see cref="SignedInterval"/> instances passed in.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException">
+    /// Either <paramref name="lhs"/> or <paramref name="rhs"/> was <see langword="null"/>.
+    /// </exception>
+    public static SignedInterval operator +(SignedInterval lhs, SignedInterval rhs)
+    {
+        Throw.IfArgNull(lhs, nameof(lhs));
+        Throw.IfArgNull(rhs, nameof(rhs));
+
+        return lhs._sign == rhs._sign
+                ? new(lhs.Interval + rhs.Interval, lhs._sign)
+                : SubtractRelativeToLeftHandSign(lhs, rhs);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static SignedInterval SubtractRelativeToLeftHandSign(SignedInterval lhs, SignedInterval rhs)
+    {
+        Interval.SubtractInPlace(lhs.Interval, rhs.Interval, out var newBase, out var newOctaves);
+
+        if (newOctaves < 0)
+        {
+            // The final base is the inversion of the original (since we are treating it as an interval down from a
+            // given note, rather than an interval up from the note an octave below)
+            var finalBase = -newBase;
+
+            // The negative range of values starts at a unison (exclusive) and decreases in octave count by 1
+            // every octave
+            // For example, the values treated as in the -1 octave range by the SubtractInPlace method are really in
+            // the 0 octave range, but with a negative sign EXCEPT the -1 octave itself
+            // Correct the range unless the base value is an octave multiple
+            var finalOctaves = -newOctaves;
+            if (finalBase.NumberValue != 1) finalOctaves--;
+
+            return new(new(finalBase, finalOctaves), (sbyte)-lhs._sign);
+        }
+        else return new(new(newBase, newOctaves), lhs._sign);
+    }
+
     /// <summary>
     /// Negates the <see cref="SignedInterval"/> instance passed in.
     /// </summary>

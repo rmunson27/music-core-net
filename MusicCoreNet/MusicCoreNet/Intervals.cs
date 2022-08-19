@@ -174,16 +174,35 @@ public readonly record struct Interval(
     /// </exception>
     public static Interval operator -([NonDefaultableStruct] Interval lhs, [NonDefaultableStruct] Interval rhs)
     {
+        SubtractInPlace(in lhs, in rhs, out var newBase, out var newAdditionalOctaves);
+        if (newAdditionalOctaves < 0) throw new OverflowException("The difference underflows past a unison.");
+        return new(newBase, newAdditionalOctaves);
+    }
+
+    /// <summary>
+    /// Computes the difference between the two <see cref="Interval"/> instances passed in, returning the resulting
+    /// components that can be used to construct an <see cref="Interval"/> in <see langword="out"/> parameters.
+    /// </summary>
+    /// <remarks>
+    /// This method is internal since it can be used to provide subtraction both for this struct and
+    /// <see cref="SignedInterval"/> instances.
+    /// </remarks>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <param name="newBase"></param>
+    /// <param name="newAdditionalOctaves"></param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static void SubtractInPlace(
+        [NonDefaultableStruct] in Interval lhs, [NonDefaultableStruct] in Interval rhs,
+        out SimpleIntervalBase newBase, out int newAdditionalOctaves)
+    {
         Throw.IfStructArgDefault(lhs, nameof(lhs));
         Throw.IfStructArgDefault(rhs, nameof(rhs));
 
-        var newBase = lhs.Base.MinusWithUnderflow(rhs.Base, out var baseAdditionUnderflows);
+        newBase = lhs.Base.MinusWithUnderflow(rhs.Base, out var baseAdditionUnderflows);
 
-        var newAdditionalOctaves = lhs.AdditionalOctaves - rhs.AdditionalOctaves;
+        newAdditionalOctaves = lhs.AdditionalOctaves - rhs.AdditionalOctaves;
         if (baseAdditionUnderflows) newAdditionalOctaves--;
-
-        if (newAdditionalOctaves < 0) throw new OverflowException("The difference underflows past a unison.");
-        return new(newBase, newAdditionalOctaves);
     }
     #endregion
 
