@@ -32,6 +32,9 @@ public static class IntervalQualities
 /// <summary>
 /// Represents a general interval quality that can be either perfectable or non-perfectable.
 /// </summary>
+/// <remarks>
+/// The default value of this struct represents a perfect interval quality.
+/// </remarks>
 public readonly record struct IntervalQuality
     : IEquatable<PerfectableIntervalQuality>, IEquatable<NonPerfectableIntervalQuality>
 {

@@ -19,6 +19,15 @@ public class IntervalQualityTest
 
     #region General
     /// <summary>
+    /// Ensures that the default value of the <see cref="IntervalQuality"/> struct is the value advertised.
+    /// </summary>
+    [TestMethod]
+    public void TestGeneralDefault()
+    {
+        Assert.AreEqual(default(IntervalQuality), PerfectableIntervalQuality.Perfect);
+    }
+
+    /// <summary>
     /// Pairs of interval qualities and integers with the relationship as follows:
     /// <para/>
     /// <c>Quality.PerfectBasedIndex == Index;</c>
