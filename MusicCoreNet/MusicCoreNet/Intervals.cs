@@ -128,6 +128,58 @@ public readonly record struct Interval(
     public override int GetHashCode() => HashCode.Combine(Base, AdditionalOctaves);
     #endregion
 
+    #region Arithmetic
+    /// <summary>
+    /// Computes the sum of the two <see cref="Interval"/> instances passed in.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    /// <exception cref="StructArgumentDefaultException">
+    /// Either <paramref name="lhs"/> or <paramref name="rhs"/> was the default.
+    /// </exception>
+    public static Interval operator +(Interval lhs, Interval rhs)
+    {
+        Throw.IfStructArgDefault(lhs, nameof(lhs));
+        Throw.IfStructArgDefault(rhs, nameof(rhs));
+
+        var newBase = lhs.Base.PlusWithOverflow(rhs.Base, out var baseAdditionOverflows);
+
+        var newAdditionalOctaves = lhs.AdditionalOctaves + rhs.AdditionalOctaves;
+        if (baseAdditionOverflows) newAdditionalOctaves++;
+
+        return new(newBase, newAdditionalOctaves);
+    }
+
+    /// <summary>
+    /// Computes the difference between the two <see cref="Interval"/> instances passed in.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    /// <exception cref="StructArgumentDefaultException">
+    /// Either <paramref name="lhs"/> or <paramref name="rhs"/> was the default.
+    /// </exception>
+    /// <exception cref="OverflowException">
+    /// The difference between the intervals underflows past a unison.
+    /// <para/>
+    /// This will occur if <paramref name="lhs"/> is less than <paramref name="rhs"/>.
+    /// </exception>
+    public static Interval operator -(Interval lhs, Interval rhs)
+    {
+        Throw.IfStructArgDefault(lhs, nameof(lhs));
+        Throw.IfStructArgDefault(rhs, nameof(rhs));
+
+        var newBase = lhs.Base.MinusWithUnderflow(rhs.Base, out var baseAdditionUnderflows);
+
+        var newAdditionalOctaves = lhs.AdditionalOctaves - rhs.AdditionalOctaves;
+        if (baseAdditionUnderflows) newAdditionalOctaves--;
+
+        if (newAdditionalOctaves < 0) throw new OverflowException("The difference underflows past a unison.");
+        return new(newBase, newAdditionalOctaves);
+    }
+    #endregion
+
     #region Conversion
     /// <summary>
     /// Implicitly converts a <see cref="SimpleIntervalBase"/> to an <see cref="Interval"/>.

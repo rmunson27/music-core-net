@@ -365,6 +365,23 @@ public abstract record class SimpleIntervalBase
 
     #region Arithmetic
     /// <summary>
+    /// Computes the difference between this <see cref="SimpleIntervalBase"/> and another, collapsing the result into a
+    /// <see cref="SimpleIntervalBase"/> and setting whether or not the subtraction underflows past a unison in an
+    /// <see langword="out"/> parameter.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <param name="underflows"></param>
+    /// <returns></returns>
+    internal SimpleIntervalBase MinusWithUnderflow(SimpleIntervalBase other, out bool underflows)
+    {
+        // Subtraction underflows past a unison depending on the difference between the interval numbers
+        // Add 1 to the difference, as for example, a third (3) minus a unison (1) is a third (3), not a second (2).
+        underflows = NumberValue - other.NumberValue + 1 <= 0;
+
+        return this - other;
+    }
+
+    /// <summary>
     /// Subtracts the two <see cref="SimpleIntervalBase"/> instances.
     /// </summary>
     /// <remarks>
@@ -378,6 +395,23 @@ public abstract record class SimpleIntervalBase
     /// Either <paramref name="lhs"/> or <paramref name="rhs"/> was <see langword="null"/>.
     /// </exception>
     public static SimpleIntervalBase operator -(SimpleIntervalBase lhs, SimpleIntervalBase rhs) => lhs + (-rhs);
+
+    /// <summary>
+    /// Computes the sum of this <see cref="SimpleIntervalBase"/> and another, collapsing the result into a
+    /// <see cref="SimpleIntervalBase"/> and setting whether or not the addition overflows past an octave in an
+    /// <see langword="out"/> parameter.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <param name="overflows"></param>
+    /// <returns></returns>
+    internal SimpleIntervalBase PlusWithOverflow(SimpleIntervalBase other, out bool overflows)
+    {
+        // Addition overflows past an octave depending on the sum of the interval numbers
+        // Subtract 1 from the sum, as for example, a unison (1) plus a unison (1) is a unison (1), not a second (2). 
+        overflows = NumberValue + other.NumberValue - 1 >= 8;
+
+        return this + other;
+    }
 
     /// <summary>
     /// Adds the two <see cref="SimpleIntervalBase"/> instances.
