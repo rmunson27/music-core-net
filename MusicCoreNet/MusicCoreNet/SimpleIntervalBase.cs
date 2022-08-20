@@ -439,8 +439,7 @@ public abstract record class SimpleIntervalBase
         Throw.IfArgNull(rhs, nameof(rhs));
 
         #region Number
-        var newUnisonBasedNumberIndex = CircleOfFifths.UnisonBasedNumberIndex(lhs)
-                                            + CircleOfFifths.UnisonBasedNumberIndex(rhs);
+        var newUnisonBasedNumberIndex = lhs.Number.UnisonBasedIndex() + rhs.Number.UnisonBasedIndex();
         var ubni_determinant = newUnisonBasedNumberIndex + 1; // Get rid of the -1 label for fourths
         var qualityShift = Maths.FloorDivRem(ubni_determinant, 7, out ubni_determinant);
         newUnisonBasedNumberIndex = ubni_determinant - 1; // Add back the -1 label for fourths

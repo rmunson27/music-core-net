@@ -16,17 +16,6 @@ using static NonPerfectableSimpleIntervalNumber;
 /// </summary>
 public static class CircleOfFifths
 {
-    #region Number
-    internal static int UnisonBasedNumberIndex(this SimpleIntervalBase siBase)
-#pragma warning disable CS8509 // This should handle everything
-        => Throw.IfArgNull(siBase, nameof(siBase)) switch
-#pragma warning restore CS8509
-        {
-            PerfectableSimpleIntervalBase(_, var number) => number.UnisonBasedPerfectIndex(),
-            NonPerfectableSimpleIntervalBase(_, var number) => number.UnisonBasedMajorIndex(),
-        };
-
     {
 
-    #endregion
 }
