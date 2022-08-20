@@ -33,6 +33,8 @@ public sealed record class PerfectableSimpleIntervalBase(
 
     private protected override IntervalQuality QualityInternal => Quality;
 
+    private protected override SimpleIntervalNumber NumberInternal => Number;
+
     /// <summary>
     /// Gets or initializes the quality of the interval represented by the current instance.
     /// </summary>
@@ -47,7 +49,7 @@ public sealed record class PerfectableSimpleIntervalBase(
     /// <exception cref="InvalidEnumPropertySetException">
     /// This property was initialized to an unnamed enum value.
     /// </exception>
-    [NamedEnum] public PerfectableSimpleIntervalNumber Number
+    [NamedEnum] public new PerfectableSimpleIntervalNumber Number
     {
         get => _number;
         init => _number = Throw.IfEnumPropSetUnnamed(value);
@@ -130,6 +132,8 @@ public sealed record class NonPerfectableSimpleIntervalBase(
     /// <inheritdoc/>
     [Positive] public override int NumberValue => (int)Number;
 
+    private protected override SimpleIntervalNumber NumberInternal => Number;
+
     /// <inheritdoc/>
     public override int HalfSteps => Number.MajorHalfSteps() + Quality.MajorBasedIndex;
 
@@ -152,7 +156,7 @@ public sealed record class NonPerfectableSimpleIntervalBase(
     /// <exception cref="InvalidEnumPropertySetException">
     /// This property was initialized to an unnamed enum value.
     /// </exception>
-    [NamedEnum] public NonPerfectableSimpleIntervalNumber Number
+    [NamedEnum] public new NonPerfectableSimpleIntervalNumber Number
     {
         get => _number;
         init => _number = Throw.IfEnumPropSetUnnamed(value);
@@ -246,6 +250,16 @@ public abstract record class SimpleIntervalBase
     /// For a simple example, accessing this property on a second will yield 2.
     /// </remarks>
     [Positive] public abstract int NumberValue { get; }
+
+    /// <summary>
+    /// Gets the number of the interval represented by this instance.
+    /// </summary>
+    public SimpleIntervalNumber Number => NumberInternal;
+
+    /// <summary>
+    /// Allows more specific number types to exist as properties in subclasses.
+    /// </summary>
+    private protected abstract SimpleIntervalNumber NumberInternal { get; }
 
     /// <summary>
     /// Gets the quality of the interval represented by the current instance.

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,6 +38,316 @@ public static class IntervalNumbers
         >= 2 and <= 5 => NonPerfectable,
         _ => throw new Exception("Bug - should not happen ever."),
     };
+}
+
+/// <summary>
+/// Represents a number of a simple interval, that can be either perfectable or non-perfectable.
+/// </summary>
+public readonly record struct SimpleIntervalNumber
+    : IEquatable<PerfectableSimpleIntervalNumber>, IEquatable<NonPerfectableSimpleIntervalNumber>
+{
+    #region Properties And Fields
+    /// <summary>
+    /// Gets the perfectability of this instance.
+    /// </summary>
+    public IntervalPerfectability Perfectability { get; }
+
+    private readonly InternalNumberStruct InternalNumber;
+    #endregion
+
+    #region Constructors
+    /// <summary>
+    /// Constructs a new instance of the <see cref="SimpleIntervalNumber"/> struct representing the
+    /// <see cref="PerfectableSimpleIntervalNumber"/> passed in.
+    /// </summary>
+    /// <param name="Number"></param>
+    /// <exception cref="InvalidEnumArgumentException"><paramref name="Number"/> was an unnamed enum value.</exception>
+    public SimpleIntervalNumber([NamedEnum] PerfectableSimpleIntervalNumber Number)
+    {
+        InternalNumber = new();
+        InternalNumber.Perfectable = Throw.IfEnumArgUnnamed(Number, nameof(Number));
+        Perfectability = Perfectable;
+    }
+
+    /// <summary>
+    /// Constructs a new instance of the <see cref="SimpleIntervalNumber"/> struct representing the
+    /// <see cref="NonPerfectableSimpleIntervalNumber"/> passed in.
+    /// </summary>
+    /// <param name="Number"></param>
+    /// <exception cref="InvalidEnumArgumentException"><paramref name="Number"/> was an unnamed enum value.</exception>
+    public SimpleIntervalNumber([NamedEnum] NonPerfectableSimpleIntervalNumber Number)
+    {
+        InternalNumber = new();
+        InternalNumber.NonPerfectable = Throw.IfEnumArgUnnamed(Number, nameof(Number));
+        Perfectability = NonPerfectable;
+    }
+    #endregion
+
+    #region Methods
+    #region Factory
+    /// <summary>
+    /// Gets the <see cref="SimpleIntervalNumber"/> of a perfect or major interval with the circle-of-fifths perfect
+    /// unison-based index passed in.
+    /// </summary>
+    /// <param name="Index"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="Index"/> did not indicate any perfect or major interval.
+    /// </exception>
+    /// <seealso cref="SimpleIntervalNumbers.UnisonBasedPerfectIndex(PerfectableSimpleIntervalNumber)"/>
+    public static SimpleIntervalNumber FromUnisonBasedIndex(
+        [GreaterThanOrEqualToInteger(-1), LessThanOrEqualToInteger(5)] int Index) => Index switch
+    {
+        >= -1 and <= 1 => PerfectableSimpleIntervalNumbers.FromUnisonBasedPerfectIndex(Index),
+        >= 2 and <= 5 => NonPerfectableSimpleIntervalNumbers.FromUnisonBasedMajorIndex(Index),
+        _ => throw new ArgumentOutOfRangeException(
+                nameof(Index), Index, "Index did not indicate any perfect or major interval."),
+    };
+    #endregion
+
+    #region Classification
+    #region Perfectable
+    /// <summary>
+    /// Gets whether or not this instance is perfectable, setting the perfectable number value in an
+    /// <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="Perfectable"></param>
+    /// <returns></returns>
+    public bool IsPerfectable(out PerfectableSimpleIntervalNumber Perfectable)
+    {
+        if (IsPerfectable())
+        {
+            Perfectable = InternalNumber.Perfectable;
+            return true;
+        }
+        else
+        {
+            Perfectable = default;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Gets whether or not this instance is perfectable.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPerfectable() => Perfectability == Perfectable;
+    #endregion
+
+    #region Non-Perfectable
+    /// <summary>
+    /// Gets whether or not this instance is non-perfectable, setting the non-perfectable number value in an
+    /// <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="NonPerfectable"></param>
+    /// <returns></returns>
+    public bool IsNonPerfectable(out NonPerfectableSimpleIntervalNumber NonPerfectable)
+    {
+        if (IsNonPerfectable())
+        {
+            NonPerfectable = InternalNumber.NonPerfectable;
+            return true;
+        }
+        else
+        {
+            NonPerfectable = default;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Gets whether or not this instance is non-perfectable.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsNonPerfectable() => Perfectability == NonPerfectable;
+    #endregion
+    #endregion
+
+    #region Computation
+    /// <summary>
+    /// Gets the circle of fifths index of a perfect or major interval numbered with the current instance relative to
+    /// a perfect unison.
+    /// </summary>
+    /// <remarks>
+    /// The interval used in the comparison will be perfect if the current instance is perfectable and major otherwise.
+    /// </remarks>
+    /// <returns></returns>
+    public int UnisonBasedIndex() => IsPerfectable()
+                                        ? InternalNumber.Perfectable.UnisonBasedPerfectIndex()
+                                        : InternalNumber.NonPerfectable.UnisonBasedMajorIndex();
+
+    /// <summary>
+    /// Gets the inversion of the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public SimpleIntervalNumber Inversion() => IsPerfectable()
+                                                ? new(InternalNumber.Perfectable.Inversion())
+                                                : new(InternalNumber.NonPerfectable.Inversion());
+    #endregion
+
+    #region Equality
+    /// <summary>
+    /// Determines if this instance is equal to another object of the same type.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool Equals(SimpleIntervalNumber other)
+    {
+        if (Perfectability == other.Perfectability)
+        {
+            return Perfectability switch
+            {
+                Perfectable => InternalNumber.Perfectable == other.InternalNumber.Perfectable,
+                _ => InternalNumber.NonPerfectable == other.InternalNumber.NonPerfectable,
+            };
+        }
+        else return false;
+    }
+
+    /// <summary>
+    /// Gets a hash code for the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode() => IsPerfectable()
+                                            ? InternalNumber.Perfectable.GetHashCode()
+                                            : InternalNumber.NonPerfectable.GetHashCode();
+
+    #region Operators And Explicit `IEquatable` Implementations
+    #region Perfectable
+    /// <summary>
+    /// Determines if the interval numbers passed in are not equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator !=(SimpleIntervalNumber lhs, PerfectableSimpleIntervalNumber rhs) => !lhs.Equals(rhs);
+
+    /// <summary>
+    /// Determines if the interval numbers passed in are equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator ==(SimpleIntervalNumber lhs, PerfectableSimpleIntervalNumber rhs) => lhs.Equals(rhs);
+
+    /// <summary>
+    /// Determines if the interval numbers passed in are not equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator !=(PerfectableSimpleIntervalNumber lhs, SimpleIntervalNumber rhs) => !rhs.Equals(lhs);
+
+    /// <summary>
+    /// Determines if the interval numbers passed in are equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator ==(PerfectableSimpleIntervalNumber lhs, SimpleIntervalNumber rhs) => rhs.Equals(lhs);
+
+    /// <inheritdoc/>
+    public bool Equals(PerfectableSimpleIntervalNumber number)
+        => IsPerfectable(out var thisNumber) && thisNumber == number;
+    #endregion
+
+    #region Non-Perfectable
+    /// <summary>
+    /// Determines if the interval numbers passed in are not equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator !=(SimpleIntervalNumber lhs, NonPerfectableSimpleIntervalNumber rhs)
+        => !lhs.Equals(rhs);
+
+    /// <summary>
+    /// Determines if the interval numbers passed in are equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator ==(SimpleIntervalNumber lhs, NonPerfectableSimpleIntervalNumber rhs)
+        => lhs.Equals(rhs);
+
+    /// <summary>
+    /// Determines if the interval numbers passed in are not equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator !=(NonPerfectableSimpleIntervalNumber lhs, SimpleIntervalNumber rhs)
+        => !rhs.Equals(lhs);
+
+    /// <summary>
+    /// Determines if the interval numbers passed in are equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator ==(NonPerfectableSimpleIntervalNumber lhs, SimpleIntervalNumber rhs)
+        => rhs.Equals(lhs);
+
+    /// <inheritdoc/>
+    public bool Equals(NonPerfectableSimpleIntervalNumber number)
+        => IsNonPerfectable(out var thisNumber) && thisNumber == number;
+    #endregion
+    #endregion
+    #endregion
+
+    #region Conversion
+    /// <summary>
+    /// Implicitly converts a <see cref="PerfectableSimpleIntervalNumber"/> to an instance of this struct.
+    /// </summary>
+    /// <param name="number"></param>
+    public static implicit operator SimpleIntervalNumber(PerfectableSimpleIntervalNumber number) => new(number);
+
+    /// <summary>
+    /// Implicitly converts a <see cref="NonPerfectableSimpleIntervalNumber"/> to an instance of this struct.
+    /// </summary>
+    /// <param name="number"></param>
+    public static implicit operator SimpleIntervalNumber(NonPerfectableSimpleIntervalNumber number) => new(number);
+
+    /// <summary>
+    /// Explicitly converts an instance of this struct to a <see cref="PerfectableSimpleIntervalNumber"/>.
+    /// </summary>
+    /// <param name="number"></param>
+    /// <exception cref="InvalidCastException">
+    /// <paramref name="number"/> did not represent a perfectable simple interval number.
+    /// </exception>
+    public static explicit operator PerfectableSimpleIntervalNumber(SimpleIntervalNumber number)
+        => number.IsPerfectable()
+            ? number.InternalNumber.Perfectable
+            : throw new InvalidCastException("Value did not represent a perfectable simple interval number.");
+
+    /// <summary>
+    /// Explicitly converts an instance of this struct to a <see cref="NonPerfectableSimpleIntervalNumber"/>.
+    /// </summary>
+    /// <param name="number"></param>
+    /// <exception cref="InvalidCastException">
+    /// <paramref name="number"/> did not represent a non-perfectable simple interval number.
+    /// </exception>
+    public static explicit operator NonPerfectableSimpleIntervalNumber(SimpleIntervalNumber number)
+        => number.IsNonPerfectable()
+            ? number.InternalNumber.NonPerfectable
+            : throw new InvalidCastException("Value did not represent a non-perfectable simple interval number.");
+    #endregion
+    #endregion
+
+    #region Types
+    /// <summary>
+    /// Internally represents both explicit simple interval number types as a union.
+    /// </summary>
+    [StructLayout(LayoutKind.Explicit)]
+    private struct InternalNumberStruct
+    {
+        [FieldOffset(0)]
+        public NonPerfectableSimpleIntervalNumber NonPerfectable;
+
+        [FieldOffset(0)]
+        public PerfectableSimpleIntervalNumber Perfectable;
+    }
+    #endregion
 }
 
 /// <summary>
