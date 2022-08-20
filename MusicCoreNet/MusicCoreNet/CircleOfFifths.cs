@@ -16,6 +16,27 @@ using static NonPerfectableSimpleIntervalNumber;
 /// </summary>
 public static class CircleOfFifths
 {
-    {
+    /// <summary>
+    /// A comparer that can be used to compare <see cref="SimpleIntervalBase"/> instances based on their position in
+    /// the circle of fifths.
+    /// </summary>
+    public static readonly IComparer<SimpleIntervalBase> Comparer = new SimpleIntervalBaseComparer();
 
+    private sealed class SimpleIntervalBaseComparer : IComparer<SimpleIntervalBase>
+    {
+        /// <inheritdoc/>
+        public int Compare(SimpleIntervalBase? x, SimpleIntervalBase? y)
+        {
+            // Set `null` to compare as below any other value
+            if (x is null) return y is null ? 0 : -1;
+            else if (y is null) return 1;
+
+            // Compare the qualities and then the numbers if the qualities are equal
+            return x.Quality.PerfectBasedIndex.CompareTo(y.Quality.PerfectBasedIndex) switch
+            {
+                0 => x.Number.UnisonBasedIndex().CompareTo(y.Number.UnisonBasedIndex()),
+                var comp => comp,
+            };
+        }
+    }
 }
