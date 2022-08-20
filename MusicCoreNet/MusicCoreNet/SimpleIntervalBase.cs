@@ -442,10 +442,10 @@ public abstract record class SimpleIntervalBase
         {
             Perfectable => new PerfectableSimpleIntervalBase(
                             PerfectableIntervalQuality.FromPerfectBasedIndex(newQualityIndex),
-                            CircleOfFifths.PerfectableNumberFromUnisonBasedIndex(newUnisonBasedNumberIndex)),
+                            PerfectableSimpleIntervalNumbers.FromUnisonBasedPerfectIndex(newUnisonBasedNumberIndex)),
             _ => new NonPerfectableSimpleIntervalBase(
                     NonPerfectableIntervalQuality.FromMajorBasedIndex(newQualityIndex),
-                    CircleOfFifths.NonPerfectableNumberFromUnisonBasedIndex(newUnisonBasedNumberIndex)),
+                    NonPerfectableSimpleIntervalNumbers.FromUnisonBasedMajorIndex(newUnisonBasedNumberIndex)),
         };
         #endregion
     }

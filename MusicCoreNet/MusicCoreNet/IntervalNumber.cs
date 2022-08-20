@@ -46,6 +46,22 @@ public static class SimpleIntervalNumbers
 {
     #region Perfectable
     /// <summary>
+    /// Gets the circle of fifths index of a perfect interval numbered with the current instance relative to a
+    /// perfect unison.
+    /// </summary>
+    /// <param name="pn"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
+    [return: GreaterThanOrEqualToInteger(-1), LessThanOrEqualToInteger(1)]
+    public static int UnisonBasedPerfectIndex([NamedEnum] this PerfectableSimpleIntervalNumber pn) => pn switch
+    {
+        Fourth => -1,
+        Unison => 0,
+        Fifth => 1,
+        _ => throw UndefinedPerfectable,
+    };
+
+    /// <summary>
     /// Gets the <see cref="PerfectableSimpleIntervalNumber"/> that is the inversion of the current instance.
     /// </summary>
     /// <param name="pn"></param>
@@ -80,6 +96,23 @@ public static class SimpleIntervalNumbers
     #endregion
 
     #region Non-Perfectable
+    /// <summary>
+    /// Gets the circle of fifths index of a major interval numbered with the current instance relative to a
+    /// perfect unison.
+    /// </summary>
+    /// <param name="npn"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
+    [return: GreaterThanOrEqualToInteger(2), LessThanOrEqualToInteger(5)]
+    public static int UnisonBasedMajorIndex([NamedEnum] this NonPerfectableSimpleIntervalNumber npn) => npn switch
+    {
+        Second => 2,
+        Sixth => 3,
+        Third => 4,
+        Seventh => 5,
+        _ => throw UndefinedNonPerfectable,
+    };
+
     /// <summary>
     /// Gets the <see cref="NonPerfectableSimpleIntervalNumber"/> that is the inversion of the current instance.
     /// </summary>
@@ -117,6 +150,33 @@ public static class SimpleIntervalNumbers
 }
 
 /// <summary>
+/// Static functionality for the <see cref="PerfectableSimpleIntervalNumber"/> enum.
+/// </summary>
+public static class PerfectableSimpleIntervalNumbers
+{
+    /// <summary>
+    /// Gets the <see cref="PerfectableSimpleIntervalNumber"/> of a perfect interval with the circle-of-fifths perfect
+    /// unison-based index passed in.
+    /// </summary>
+    /// <param name="Index"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="Index"/> did not indicate any perfect interval.
+    /// </exception>
+    /// <seealso cref="SimpleIntervalNumbers.UnisonBasedPerfectIndex(PerfectableSimpleIntervalNumber)"/>
+    public static PerfectableSimpleIntervalNumber FromUnisonBasedPerfectIndex(
+        [GreaterThanOrEqualToInteger(-1), LessThanOrEqualToInteger(1)] int Index)
+        => Index switch
+        {
+            -1 => Fourth,
+            0 => Unison,
+            1 => Fifth,
+            _ => throw new ArgumentOutOfRangeException(
+                    nameof(Index), Index, "Index did not indicate any perfect interval."),
+        };
+}
+
+/// <summary>
 /// Represents the number of a perfectable simple interval.
 /// </summary>
 public enum PerfectableSimpleIntervalNumber : byte
@@ -135,6 +195,34 @@ public enum PerfectableSimpleIntervalNumber : byte
     /// Represents a fifth.
     /// </summary>
     Fifth = 5,
+}
+
+/// <summary>
+/// Static functionality for the <see cref="PerfectableSimpleIntervalNumber"/> enum.
+/// </summary>
+public static class NonPerfectableSimpleIntervalNumbers
+{
+    /// <summary>
+    /// Gets the <see cref="NonPerfectableSimpleIntervalNumber"/> of a major interval with the circle-of-fifths perfect
+    /// unison-based index passed in.
+    /// </summary>
+    /// <param name="Index"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="Index"/> did not indicate any major interval.
+    /// </exception>
+    /// <seealso cref="SimpleIntervalNumbers.UnisonBasedMajorIndex(NonPerfectableSimpleIntervalNumber)"/>
+    public static NonPerfectableSimpleIntervalNumber FromUnisonBasedMajorIndex(
+        [GreaterThanOrEqualToInteger(2), LessThanOrEqualToInteger(5)] int Index)
+        => Index switch
+        {
+            2 => Second,
+            3 => Sixth,
+            4 => Third,
+            5 => Seventh,
+            _ => throw new ArgumentOutOfRangeException(
+                    nameof(Index), Index, "Index did not indicate any major interval."),
+        };
 }
 
 /// <summary>
