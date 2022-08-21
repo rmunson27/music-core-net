@@ -101,5 +101,19 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
     /// <param name="letter"></param>
     public static implicit operator NoteClass(NoteLetter letter) => new(letter);
     #endregion
+
+    #region ToString
+    /// <summary>
+    /// Gets a string that represents the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString() => $"{nameof(NoteClass)} {{ Letter = {Letter}, Accidental = {Accidental} }}";
+
+    /// <summary>
+    /// Gets a musical notation string that represents the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public string ToMusicalNotationString() => $"{Letter}{Accidental.ToMusicalNotationString()}";
+    #endregion
     #endregion
 }

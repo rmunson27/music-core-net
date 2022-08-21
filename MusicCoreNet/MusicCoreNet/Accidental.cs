@@ -177,6 +177,25 @@ public readonly record struct Accidental
         0 => "Natural",
         > 0 => $"Sharp {{ Degree = {_intValue} }}",
     };
+
+    /// <summary>
+    /// Gets a musical notation string that represents the current <see cref="Accidental"/>.
+    /// </summary>
+    /// <returns></returns>
+    public string ToMusicalNotationString()
+    {
+        if (IsSharp(out int sharpDegree))
+        {
+            var result = new string('x', sharpDegree / 2);
+            if (sharpDegree % 2 != 0) result = '#' + result;
+            return result;
+        }
+        else if (IsFlat(out int flatDegree))
+        {
+            return new string('b', flatDegree);
+        }
+        else return string.Empty;
+    }
     #endregion
     #endregion
 }
