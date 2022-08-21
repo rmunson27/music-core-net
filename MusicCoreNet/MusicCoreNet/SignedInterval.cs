@@ -14,6 +14,23 @@ namespace Rem.Music;
 /// </summary>
 public sealed record class SignedInterval
 {
+    #region Constants
+    /// <summary>
+    /// A <see cref="SignedInterval"/> representing a perfect octave.
+    /// </summary>
+    public static readonly SignedInterval PerfectOctave = Interval.PerfectOctave;
+
+    /// <summary>
+    /// A <see cref="SignedInterval"/> representing a perfect unison.
+    /// </summary>
+    public static readonly SignedInterval PerfectUnison = Positive(SimpleIntervalBase.PerfectUnison);
+
+    /// <summary>
+    /// A <see cref="SignedInterval"/> representing a negative perfect octave.
+    /// </summary>
+    public static readonly SignedInterval NegativePerfectOctave = Negative(Interval.PerfectOctave);
+    #endregion
+
     #region Properties And Fields
     /// <summary>
     /// Gets the interval this instance represents.
