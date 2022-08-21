@@ -108,21 +108,45 @@ public readonly record struct SimpleIntervalNumber
     #region Classification
     #region Perfectable
     /// <summary>
-    /// Gets whether or not this instance is perfectable, setting the perfectable number value in an
-    /// <see langword="out"/> parameter if so.
+    /// Gets whether or not this instance is perfectable, setting <paramref name="Perfectable"/> to the perfectable
+    /// number value if so and setting <paramref name="NonPerfectable"/> to the non-perfectable value otherwise.
     /// </summary>
     /// <param name="Perfectable"></param>
+    /// <param name="NonPerfectable"></param>
     /// <returns></returns>
-    public bool IsPerfectable(out PerfectableSimpleIntervalNumber Perfectable)
+    public bool IsPerfectable(
+        out PerfectableSimpleIntervalNumber Perfectable, out NonPerfectableSimpleIntervalNumber NonPerfectable)
     {
         if (IsPerfectable())
         {
             Perfectable = InternalNumber.Perfectable;
+            NonPerfectable = default;
             return true;
         }
         else
         {
             Perfectable = default;
+            NonPerfectable = InternalNumber.NonPerfectable;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Gets whether or not this instance is perfectable, setting the perfectable number value in an
+    /// <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="Number"></param>
+    /// <returns></returns>
+    public bool IsPerfectable(out PerfectableSimpleIntervalNumber Number)
+    {
+        if (IsPerfectable())
+        {
+            Number = InternalNumber.Perfectable;
+            return true;
+        }
+        else
+        {
+            Number = default;
             return false;
         }
     }
@@ -139,18 +163,18 @@ public readonly record struct SimpleIntervalNumber
     /// Gets whether or not this instance is non-perfectable, setting the non-perfectable number value in an
     /// <see langword="out"/> parameter if so.
     /// </summary>
-    /// <param name="NonPerfectable"></param>
+    /// <param name="Number"></param>
     /// <returns></returns>
-    public bool IsNonPerfectable(out NonPerfectableSimpleIntervalNumber NonPerfectable)
+    public bool IsNonPerfectable(out NonPerfectableSimpleIntervalNumber Number)
     {
         if (IsNonPerfectable())
         {
-            NonPerfectable = InternalNumber.NonPerfectable;
+            Number = InternalNumber.NonPerfectable;
             return true;
         }
         else
         {
-            NonPerfectable = default;
+            Number = default;
             return false;
         }
     }

@@ -122,23 +122,70 @@ public readonly record struct IntervalQuality
 
     #region Classification
     #region Perfectability
+    #region Perfectable
     /// <summary>
-    /// Gets whether or not this instance is perfectable.
+    /// Gets whether or not this instance is perfectable, setting <paramref name="Perfectable"/> to the perfectable
+    /// quality if so and setting <paramref name="NonPerfectable"/> to the non-perfectable quality otherwise.
     /// </summary>
+    /// <param name="Perfectable"></param>
+    /// <param name="NonPerfectable"></param>
     /// <returns></returns>
-    public bool IsPerfectable() => Perfectability == Perfectable;
+    public bool IsPerfectable(
+        out PerfectableIntervalQuality Perfectable, out NonPerfectableIntervalQuality NonPerfectable)
+    {
+        if (IsPerfectable())
+        {
+            Perfectable = InternalQuality.Perfectable;
+            NonPerfectable = default;
+            return true;
+        }
+        else
+        {
+            Perfectable = default;
+            NonPerfectable = InternalQuality.NonPerfectable;
+            return false;
+        }
+    }
 
     /// <summary>
-    /// Gets whether or not this instance is perfectable, setting the perfectable interval quality details in an
+    /// Gets whether or not this instance is perfectable, setting the perfectable quality in an
     /// <see langword="out"/> parameter if so.
     /// </summary>
     /// <param name="Quality"></param>
     /// <returns></returns>
     public bool IsPerfectable(out PerfectableIntervalQuality Quality)
     {
-        if (Perfectability == Perfectable)
+        if (IsPerfectable())
         {
             Quality = InternalQuality.Perfectable;
+            return true;
+        }
+        else
+        {
+            Quality = default;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Gets whether or not this instance is perfectable.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPerfectable() => Perfectability == Perfectable;
+    #endregion
+
+    #region Non-Perfectable
+    /// <summary>
+    /// Gets whether or not this instance is non-perfectable, setting the non-perfectable quality in an
+    /// <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="Quality"></param>
+    /// <returns></returns>
+    public bool IsNonPerfectable(out NonPerfectableIntervalQuality Quality)
+    {
+        if (IsNonPerfectable())
+        {
+            Quality = InternalQuality.NonPerfectable;
             return true;
         }
         else
@@ -153,26 +200,7 @@ public readonly record struct IntervalQuality
     /// </summary>
     /// <returns></returns>
     public bool IsNonPerfectable() => Perfectability == NonPerfectable;
-
-    /// <summary>
-    /// Gets whether or not this instance is non-perfectable, setting the perfectable interval quality details in an
-    /// <see langword="out"/> parameter if so.
-    /// </summary>
-    /// <param name="Quality"></param>
-    /// <returns></returns>
-    public bool IsNonPerfectable(out NonPerfectableIntervalQuality Quality)
-    {
-        if (Perfectability == NonPerfectable)
-        {
-            Quality = InternalQuality.NonPerfectable;
-            return true;
-        }
-        else
-        {
-            Quality = default;
-            return false;
-        }
-    }
+    #endregion
     #endregion
 
     #region Specific Quality
