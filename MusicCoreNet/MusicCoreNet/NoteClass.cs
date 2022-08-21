@@ -89,6 +89,13 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
 
     #region Conversion
     /// <summary>
+    /// Gets the <see cref="Note"/> with the current <see cref="NoteClass"/> in the specified numbered octave.
+    /// </summary>
+    /// <param name="Octave"></param>
+    /// <returns></returns>
+    public Note WithOctave(int Octave) => new(this, Octave);
+
+    /// <summary>
     /// Implicitly converts a <see cref="NoteLetter"/> to an instance of this type.
     /// </summary>
     /// <param name="letter"></param>
