@@ -32,9 +32,9 @@ public static class CircleOfFifths
             else if (y is null) return 1;
 
             // Compare the qualities and then the numbers if the qualities are equal
-            return x.Quality.PerfectBasedIndex.CompareTo(y.Quality.PerfectBasedIndex) switch
+            return x.Quality.CircleOfFifthsIndex.CompareTo(y.Quality.CircleOfFifthsIndex) switch
             {
-                0 => x.Number.UnisonBasedIndex().CompareTo(y.Number.UnisonBasedIndex()),
+                0 => x.Number.CircleOfFifthsIndex().CompareTo(y.Number.CircleOfFifthsIndex()),
                 var comp => comp,
             };
         }

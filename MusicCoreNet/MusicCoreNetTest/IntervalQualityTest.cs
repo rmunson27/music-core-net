@@ -54,7 +54,7 @@ public class IntervalQualityTest
         });
 
     /// <summary>
-    /// Tests the <see cref="IntervalQuality.PerfectBasedIndex"/> property.
+    /// Tests the <see cref="IntervalQuality.CircleOfFifthsIndex"/> property.
     /// </summary>
     [TestMethod]
     public void TestPerfectBasedIndex()
@@ -62,15 +62,15 @@ public class IntervalQualityTest
         foreach (var (Quality, Index) in GeneralPerfectBasedIndexPairs)
         {
             Assert.AreEqual(
-                Index, Quality.PerfectBasedIndex,
-                $"Invalid {nameof(Quality.PerfectBasedIndex)} result from"
+                Index, Quality.CircleOfFifthsIndex,
+                $"Invalid {nameof(Quality.CircleOfFifthsIndex)} result from"
                     + $" ({(Quality.IsPerfectable() ? "Perfectable" : "Non-Perfectable")})"
                     + $" interval quality '{Quality}'.");
         }
     }
 
     /// <summary>
-    /// Tests the <see cref="IntervalQuality.FromPerfectBasedIndex(int)"/> factory method.
+    /// Tests the <see cref="IntervalQuality.FromCircleOfFifthsIndex(int)"/> factory method.
     /// </summary>
     [TestMethod]
     public void TestFromPerfectBasedIndex()
@@ -78,8 +78,8 @@ public class IntervalQualityTest
         foreach (var (Quality, Index) in GeneralPerfectBasedIndexPairs)
         {
             Assert.AreEqual(
-                Quality, IntervalQuality.FromPerfectBasedIndex(Index),
-                $"Invalid {nameof(IntervalQuality.FromPerfectBasedIndex)} result from index {Index}.");
+                Quality, IntervalQuality.FromCircleOfFifthsIndex(Index),
+                $"Invalid {nameof(IntervalQuality.FromCircleOfFifthsIndex)} result from index {Index}.");
         }
     }
     #endregion

@@ -86,20 +86,20 @@ public readonly record struct SimpleIntervalNumber
     #region Methods
     #region Factory
     /// <summary>
-    /// Gets the <see cref="SimpleIntervalNumber"/> of a perfect or major interval with the circle-of-fifths perfect
-    /// unison-based index passed in.
+    /// Gets the <see cref="SimpleIntervalNumber"/> of a major or perfect interval with the circle-of-fifths
+    /// perfect-unison-based index passed in.
     /// </summary>
     /// <param name="Index"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="Index"/> did not indicate any perfect or major interval.
     /// </exception>
-    /// <seealso cref="SimpleIntervalNumbers.UnisonBasedPerfectIndex(PerfectableSimpleIntervalNumber)"/>
-    public static SimpleIntervalNumber FromUnisonBasedIndex(
+    /// <see cref="CircleOfFifthsIndex"/>
+    public static SimpleIntervalNumber FromCircleOfFifthsIndex(
         [GreaterThanOrEqualToInteger(-1), LessThanOrEqualToInteger(5)] int Index) => Index switch
     {
-        >= -1 and <= 1 => PerfectableSimpleIntervalNumbers.FromUnisonBasedPerfectIndex(Index),
-        >= 2 and <= 5 => NonPerfectableSimpleIntervalNumbers.FromUnisonBasedMajorIndex(Index),
+        >= -1 and <= 1 => PerfectableSimpleIntervalNumbers.FromCircleOfFifthsIndex(Index),
+        >= 2 and <= 5 => NonPerfectableSimpleIntervalNumbers.FromCircleOfFifthsIndex(Index),
         _ => throw new ArgumentOutOfRangeException(
                 nameof(Index), Index, "Index did not indicate any perfect or major interval."),
     };
@@ -172,9 +172,9 @@ public readonly record struct SimpleIntervalNumber
     /// The interval used in the comparison will be perfect if the current instance is perfectable and major otherwise.
     /// </remarks>
     /// <returns></returns>
-    public int UnisonBasedIndex() => IsPerfectable()
-                                        ? InternalNumber.Perfectable.UnisonBasedPerfectIndex()
-                                        : InternalNumber.NonPerfectable.UnisonBasedMajorIndex();
+    public int CircleOfFifthsIndex() => IsPerfectable()
+                                            ? InternalNumber.Perfectable.CircleOfFifthsIndex()
+                                            : InternalNumber.NonPerfectable.CircleOfFifthsIndex();
 
     /// <summary>
     /// Gets the inversion of the current instance.
@@ -360,11 +360,12 @@ public static class SimpleIntervalNumbers
     /// Gets the circle of fifths index of a perfect interval numbered with the current instance relative to a
     /// perfect unison.
     /// </summary>
+    /// <remarks></remarks>
     /// <param name="pn"></param>
     /// <returns></returns>
     /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
     [return: GreaterThanOrEqualToInteger(-1), LessThanOrEqualToInteger(1)]
-    public static int UnisonBasedPerfectIndex([NamedEnum] this PerfectableSimpleIntervalNumber pn) => pn switch
+    public static int CircleOfFifthsIndex([NamedEnum] this PerfectableSimpleIntervalNumber pn) => pn switch
     {
         Fourth => -1,
         Unison => 0,
@@ -407,6 +408,8 @@ public static class SimpleIntervalNumbers
     #endregion
 
     #region Non-Perfectable
+
+
     /// <summary>
     /// Gets the circle of fifths index of a major interval numbered with the current instance relative to a
     /// perfect unison.
@@ -415,14 +418,15 @@ public static class SimpleIntervalNumbers
     /// <returns></returns>
     /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
     [return: GreaterThanOrEqualToInteger(2), LessThanOrEqualToInteger(5)]
-    public static int UnisonBasedMajorIndex([NamedEnum] this NonPerfectableSimpleIntervalNumber npn) => npn switch
-    {
-        Second => 2,
-        Sixth => 3,
-        Third => 4,
-        Seventh => 5,
-        _ => throw UndefinedNonPerfectable,
-    };
+    public static int CircleOfFifthsIndex([NamedEnum] this NonPerfectableSimpleIntervalNumber npn)
+        => npn switch
+        {
+            Second => 2,
+            Sixth => 3,
+            Third => 4,
+            Seventh => 5,
+            _ => throw UndefinedNonPerfectable,
+        };
 
     /// <summary>
     /// Gets the <see cref="NonPerfectableSimpleIntervalNumber"/> that is the inversion of the current instance.
@@ -474,8 +478,8 @@ public static class PerfectableSimpleIntervalNumbers
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="Index"/> did not indicate any perfect interval.
     /// </exception>
-    /// <seealso cref="SimpleIntervalNumbers.UnisonBasedPerfectIndex(PerfectableSimpleIntervalNumber)"/>
-    public static PerfectableSimpleIntervalNumber FromUnisonBasedPerfectIndex(
+    /// <seealso cref="SimpleIntervalNumbers.CircleOfFifthsIndex(PerfectableSimpleIntervalNumber)"/>
+    public static PerfectableSimpleIntervalNumber FromCircleOfFifthsIndex(
         [GreaterThanOrEqualToInteger(-1), LessThanOrEqualToInteger(1)] int Index)
         => Index switch
         {
@@ -522,8 +526,8 @@ public static class NonPerfectableSimpleIntervalNumbers
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="Index"/> did not indicate any major interval.
     /// </exception>
-    /// <seealso cref="SimpleIntervalNumbers.UnisonBasedMajorIndex(NonPerfectableSimpleIntervalNumber)"/>
-    public static NonPerfectableSimpleIntervalNumber FromUnisonBasedMajorIndex(
+    /// <seealso cref="SimpleIntervalNumbers.CircleOfFifthsIndex(NonPerfectableSimpleIntervalNumber)"/>
+    public static NonPerfectableSimpleIntervalNumber FromCircleOfFifthsIndex(
         [GreaterThanOrEqualToInteger(2), LessThanOrEqualToInteger(5)] int Index)
         => Index switch
         {

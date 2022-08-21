@@ -439,7 +439,7 @@ public abstract record class SimpleIntervalBase
         Throw.IfArgNull(rhs, nameof(rhs));
 
         #region Number
-        var newUnisonBasedNumberIndex = lhs.Number.UnisonBasedIndex() + rhs.Number.UnisonBasedIndex();
+        var newUnisonBasedNumberIndex = lhs.Number.CircleOfFifthsIndex() + rhs.Number.CircleOfFifthsIndex();
         var ubni_determinant = newUnisonBasedNumberIndex + 1; // Get rid of the -1 label for fourths
         var qualityShift = Maths.FloorDivRem(ubni_determinant, 7, out ubni_determinant);
         newUnisonBasedNumberIndex = ubni_determinant - 1; // Add back the -1 label for fourths
@@ -455,10 +455,10 @@ public abstract record class SimpleIntervalBase
         {
             Perfectable => new PerfectableSimpleIntervalBase(
                             PerfectableIntervalQuality.FromPerfectBasedIndex(newQualityIndex),
-                            PerfectableSimpleIntervalNumbers.FromUnisonBasedPerfectIndex(newUnisonBasedNumberIndex)),
+                            PerfectableSimpleIntervalNumbers.FromCircleOfFifthsIndex(newUnisonBasedNumberIndex)),
             _ => new NonPerfectableSimpleIntervalBase(
                     NonPerfectableIntervalQuality.FromMajorBasedIndex(newQualityIndex),
-                    NonPerfectableSimpleIntervalNumbers.FromUnisonBasedMajorIndex(newUnisonBasedNumberIndex)),
+                    NonPerfectableSimpleIntervalNumbers.FromCircleOfFifthsIndex(newUnisonBasedNumberIndex)),
         };
         #endregion
     }

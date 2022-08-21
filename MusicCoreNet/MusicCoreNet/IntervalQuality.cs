@@ -43,12 +43,7 @@ public readonly record struct IntervalQuality
     /// Gets an index that can be used to order <see cref="IntervalQuality"/> instances based on their positions in
     /// the circle of fifths relative to <see cref="PerfectableIntervalQuality.Perfect"/>.
     /// </summary>
-    /// <remarks>
-    /// Note that this is <i>not</i> equivalent to the behavior of the
-    /// <see cref="PerfectableIntervalQuality.PerfectBasedIndex"/> property, as non-perfectable qualities are included
-    /// in the ordering as well.
-    /// </remarks>
-    public int PerfectBasedIndex
+    public int CircleOfFifthsIndex
     {
         get
         {
@@ -115,8 +110,8 @@ public readonly record struct IntervalQuality
     /// Creates a new <see cref="IntervalQuality"/> from a corresponding perfect-based circle of fifths index.
     /// </summary>
     /// <returns></returns>
-    /// <seealso cref="PerfectBasedIndex"/>
-    public static IntervalQuality FromPerfectBasedIndex(int Index)
+    /// <seealso cref="CircleOfFifthsIndex"/>
+    public static IntervalQuality FromCircleOfFifthsIndex(int Index)
     {
         // Handle the simple hard-codeable cases
         switch (Index)
