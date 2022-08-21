@@ -489,5 +489,15 @@ public abstract record class SimpleIntervalBase
     /// <returns></returns>
     private protected abstract SimpleIntervalBase InversionInternal();
     #endregion
+
+    #region Conversion
+    /// <summary>
+    /// Gets the <see cref="Interval"/> equivalent to this instance with the number of additional octaves passed in.
+    /// </summary>
+    /// <param name="AdditionalOctaves"></param>
+    /// <returns></returns>
+    public Interval WithAdditionalOctaves([NonNegative] int AdditionalOctaves)
+        => new(this, Throw.IfArgNegative(AdditionalOctaves, nameof(AdditionalOctaves)));
+    #endregion
     #endregion
 }
