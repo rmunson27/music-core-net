@@ -18,11 +18,11 @@ public class NoteClassTest
     [TestMethod]
     public void TestDifference()
     {
-        TestDifferencePair(NoteClass.A().Natural(), NoteClass.C().Natural(), Intervals.Major().Sixth());
-        TestDifferencePair(NoteClass.F().Sharp(), NoteClass.C().Natural(), Intervals.Augmented().Fourth());
-        TestDifferencePair(NoteClass.G().Sharp(), NoteClass.B().Flat(), Intervals.Augmented().Sixth());
-        TestDifferencePair(NoteClass.B().Sharp(), NoteClass.D().Flat(), Intervals.Augmented(2).Sixth());
-        TestDifferencePair(NoteClass.E().Natural(), NoteClass.G().Sharp(), Intervals.Minor().Sixth());
+        TestDifferencePair(Notes.A().Natural(), Notes.C().Natural(), Intervals.Major().Sixth());
+        TestDifferencePair(Notes.F().Sharp(), Notes.C().Natural(), Intervals.Augmented().Fourth());
+        TestDifferencePair(Notes.G().Sharp(), Notes.B().Flat(), Intervals.Augmented().Sixth());
+        TestDifferencePair(Notes.B().Sharp(), Notes.D().Flat(), Intervals.Augmented(2).Sixth());
+        TestDifferencePair(Notes.E().Natural(), Notes.G().Sharp(), Intervals.Minor().Sixth());
     }
     
     private static void TestDifferencePair(NoteClass lhs, NoteClass rhs, SimpleIntervalBase expectedResult)

@@ -33,67 +33,23 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
         init => _letter = Throw.IfEnumPropSetUnnamed(value);
     }
     private readonly NoteLetter _letter = Throw.IfEnumArgUnnamed(Letter, nameof(Letter));
+
+    /// <summary>
+    /// Gets the circle of fifths index of this instance relative to C natural.
+    /// </summary>
+    internal int CircleOfFifthsIndexRelativeToC => Letter switch
+    {
+        NoteLetter.A => 3,
+        NoteLetter.B => 5,
+        NoteLetter.C => 0,
+        NoteLetter.D => 2,
+        NoteLetter.E => 4,
+        NoteLetter.F => -1,
+        _ => 1,
+    } + Accidental.IntValue * 7;
     #endregion
 
     #region Methods
-    #region Builder
-    /// <summary>
-    /// Gets a builder object that can be used to quickly create an 'A' <see cref="NoteClass"/> with a
-    /// given accidental.
-    /// </summary>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteClassBuilder A() => new(NoteLetter.A);
-
-    /// <summary>
-    /// Gets a builder object that can be used to quickly create a 'B' <see cref="NoteClass"/> with a
-    /// given accidental.
-    /// </summary>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteClassBuilder B() => new(NoteLetter.B);
-
-    /// <summary>
-    /// Gets a builder object that can be used to quickly create a 'C' <see cref="NoteClass"/> with a
-    /// given accidental.
-    /// </summary>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteClassBuilder C() => new(NoteLetter.C);
-
-    /// <summary>
-    /// Gets a builder object that can be used to quickly create a 'D' <see cref="NoteClass"/> with a
-    /// given accidental.
-    /// </summary>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteClassBuilder D() => new(NoteLetter.D);
-
-    /// <summary>
-    /// Gets a builder object that can be used to quickly create an 'E' <see cref="NoteClass"/> with a
-    /// given accidental.
-    /// </summary>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteClassBuilder E() => new(NoteLetter.E);
-
-    /// <summary>
-    /// Gets a builder object that can be used to quickly create an 'F' <see cref="NoteClass"/> with a
-    /// given accidental.
-    /// </summary>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteClassBuilder F() => new(NoteLetter.F);
-
-    /// <summary>
-    /// Gets a builder object that can be used to quickly create a 'G' <see cref="NoteClass"/> with a
-    /// given accidental.
-    /// </summary>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteClassBuilder G() => new(NoteLetter.G);
-    #endregion
-
     #region Arithmetic
     /// <summary>
     /// Gets the difference between the two <see cref="NoteClass"/> instances passed in as an instance
@@ -114,6 +70,21 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
                 => npi with { Quality = npi.Quality.Shift(lhs.Accidental.IntValue - rhs.Accidental.IntValue) },
         };
     }
+    #endregion
+
+    #region Equality
+    /// <summary>
+    /// Determines if the current instance is equal to another object of the same type.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool Equals(NoteClass other) => Letter == other.Letter && Accidental == other.Accidental;
+
+    /// <summary>
+    /// Gets a hash code for the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode() => HashCode.Combine(Letter, Accidental);
     #endregion
 
     #region Conversion
