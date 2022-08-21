@@ -52,32 +52,9 @@ public readonly record struct IntervalQuality
     /// Gets an index that can be used to order <see cref="IntervalQuality"/> instances based on their positions in
     /// the circle of fifths relative to <see cref="PerfectableIntervalQuality.Perfect"/>.
     /// </summary>
-    public int CircleOfFifthsIndex
-    {
-        get
-        {
-            if (IsPerfectable(out var pQuality))
-            {
-                // Expand the degrees of augmented or diminished to allow for the non-perfectable qualities to fit
-                // into the ordering
-                if (pQuality.IsAugmented(out var augDegree)) return augDegree * 2;
-                else if (pQuality.IsDiminished(out var dimDegree)) return -dimDegree * 2;
-
-                else return 0; // Must be perfect
-            }
-            else
-            {
-                var npQuality = InternalQuality.NonPerfectable;
-
-                // Expand the degrees of augmented or diminished to allow for the perfectable qualities to fit into
-                // the ordering
-                if (npQuality.IsAugmented(out var augDegree)) return augDegree * 2 + 1;
-                else if (npQuality.IsDiminished(out var dimDegree)) return -dimDegree * 2 - 1;
-
-                else return npQuality.IsMajor() ? 1 : -1;
-            }
-        }
-    }
+    public int CircleOfFifthsIndex => IsPerfectable()
+                                        ? InternalQuality.Perfectable.CircleOfFifthsIndex
+                                        : InternalQuality.NonPerfectable.CircleOfFifthsIndex;
 
     /// <summary>
     /// Gets the perfectability of this interval quality.
@@ -447,6 +424,23 @@ public readonly record struct PerfectableIntervalQuality
     /// Represents this quality as an index based on <see cref="Perfect"/>.
     /// </summary>
     public int PerfectBasedIndex { get; }
+
+    /// <summary>
+    /// Gets an index that can be used to order <see cref="IntervalQuality"/> instances based on their positions in
+    /// the circle of fifths relative to <see cref="PerfectableIntervalQuality.Perfect"/>.
+    /// </summary>
+    public int CircleOfFifthsIndex
+    {
+        get
+        {
+            // Expand the degrees of augmented or diminished to allow for the non-perfectable qualities to fit
+            // into the ordering
+            if (IsAugmented(out var augDegree)) return augDegree * 2;
+            else if (IsDiminished(out var dimDegree)) return -dimDegree * 2;
+
+            else return 0; // Must be perfect
+        }
+    }
     #endregion
 
     #region Constructor
@@ -608,6 +602,23 @@ public readonly record struct NonPerfectableIntervalQuality
     /// Represents this quality as an index based on <see cref="Major"/>.
     /// </summary>
     public int MajorBasedIndex { get; }
+
+    /// <summary>
+    /// Gets an index that can be used to order <see cref="IntervalQuality"/> instances based on their positions in
+    /// the circle of fifths relative to <see cref="PerfectableIntervalQuality.Perfect"/>.
+    /// </summary>
+    public int CircleOfFifthsIndex
+    {
+        get
+        {
+            // Expand the degrees of augmented or diminished to allow for the perfectable qualities to fit into
+            // the ordering
+            if (IsAugmented(out var augDegree)) return augDegree * 2 + 1;
+            else if (IsDiminished(out var dimDegree)) return -dimDegree * 2 - 1;
+
+            else return IsMajor() ? 1 : -1;
+        }
+    }
     #endregion
 
     #region Constructor
