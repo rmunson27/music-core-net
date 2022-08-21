@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rem.Core.Attributes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -76,6 +77,25 @@ public static class NoteLetters
         E => 7,
         F => 8,
         G => 10,
+        _ => throw Undefined,
+    };
+
+    /// <summary>
+    /// Gets an index representing the position of the current instance relative to <see cref="C"/>.
+    /// </summary>
+    /// <param name="letter"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
+    [return: NonNegative]
+    public static int CBasedIndex(this NoteLetter letter) => letter switch
+    {
+        C => 0,
+        D => 1,
+        E => 2,
+        F => 3,
+        G => 4,
+        A => 5,
+        B => 6,
         _ => throw Undefined,
     };
 
