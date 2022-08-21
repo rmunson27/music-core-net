@@ -67,7 +67,12 @@ public readonly record struct Interval(
 {
     #region Constants
     /// <summary>
-    /// A <see cref="Interval"/> representing a perfect octave.
+    /// An <see cref="Interval"/> representing a perfect unison.
+    /// </summary>
+    public static readonly Interval PerfectUnison = SimpleIntervalBase.PerfectUnison;
+
+    /// <summary>
+    /// An <see cref="Interval"/> representing a perfect octave.
     /// </summary>
     public static readonly Interval PerfectOctave = new(SimpleIntervalBase.PerfectUnison, AdditionalOctaves: 1);
     #endregion

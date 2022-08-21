@@ -23,7 +23,7 @@ public sealed record class SignedInterval
     /// <summary>
     /// A <see cref="SignedInterval"/> representing a perfect unison.
     /// </summary>
-    public static readonly SignedInterval PerfectUnison = Positive(SimpleIntervalBase.PerfectUnison);
+    public static readonly SignedInterval PerfectUnison = Interval.PerfectUnison;
 
     /// <summary>
     /// A <see cref="SignedInterval"/> representing a negative perfect octave.
