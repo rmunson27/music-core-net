@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,34 @@ namespace RemTest.Music;
 [TestClass]
 public class SimpleIntervalBaseTest
 {
+    /// <summary>
+    /// A series of pairs of <see cref="SimpleIntervalBase"/> instances and their associated perfect unison-based
+    /// circle of fifths indexes.
+    /// </summary>
+    private static readonly ImmutableArray<(SimpleIntervalBase Interval, int Index)> PerfectUnisonBasedIndexPairs
+        = ImmutableArray.CreateRange(new (SimpleIntervalBase, int)[]
+        {
+            (SimpleIntervalBase.PerfectUnison, 0),
+            (Intervals.Minor().Second(), -5),
+            (Intervals.Major().Second(), 2),
+            (Intervals.Augmented(2).Sixth(), 17),
+            (Intervals.Diminished().Third(), -10),
+        });
+
+    /// <summary>
+    /// Tests the <see cref="SimpleIntervalBase.CircleOfFifthsIndex"/> property.
+    /// </summary>
+    [TestMethod]
+    public void TestPerfectUnisonBasedIndex()
+    {
+        foreach (var (Interval, Index) in PerfectUnisonBasedIndexPairs)
+        {
+            Assert.AreEqual(
+                Index, Interval.CircleOfFifthsIndex,
+                $"Invalid '{Interval}' {nameof(SimpleIntervalBase.CircleOfFifthsIndex)} value.");
+        }
+    }
+
     /// <summary>
     /// Tests negation of <see cref="SimpleIntervalBase"/> instances.
     /// </summary>

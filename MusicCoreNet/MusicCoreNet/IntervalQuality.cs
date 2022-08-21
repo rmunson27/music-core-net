@@ -40,6 +40,15 @@ public readonly record struct IntervalQuality
 {
     #region Properties And Fields
     /// <summary>
+    /// Gets the value of the <see cref="PerfectableIntervalQuality.PerfectBasedIndex"/> or
+    /// <see cref="NonPerfectableIntervalQuality.MajorBasedIndex"/> property depending on which type is
+    /// represented internally.
+    /// </summary>
+    internal int PerfectOrMajorBasedIndex => IsPerfectable()
+                                                ? InternalQuality.Perfectable.PerfectBasedIndex
+                                                : InternalQuality.NonPerfectable.MajorBasedIndex;
+
+    /// <summary>
     /// Gets an index that can be used to order <see cref="IntervalQuality"/> instances based on their positions in
     /// the circle of fifths relative to <see cref="PerfectableIntervalQuality.Perfect"/>.
     /// </summary>

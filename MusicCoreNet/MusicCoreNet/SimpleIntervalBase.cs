@@ -262,6 +262,11 @@ public abstract record class SimpleIntervalBase
     private protected abstract SimpleIntervalNumber NumberInternal { get; }
 
     /// <summary>
+    /// Gets the circle of fifths index of this instance relative to a perfect unison.
+    /// </summary>
+    public int CircleOfFifthsIndex => Number.CircleOfFifthsIndex() + Quality.PerfectOrMajorBasedIndex * 7;
+
+    /// <summary>
     /// Gets the quality of the interval represented by the current instance.
     /// </summary>
     public IntervalQuality Quality => QualityInternal;
