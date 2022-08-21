@@ -237,9 +237,19 @@ public abstract record class SimpleIntervalBase
 {
     #region Constants
     /// <summary>
+    /// A <see cref="SimpleIntervalBase"/> representing a perfect fourth.
+    /// </summary>
+    public static readonly PerfectableSimpleIntervalBase PerfectFourth = Intervals.Perfect().Fourth();
+
+    /// <summary>
     /// A <see cref="SimpleIntervalBase"/> representing a perfect unison.
     /// </summary>
     public static readonly PerfectableSimpleIntervalBase PerfectUnison = Intervals.Perfect().Unison();
+
+    /// <summary>
+    /// A <see cref="SimpleIntervalBase"/> representing a perfect fifth.
+    /// </summary>
+    public static readonly PerfectableSimpleIntervalBase PerfectFifth = Intervals.Perfect().Fifth();
     #endregion
 
     #region Properties
