@@ -1,4 +1,5 @@
 ﻿using Rem.Core.ComponentModel;
+using Rem.Music.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -63,6 +64,21 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
     #endregion
 
     #region Methods
+    #region Factory
+    /// <summary>
+    /// Creates a new <see cref="NotePitchInfo"/> from the corresponding index relative to <see cref="C0"/>.
+    /// </summary>
+    /// <param name="Index"></param>
+    /// <returns></returns>
+    /// <seealso cref="C0"/>
+    /// <seealso cref="C0Index"/>
+    public static NotePitchInfo FromC0Index(int Index)
+    {
+        var octave = Maths.FloorDivRem(Index, 12, out var classCRelativeIndex);
+        return new(NotePitchClasses.FromCRelativeIndex(classCRelativeIndex), octave);
+    }
+    #endregion
+
     #region Arithmetic
     /// <summary>
     /// Gets the difference between the pitches represented by the two <see cref="NotePitchInfo"/> instances passed in

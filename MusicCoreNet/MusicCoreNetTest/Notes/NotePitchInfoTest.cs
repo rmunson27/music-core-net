@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,41 @@ namespace RemTest.Music;
 [TestClass]
 public class NotePitchInfoTest
 {
+    private static readonly ImmutableArray<(NotePitchInfo Pitch, int Index)> C0IndexPairs
+        = ImmutableArray.CreateRange(new[]
+        {
+            (NotePitchInfo.C0, 0),
+            (NotePitchClass.A.WithOctave(4), 57),
+            (NotePitchClass.GA.WithOctave(9), 116),
+            (NotePitchClass.B.WithOctave(6), 83),
+        });
+
+    /// <summary>
+    /// Tests the <see cref="NotePitchInfo.FromC0Index(int)"/> factory method.
+    /// </summary>
+    [TestMethod]
+    public void TestFromC0Index()
+    {
+        foreach (var (Pitch, Index) in C0IndexPairs)
+        {
+            Assert.AreEqual(
+                Pitch, NotePitchInfo.FromC0Index(Index),
+                $"Invalid {nameof(NotePitchInfo.FromC0Index)} result for index {Index}.");
+        }
+    }
+
+    /// <summary>
+    /// Tests the <see cref="NotePitchInfo.C0Index"/> property.
+    /// </summary>
+    [TestMethod]
+    public void TestC0Index()
+    {
+        foreach (var (Pitch, Index) in C0IndexPairs)
+        {
+            Assert.AreEqual(Index, Pitch.C0Index, $"Invalid {Pitch} C0 index.");
+        }
+    }
+
     /// <summary>
     /// Tests the <see cref="NotePitchInfo.Frequency"/> method.
     /// </summary>
