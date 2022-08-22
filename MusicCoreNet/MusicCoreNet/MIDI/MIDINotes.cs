@@ -169,6 +169,18 @@ public static class MIDINotes
     #endregion
     #endregion
 
+    #region Factories
+    /// <summary>
+    /// Converts a MIDI number to the equivalent <see cref="NotePitchInfo"/>.
+    /// </summary>
+    /// <remarks>
+    /// This method will treat numbers not in the MIDI range as well as numbers that are.
+    /// </remarks>
+    /// <param name="Number"></param>
+    /// <returns></returns>
+    public static NotePitchInfo PitchFromNumber(int Number) => NotePitchInfo.FromC0Index(Number + MinPitch.C0Index);
+    #endregion
+
     #region Helpers
     /// <summary>
     /// Determines if the integer passed in is in the MIDI number range.

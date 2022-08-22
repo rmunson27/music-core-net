@@ -35,6 +35,20 @@ public class MIDINotesTest
         });
 
     /// <summary>
+    /// Tests the <see cref="MIDINotes.PitchFromNumber(int)"/> factory method.
+    /// </summary>
+    [TestMethod]
+    public void TestPitchFromNumber()
+    {
+        foreach (var (Pitch, Number) in MIDINumberPairs)
+        {
+            Assert.AreEqual(
+                Pitch, MIDINotes.PitchFromNumber(Number),
+                $"Invalid {nameof(MIDINotes.PitchFromNumber)} result for number {Number}.");
+        }
+    }
+
+    /// <summary>
     /// Tests the <see cref="MIDINotes.MIDINumber(NotePitchInfo)"/> extension method.
     /// </summary>
     [TestMethod]
