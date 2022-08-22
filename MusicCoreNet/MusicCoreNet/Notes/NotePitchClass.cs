@@ -1,12 +1,17 @@
-﻿using System;
+﻿using Rem.Core.Attributes;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Rem.Music;
 
-internal static class NotePitchClasses
+/// <summary>
+/// Extension methods and other static functionality for the <see cref="NotePitchClass"/> enum.
+/// </summary>
+public static class NotePitchClasses
 {
     /// <summary>
     /// Gets a <see cref="NotePitchClass"/> from an index relative to <see cref="NotePitchClass.C"/>.
@@ -16,9 +21,20 @@ internal static class NotePitchClasses
     /// </remarks>
     /// <param name="index"></param>
     /// <returns></returns>
-    public static NotePitchClass FromCRelativeIndex(int index)
-        // A relative, but +15 (+3 so A is at 0, +12 so is positive), %12 (so is in range)
+    internal static NotePitchClass FromCRelativeIndex(int index)
+        // Convert to A relative: +15 (+3 so A is at 0, +12 so is positive), %12 (so is in range)
         => (NotePitchClass)((index + 15) % 12);
+
+    /// <summary>
+    /// Gets the <see cref="NotePitchInfo"/> equivalent to the current <see cref="NotePitchClass"/> equipped with
+    /// the supplied octave number.
+    /// </summary>
+    /// <param name="pitchClass"></param>
+    /// <param name="Octave"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
+    public static NotePitchInfo WithOctave([NamedEnum] this NotePitchClass pitchClass, int Octave)
+        => new(Throw.IfEnumArgUnnamed(pitchClass, nameof(pitchClass)), Octave);
 }
 
 /// <summary>
