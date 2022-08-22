@@ -81,7 +81,7 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
 
     #region Arithmetic
     /// <summary>
-    /// Adds the number of half steps passed in to the <see cref="NotePitchInfo"/> passed in.
+    /// Adds the number of semitones passed in to the <see cref="NotePitchInfo"/> passed in.
     /// </summary>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
@@ -89,7 +89,7 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
     public static NotePitchInfo operator +(int lhs, NotePitchInfo rhs) => rhs + lhs;
 
     /// <summary>
-    /// Subtracts the number of half steps passed in to the <see cref="NotePitchInfo"/> passed in.
+    /// Subtracts the number of semitones passed in to the <see cref="NotePitchInfo"/> passed in.
     /// </summary>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
@@ -97,7 +97,7 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
     public static NotePitchInfo operator -(NotePitchInfo lhs, int rhs) => lhs + (-rhs);
 
     /// <summary>
-    /// Adds the number of half steps passed in to the <see cref="NotePitchInfo"/> passed in.
+    /// Adds the number of semitones passed in to the <see cref="NotePitchInfo"/> passed in.
     /// </summary>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
@@ -105,8 +105,8 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
     public static NotePitchInfo operator +(NotePitchInfo lhs, int rhs) => FromC0Index(lhs.C0Index + rhs);
 
     /// <summary>
-    /// Gets the difference between the pitches represented by the two <see cref="NotePitchInfo"/> instances passed in
-    /// in half steps.
+    /// Gets the difference between the pitches represented by the two supplied <see cref="NotePitchInfo"/> instances
+    /// in semitones.
     /// </summary>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
