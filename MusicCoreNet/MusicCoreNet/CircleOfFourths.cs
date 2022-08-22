@@ -9,12 +9,12 @@ namespace Rem.Music;
 /// <summary>
 /// Helper functionality relating to the circle of fifths.
 /// </summary>
-///<seealso cref="CircleOfFourths"/>
-public static class CircleOfFifths
+///<seealso cref="CircleOfFifths"/>
+public static class CircleOfFourths
 {
     /// <summary>
     /// A comparer that can be used to compare <see cref="NoteClass"/> instances based on their position in
-    /// the circle of fifths.
+    /// the circle of fourths.
     /// </summary>
     public static readonly IComparer<NoteClass> NoteClassComparer = new NoteClassComparerType();
 
@@ -23,7 +23,7 @@ public static class CircleOfFifths
         /// <inheritdoc/>
         public int Compare(NoteClass x, NoteClass y)
         {
-            return x.CircleOfFifthsIndexRelativeToC.CompareTo(y.CircleOfFifthsIndexRelativeToC);
+            return y.CircleOfFifthsIndexRelativeToC.CompareTo(x.CircleOfFifthsIndexRelativeToC);
         }
     }
 }
