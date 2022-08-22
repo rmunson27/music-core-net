@@ -65,6 +65,9 @@ public static class NoteLetters
     /// Gets the number of half steps from the C note below or equal to the natural note represented by the current
     /// <see cref="NoteLetter"/> instance to the current instance.
     /// </summary>
+    /// <remarks>
+    /// This is important for computing octave information.
+    /// </remarks>
     /// <param name="letter"></param>
     /// <returns></returns>
     /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
