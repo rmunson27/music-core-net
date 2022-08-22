@@ -91,4 +91,16 @@ public class NoteTest
                     + $" to {First.ToMusicalNotationString()}.");
         }
     }
+
+    /// <summary>
+    /// Tests the <see cref="Note.Pitch"/> property.
+    /// </summary>
+    [TestMethod]
+    public void TestPitch()
+    {
+        Assert.AreEqual(new(NotePitchClass.A, 4), Notes.A().Natural().WithOctave(4).Pitch);
+        Assert.AreEqual(new(NotePitchClass.DE, 2), Notes.C().Sharp(3).WithOctave(2).Pitch);
+        Assert.AreEqual(new(NotePitchClass.B, 3), Notes.C().Flat().WithOctave(4).Pitch);
+        Assert.AreEqual(new(NotePitchClass.C, 4), Notes.B().Sharp().WithOctave(3).Pitch);
+    }
 }

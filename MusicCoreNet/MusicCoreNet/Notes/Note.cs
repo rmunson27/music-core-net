@@ -24,6 +24,20 @@ public readonly record struct Note(NoteClass Class, int Octave)
     /// Gets the accidental of this note.
     /// </summary>
     public Accidental Accidental => Class.Accidental;
+
+    /// <summary>
+    /// Gets info for the pitch this note represents.
+    /// </summary>
+    public NotePitchInfo Pitch
+    {
+        get
+        {
+            var octaveFixup = Maths.FloorDivRem(
+                                Class.Letter.CRelativeHalfSteps() + Class.Accidental.IntValue, 12,
+                                out var cRelativeClassValue);
+            return new(NotePitchClasses.FromCRelativeIndex(cRelativeClassValue), Octave + octaveFixup);
+        }
+    }
     #endregion
 
     #region Methods
@@ -46,12 +60,7 @@ public readonly record struct Note(NoteClass Class, int Octave)
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
-    public bool IsEnharmonicallyEquivalentTo(Note other)
-        => Class.PitchClass == other.Class.PitchClass
-            && OctaveWithPitchClassOverflow == other.OctaveWithPitchClassOverflow;
-
-    private int OctaveWithPitchClassOverflow
-        => Octave + Maths.FloorDiv(Class.Letter.CRelativeHalfSteps() + Class.Accidental.IntValue, 12);
+    public bool IsEnharmonicallyEquivalentTo(Note other) => Pitch == other.Pitch;
     #endregion
 
     #region Arithmetic

@@ -6,6 +6,21 @@ using System.Threading.Tasks;
 
 namespace Rem.Music;
 
+internal static class NotePitchClasses
+{
+    /// <summary>
+    /// Gets a <see cref="NotePitchClass"/> from an index relative to <see cref="NotePitchClass.C"/>.
+    /// </summary>
+    /// <remarks>
+    /// This is important for computing octave information.
+    /// </remarks>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    public static NotePitchClass FromCRelativeIndex(int index)
+        // A relative, but +15 (+3 so A is at 0, +12 so is positive), %12 (so is in range)
+        => (NotePitchClass)((index + 15) % 12);
+}
+
 /// <summary>
 /// Represents the pitch class of a note, up to octave difference.
 /// </summary>
