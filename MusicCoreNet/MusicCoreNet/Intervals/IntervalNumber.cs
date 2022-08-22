@@ -375,11 +375,10 @@ public readonly record struct SimpleIntervalNumber
 }
 
 /// <summary>
-/// Static functionality relating to simple interval numbers.
+/// Static functionality for the <see cref="PerfectableSimpleIntervalNumber"/> enum.
 /// </summary>
-public static class SimpleIntervalNumbers
+public static class PerfectableSimpleIntervalNumbers
 {
-    #region Perfectable
     /// <summary>
     /// Gets the circle of fifths index of a perfect interval numbered with the current instance relative to a
     /// perfect unison.
@@ -394,7 +393,7 @@ public static class SimpleIntervalNumbers
         Fourth => -1,
         Unison => 0,
         Fifth => 1,
-        _ => throw UndefinedPerfectable,
+        _ => throw Undefined,
     };
 
     /// <summary>
@@ -409,7 +408,7 @@ public static class SimpleIntervalNumbers
             Unison => Unison,
             Fourth => Fifth,
             Fifth => Fourth,
-            _ => throw UndefinedPerfectable,
+            _ => throw Undefined,
         };
 
     /// <summary>
@@ -424,75 +423,9 @@ public static class SimpleIntervalNumbers
         Unison => 0,
         Fourth => 5,
         Fifth => 7,
-        _ => throw UndefinedPerfectable,
+        _ => throw Undefined,
     };
 
-    private static InvalidEnumArgumentException UndefinedPerfectable
-        => new($"Undefined {nameof(PerfectableSimpleIntervalNumber)} value.");
-    #endregion
-
-    #region Non-Perfectable
-
-
-    /// <summary>
-    /// Gets the circle of fifths index of a major interval numbered with the current instance relative to a
-    /// perfect unison.
-    /// </summary>
-    /// <param name="npn"></param>
-    /// <returns></returns>
-    /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
-    [return: GreaterThanOrEqualToInteger(2), LessThanOrEqualToInteger(5)]
-    public static int CircleOfFifthsIndex([NamedEnum] this NonPerfectableSimpleIntervalNumber npn)
-        => npn switch
-        {
-            Second => 2,
-            Sixth => 3,
-            Third => 4,
-            Seventh => 5,
-            _ => throw UndefinedNonPerfectable,
-        };
-
-    /// <summary>
-    /// Gets the <see cref="NonPerfectableSimpleIntervalNumber"/> that is the inversion of the current instance.
-    /// </summary>
-    /// <param name="npn"></param>
-    /// <returns></returns>
-    /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
-    public static NonPerfectableSimpleIntervalNumber Inversion([NamedEnum] this NonPerfectableSimpleIntervalNumber npn)
-        => npn switch
-        {
-            Second => Seventh,
-            Third => Sixth,
-            Sixth => Third,
-            Seventh => Second,
-            _ => throw UndefinedNonPerfectable,
-        };
-
-    /// <summary>
-    /// Gets the number of half steps spanning the major version of the current
-    /// <see cref="NonPerfectableSimpleIntervalNumber"/> passed in.
-    /// </summary>
-    /// <param name="npn"></param>
-    /// <returns></returns>
-    [return: Positive] public static int MajorHalfSteps(this NonPerfectableSimpleIntervalNumber npn) => npn switch
-    {
-        Second => 2,
-        Third => 4,
-        Sixth => 9,
-        Seventh => 11,
-        _ => throw UndefinedNonPerfectable,
-    };
-
-    private static InvalidEnumArgumentException UndefinedNonPerfectable
-        => new($"Undefined {nameof(NonPerfectableSimpleIntervalNumber)} value.");
-    #endregion
-}
-
-/// <summary>
-/// Static functionality for the <see cref="PerfectableSimpleIntervalNumber"/> enum.
-/// </summary>
-public static class PerfectableSimpleIntervalNumbers
-{
     /// <summary>
     /// Gets the <see cref="PerfectableSimpleIntervalNumber"/> of a perfect interval with the circle-of-fifths perfect
     /// unison-based index passed in.
@@ -513,6 +446,9 @@ public static class PerfectableSimpleIntervalNumbers
             _ => throw new ArgumentOutOfRangeException(
                     nameof(Index), Index, "Index did not indicate any perfect interval."),
         };
+
+    private static InvalidEnumArgumentException Undefined
+        => new($"Undefined {nameof(PerfectableSimpleIntervalNumber)} value.");
 }
 
 /// <summary>
@@ -542,6 +478,56 @@ public enum PerfectableSimpleIntervalNumber : byte
 public static class NonPerfectableSimpleIntervalNumbers
 {
     /// <summary>
+    /// Gets the circle of fifths index of a major interval numbered with the current instance relative to a
+    /// perfect unison.
+    /// </summary>
+    /// <param name="npn"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
+    [return: GreaterThanOrEqualToInteger(2), LessThanOrEqualToInteger(5)]
+    public static int CircleOfFifthsIndex([NamedEnum] this NonPerfectableSimpleIntervalNumber npn)
+        => npn switch
+        {
+            Second => 2,
+            Sixth => 3,
+            Third => 4,
+            Seventh => 5,
+            _ => throw Undefined,
+        };
+
+    /// <summary>
+    /// Gets the <see cref="NonPerfectableSimpleIntervalNumber"/> that is the inversion of the current instance.
+    /// </summary>
+    /// <param name="npn"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
+    public static NonPerfectableSimpleIntervalNumber Inversion([NamedEnum] this NonPerfectableSimpleIntervalNumber npn)
+        => npn switch
+        {
+            Second => Seventh,
+            Third => Sixth,
+            Sixth => Third,
+            Seventh => Second,
+            _ => throw Undefined,
+        };
+
+    /// <summary>
+    /// Gets the number of half steps spanning the major version of the current
+    /// <see cref="NonPerfectableSimpleIntervalNumber"/> passed in.
+    /// </summary>
+    /// <param name="npn"></param>
+    /// <returns></returns>
+    [return: Positive]
+    public static int MajorHalfSteps(this NonPerfectableSimpleIntervalNumber npn) => npn switch
+    {
+        Second => 2,
+        Third => 4,
+        Sixth => 9,
+        Seventh => 11,
+        _ => throw Undefined,
+    };
+
+    /// <summary>
     /// Gets the <see cref="NonPerfectableSimpleIntervalNumber"/> of a major interval with the circle-of-fifths perfect
     /// unison-based index passed in.
     /// </summary>
@@ -562,6 +548,9 @@ public static class NonPerfectableSimpleIntervalNumbers
             _ => throw new ArgumentOutOfRangeException(
                     nameof(Index), Index, "Index did not indicate any major interval."),
         };
+
+    private static InvalidEnumArgumentException Undefined
+        => new($"Undefined {nameof(NonPerfectableSimpleIntervalNumber)} value.");
 }
 
 /// <summary>
