@@ -9,10 +9,15 @@ using System.Threading.Tasks;
 namespace Rem.Music;
 
 /// <summary>
-/// General static functionality relating to interval qualities.
+/// Represents a general interval quality that can be either perfectable or non-perfectable.
 /// </summary>
-public static class IntervalQualities
+/// <remarks>
+/// The default value of this struct represents a perfect interval quality.
+/// </remarks>
+public readonly record struct IntervalQuality
+    : IEquatable<PerfectableIntervalQuality>, IEquatable<NonPerfectableIntervalQuality>
 {
+    #region Constants
     /// <summary>
     /// Gets a minor interval quality.
     /// </summary>
@@ -27,17 +32,8 @@ public static class IntervalQualities
     /// Gets a major interval quality.
     /// </summary>
     public static NonPerfectableIntervalQuality Major => NonPerfectableIntervalQuality.Major;
-}
+    #endregion
 
-/// <summary>
-/// Represents a general interval quality that can be either perfectable or non-perfectable.
-/// </summary>
-/// <remarks>
-/// The default value of this struct represents a perfect interval quality.
-/// </remarks>
-public readonly record struct IntervalQuality
-    : IEquatable<PerfectableIntervalQuality>, IEquatable<NonPerfectableIntervalQuality>
-{
     #region Properties And Fields
     /// <summary>
     /// Gets the value of the <see cref="PerfectableIntervalQuality.PerfectBasedIndex"/> or
