@@ -70,13 +70,7 @@ public static class MIDINotes
     /// </exception>
     /// <seealso cref="MaxPitch"/>
     /// <seealso cref="MinPitch"/>
-    public static int MIDINumberInRange(this Note note)
-    {
-        var result = note.MIDINumber();
-        return IsNumberInRange(result)
-                ? result
-                : throw new InvalidOperationException($"Note is not in the MIDI range.");
-    }
+    public static int MIDINumberInRange(this Note note) => note.Pitch.MIDINumberInRange();
 
     /// <summary>
     /// Determines whether or not the current instance is in the MIDI range.
@@ -97,7 +91,7 @@ public static class MIDINotes
     /// <returns></returns>
     /// <seealso cref="MaxPitch"/>
     /// <seealso cref="MinPitch"/>
-    public static int MIDINumber(this Note note) => note.Pitch - MinPitch;
+    public static int MIDINumber(this Note note) => note.Pitch.MIDINumber();
     #endregion
 
     #region NotePitchInfo
