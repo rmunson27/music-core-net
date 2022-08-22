@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rem.Core.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -70,6 +71,7 @@ public static class MIDINotes
     /// </exception>
     /// <seealso cref="MaxPitch"/>
     /// <seealso cref="MinPitch"/>
+    [return: GreaterThanOrEqualToInteger(MinNumber), LessThanOrEqualToInteger(MaxNumber)]
     public static int MIDINumberInRange(this Note note) => note.Pitch.MIDINumberInRange();
 
     /// <summary>
@@ -132,6 +134,7 @@ public static class MIDINotes
     /// </exception>
     /// <seealso cref="MaxPitch"/>
     /// <seealso cref="MinPitch"/>
+    [return: GreaterThanOrEqualToInteger(MinNumber), LessThanOrEqualToInteger(MaxNumber)]
     public static int MIDINumberInRange(this NotePitchInfo info)
     {
         var result = info.MIDINumber();
