@@ -14,6 +14,18 @@ namespace Rem.Music;
 public static class NotePitchClasses
 {
     /// <summary>
+    /// Gets the index of the current <see cref="NotePitchClass"/> instance relative to <see cref="NotePitchClass.C"/>.
+    /// </summary>
+    /// <remarks>
+    /// This is important for computing octave information.
+    /// </remarks>
+    /// <param name="pitchClass"></param>
+    /// <returns></returns>
+    internal static int CRelativeIndex(this NotePitchClass pitchClass)
+        // Convert from A relative: +9 (-3 so C is at 0, +12 so is positive), %12 (so is in range)
+        => ((int)pitchClass + 9) % 12;
+
+    /// <summary>
     /// Gets a <see cref="NotePitchClass"/> from an index relative to <see cref="NotePitchClass.C"/>.
     /// </summary>
     /// <remarks>
