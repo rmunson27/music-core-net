@@ -49,6 +49,16 @@ public class NotePitchInfoTest
     }
 
     /// <summary>
+    /// Tests the half-step addition operator provided by the <see cref="NotePitchInfo"/> struct.
+    /// </summary>
+    [TestMethod]
+    public void TestAddition()
+    {
+        Assert.AreEqual(NotePitchClass.B.WithOctave(4), NotePitchInfo.ConcertPitch + 2);
+        Assert.AreEqual(NotePitchClass.DE.WithOctave(6), NotePitchClass.C.WithOctave(4) + 27);
+    }
+
+    /// <summary>
     /// Tests the <see cref="NotePitchInfo.Frequency"/> method.
     /// </summary>
     [TestMethod]
@@ -79,10 +89,10 @@ public class NotePitchInfoTest
     }
 
     /// <summary>
-    /// Tests the subtraction operator provided by the <see cref="NotePitchInfo"/> struct.
+    /// Tests the difference subtraction operator provided by the <see cref="NotePitchInfo"/> struct.
     /// </summary>
     [TestMethod]
-    public void TestSubtraction()
+    public void TestDifference()
     {
         Assert.AreEqual(0, NotePitchInfo.ConcertPitch - NotePitchInfo.ConcertPitch);
         Assert.AreEqual(10, NotePitchInfo.ConcertPitch - NotePitchClass.B.WithOctave(3));
