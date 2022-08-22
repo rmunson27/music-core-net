@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rem.Music.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,6 +40,18 @@ public readonly record struct Note(NoteClass Class, int Octave)
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode() => HashCode.Combine(Class, Octave);
+
+    /// <summary>
+    /// Determines if this <see cref="Note"/> is enharmonically equivalent to another.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool IsEnharmonicallyEquivalentTo(Note other)
+        => Class.PitchClass == other.Class.PitchClass
+            && OctaveWithPitchClassOverflow == other.OctaveWithPitchClassOverflow;
+
+    private int OctaveWithPitchClassOverflow
+        => Octave + Maths.FloorDiv(Class.Letter.CRelativeHalfSteps() + Class.Accidental.IntValue, 12);
     #endregion
 
     #region Arithmetic

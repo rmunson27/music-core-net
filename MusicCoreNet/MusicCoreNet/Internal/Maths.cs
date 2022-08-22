@@ -22,9 +22,22 @@ internal static class Maths
     public static int FloorDivRem(int n, int d, out int remainder)
     {
         remainder = n % d;
-        var quot = n / d;
-        if (n < 0 && remainder != 0) { remainder += d; quot--; }
-        return quot;
+        var quotient = n / d;
+        if (n < 0 && remainder != 0) { remainder += d; quotient--; }
+        return quotient;
+    }
+
+    /// <summary>
+    /// Computes the floor quotient of the numerator and denominator passed in.
+    /// </summary>
+    /// <param name="n"></param>
+    /// <param name="d"></param>
+    /// <returns></returns>
+    public static int FloorDiv(int n, int d)
+    {
+        var quotient = n / d;
+        if (n < 0 && n % d != 0) quotient--;
+        return quotient;
     }
 
     /// <summary>

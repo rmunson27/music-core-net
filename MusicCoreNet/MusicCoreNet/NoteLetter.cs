@@ -62,13 +62,24 @@ public static class NoteLetters
     }
 
     /// <summary>
+    /// Gets the number of half steps from the C note below or equal to the natural note represented by the current
+    /// <see cref="NoteLetter"/> instance to the current instance.
+    /// </summary>
+    /// <param name="letter"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
+    internal static int CRelativeHalfSteps([NamedEnum] this NoteLetter letter)
+        // A relative, but +9 (-3 so C is at 0, +12 so is positive), %12 (so is in range)
+        => (letter.ARelativeHalfSteps() + 9) % 12;
+
+    /// <summary>
     /// Gets the number of half steps from the A note below or equal to the natural note represented by the current
     /// <see cref="NoteLetter"/> instance to the current instance.
     /// </summary>
     /// <param name="letter"></param>
     /// <returns></returns>
     /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
-    internal static int ARelativeHalfSteps(this NoteLetter letter) => letter switch
+    internal static int ARelativeHalfSteps([NamedEnum] this NoteLetter letter) => letter switch
     {
         A => 0,
         B => 2,

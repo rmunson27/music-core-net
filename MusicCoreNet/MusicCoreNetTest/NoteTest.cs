@@ -51,4 +51,44 @@ public class NoteTest
                 $"Unexpected {Right.ToMusicalNotationString()} - {Left.ToMusicalNotationString()} result.");
         }
     }
+
+    private static readonly ImmutableArray<(Note First, Note Second)> EnharmonicEquivalentPairs
+        = ImmutableArray.CreateRange(new[]
+        {
+            (Notes.A().Natural().WithOctave(2), Notes.B().Flat(2).WithOctave(2)),
+            (Notes.A().Natural().WithOctave(3), Notes.G().Sharp(2).WithOctave(3)),
+            (Notes.C().Sharp().WithOctave(4), Notes.D().Flat().WithOctave(4)),
+            (Notes.G().Natural().WithOctave(1), Notes.A().Flat(2).WithOctave(1)),
+
+            (Notes.C().Natural().WithOctave(3), Notes.B().Sharp().WithOctave(2)),
+            (Notes.B().Natural().WithOctave(2), Notes.C().Flat().WithOctave(3)),
+        });
+
+    /// <summary>
+    /// Tests the <see cref="Note.IsEnharmonicallyEquivalentTo(Note)"/> method.
+    /// </summary>
+    [TestMethod]
+    public void TestEnharmonicEquivalence()
+    {
+        foreach (var (First, Second) in EnharmonicEquivalentPairs)
+        {
+            Assert.IsTrue(
+                First.IsEnharmonicallyEquivalentTo(First),
+                $"{First.ToMusicalNotationString()} was not enharmonically equivalent to itself.");
+
+            Assert.IsTrue(
+                Second.IsEnharmonicallyEquivalentTo(Second),
+                $"{Second.ToMusicalNotationString()} was not enharmonically equivalent to itself.");
+
+            Assert.IsTrue(
+                First.IsEnharmonicallyEquivalentTo(Second),
+                $"{First.ToMusicalNotationString()} was not enharmonically equivalent"
+                    + $" to {Second.ToMusicalNotationString()}.");
+
+            Assert.IsTrue(
+                Second.IsEnharmonicallyEquivalentTo(First),
+                $"{Second.ToMusicalNotationString()} was not enharmonically equivalent"
+                    + $" to {First.ToMusicalNotationString()}.");
+        }
+    }
 }
