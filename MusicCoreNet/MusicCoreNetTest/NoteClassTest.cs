@@ -51,6 +51,17 @@ public class NoteClassTest
     }
 
     /// <summary>
+    /// Tests the <see cref="NoteClass.PitchClass"/> property.
+    /// </summary>
+    [TestMethod]
+    public void TestPitchClass()
+    {
+        Assert.AreEqual(NotePitchClass.A, Notes.A().Natural().PitchClass);
+        Assert.AreEqual(NotePitchClass.A, Notes.B().Flat(2).PitchClass);
+        Assert.AreEqual(NotePitchClass.G, Notes.A().Flat(2).PitchClass);
+    }
+
+    /// <summary>
     /// Tests of the <see cref="NoteClass.operator -(NoteClass, NoteClass)"/> method.
     /// </summary>
     [TestMethod]

@@ -48,6 +48,12 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
         NoteLetter.F => -1,
         _ => 1,
     } + Accidental.IntValue * 7;
+
+    /// <summary>
+    /// Gets the pitch class of this instance.
+    /// </summary>
+    public NotePitchClass PitchClass
+        => (NotePitchClass)Maths.FloorRem(Letter.ARelativeHalfSteps() + Accidental.IntValue, 12);
     #endregion
 
     #region Methods
@@ -92,9 +98,7 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
-    public bool IsEnharmonicallyEquivalentTo(NoteClass other)
-        => Maths.FloorRem(Letter.ARelativeHalfSteps() + Accidental.IntValue, 12)
-            == Maths.FloorRem(other.Letter.ARelativeHalfSteps() + other.Accidental.IntValue, 12);
+    public bool IsEnharmonicallyEquivalentTo(NoteClass other) => PitchClass == other.PitchClass;
     #endregion
 
     #region Conversion
