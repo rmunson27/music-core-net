@@ -14,7 +14,7 @@ namespace Rem.Music;
 /// <param name="Class">The class of the represented pitch.</param>
 /// <param name="Octave">The octave of the represented pitch.</param>
 /// <exception cref="InvalidEnumArgumentException"><paramref name="Class"/> was an unnamed enum value.</exception>
-public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave)
+public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : IComparable<NotePitchInfo>
 {
     /// <summary>
     /// Pitch info for the standard concert pitch (A440).
@@ -53,4 +53,47 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave)
     /// <returns></returns>
     public static int operator -(NotePitchInfo lhs, NotePitchInfo rhs)
         => lhs.Class.CRelativeIndex() - rhs.Class.CRelativeIndex() + (lhs.Octave - rhs.Octave) * 12;
+
+
+    #region Comparison
+    /// <summary>
+    /// Determines if <paramref name="lhs"/> is less than or equal to <paramref name="rhs"/>.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator <=(NotePitchInfo lhs, NotePitchInfo rhs) => lhs.CompareTo(rhs) <= 0;
+
+    /// <summary>
+    /// Determines if <paramref name="lhs"/> is greater than or equal to <paramref name="rhs"/>.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator >=(NotePitchInfo lhs, NotePitchInfo rhs) => lhs.CompareTo(rhs) >= 0;
+
+    /// <summary>
+    /// Determines if <paramref name="lhs"/> is less than <paramref name="rhs"/>.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator <(NotePitchInfo lhs, NotePitchInfo rhs) => lhs.CompareTo(rhs) < 0;
+
+    /// <summary>
+    /// Determines if <paramref name="lhs"/> is greater than <paramref name="rhs"/>.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator >(NotePitchInfo lhs, NotePitchInfo rhs) => lhs.CompareTo(rhs) > 0;
+
+    /// <inheritdoc/>
+    public int CompareTo(NotePitchInfo other) => Octave - other.Octave switch
+    {
+        < 0 => -1,
+        0 => Math.Sign(Class.CRelativeIndex() - other.Class.CRelativeIndex()),
+        > 0 => 1,
+    };
+    #endregion
 }
