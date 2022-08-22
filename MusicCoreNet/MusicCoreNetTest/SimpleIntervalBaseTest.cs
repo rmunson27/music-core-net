@@ -14,10 +14,10 @@ namespace RemTest.Music;
 public class SimpleIntervalBaseTest
 {
     /// <summary>
-    /// A series of pairs of <see cref="SimpleIntervalBase"/> instances and their associated perfect unison-based
+    /// A series of pairs of <see cref="SimpleIntervalBase"/> instances and their associated perfect-unison-based
     /// circle of fifths indexes.
     /// </summary>
-    private static readonly ImmutableArray<(SimpleIntervalBase Interval, int Index)> PerfectUnisonBasedIndexPairs
+    private static readonly ImmutableArray<(SimpleIntervalBase Interval, int Index)> CircleOfFifthsIndexPairs
         = ImmutableArray.CreateRange(new (SimpleIntervalBase, int)[]
         {
             (SimpleIntervalBase.PerfectUnison, 0),
@@ -33,11 +33,25 @@ public class SimpleIntervalBaseTest
     [TestMethod]
     public void TestPerfectUnisonBasedIndex()
     {
-        foreach (var (Interval, Index) in PerfectUnisonBasedIndexPairs)
+        foreach (var (Interval, Index) in CircleOfFifthsIndexPairs)
         {
             Assert.AreEqual(
                 Index, Interval.CircleOfFifthsIndex,
                 $"Invalid '{Interval}' {nameof(SimpleIntervalBase.CircleOfFifthsIndex)} value.");
+        }
+    }
+
+    /// <summary>
+    /// Tests the <see cref="SimpleIntervalBase.FromCircleOfFifthsIndex(int)"/> factory method.
+    /// </summary>
+    [TestMethod]
+    public void TestFromCircleOfFifthsIndex()
+    {
+        foreach (var (Interval, Index) in CircleOfFifthsIndexPairs)
+        {
+            Assert.AreEqual(
+                Interval, SimpleIntervalBase.FromCircleOfFifthsIndex(Index),
+                $"Invalid {nameof(TestFromCircleOfFifthsIndex)}({Index}) result.");
         }
     }
 

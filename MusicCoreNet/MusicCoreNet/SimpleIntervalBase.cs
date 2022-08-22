@@ -337,6 +337,28 @@ public abstract record class SimpleIntervalBase
             _ => throw new ArgumentOutOfRangeException(
                     nameof(halfSteps), halfSteps, $"Parameter must be in the range [0, 11]."),
         };
+
+    /// <summary>
+    /// Creates a new <see cref="SimpleIntervalBase"/> from its perfect-unison-based circle of fifths index.
+    /// </summary>
+    /// <param name="Index"></param>
+    /// <returns></returns>
+    public static SimpleIntervalBase FromCircleOfFifthsIndex(int Index)
+    {
+        // Find the quality and number circle of fifths indexes
+        // Need to adjust for the fact that a perfect fourth has index -1 with respect to a perfect unison
+        // (and the perfect quality has index 0 in that case)
+        var qualityCircleOfFifthsIndex = Maths.FloorDivRem(Index + 1, 7, out var numberCircleOfFifthsIndex);
+        numberCircleOfFifthsIndex--;
+        if (numberCircleOfFifthsIndex == -1) qualityCircleOfFifthsIndex++;
+
+        var number = SimpleIntervalNumber.FromCircleOfFifthsIndex(numberCircleOfFifthsIndex);
+        return number.IsPerfectable(out var pNumber, out var npNumber)
+                ? new PerfectableSimpleIntervalBase(
+                    PerfectableIntervalQuality.FromPerfectBasedIndex(qualityCircleOfFifthsIndex), pNumber)
+                : new NonPerfectableSimpleIntervalBase(
+                    NonPerfectableIntervalQuality.FromMajorBasedIndex(qualityCircleOfFifthsIndex), npNumber);
+    }
     #endregion
 
     #region Classification
