@@ -16,6 +16,15 @@ namespace Rem.Music;
 /// <exception cref="InvalidEnumArgumentException"><paramref name="Class"/> was an unnamed enum value.</exception>
 public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : IComparable<NotePitchInfo>
 {
+    #region Constants
+    /// <summary>
+    /// Pitch info for the lowest pitch in the zero octave.
+    /// </summary>
+    /// <remarks>
+    /// As indicated by the name of this field, the class of this pitch is <see cref="NotePitchClass.C"/>.
+    /// </remarks>
+    public static readonly NotePitchInfo C0 = new(NotePitchClass.C, 0);
+
     /// <summary>
     /// Pitch info for the standard concert pitch (A440).
     /// </summary>
@@ -25,7 +34,9 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
     /// The frequency of the standard concert pitch (A440).
     /// </summary>
     private const double ConcertPitchFrequency = 440;
+    #endregion
 
+    #region Properties
     /// <summary>
     /// Gets or initializes the class of the represented pitch.
     /// </summary>
@@ -45,15 +56,23 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
     public double Frequency => ConcertPitchFrequency * Math.Pow(2, (this - ConcertPitch) / 12.0);
 
     /// <summary>
+    /// Gets an integer index for this instance relative to the pitch <see cref="C0"/>, the lowest pitch in the
+    /// zero octave.
+    /// </summary>
+    public int C0Index => Class.CRelativeIndex() + Octave * 12;
+    #endregion
+
+    #region Methods
+    #region Arithmetic
+    /// <summary>
     /// Gets the difference between the pitches represented by the two <see cref="NotePitchInfo"/> instances passed in
     /// in half steps.
     /// </summary>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static int operator -(NotePitchInfo lhs, NotePitchInfo rhs)
-        => lhs.Class.CRelativeIndex() - rhs.Class.CRelativeIndex() + (lhs.Octave - rhs.Octave) * 12;
-
+    public static int operator -(NotePitchInfo lhs, NotePitchInfo rhs) => lhs.C0Index - rhs.C0Index;
+    #endregion
 
     #region Comparison
     /// <summary>
@@ -95,5 +114,6 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
         0 => Math.Sign(Class.CRelativeIndex() - other.Class.CRelativeIndex()),
         > 0 => 1,
     };
+    #endregion
     #endregion
 }
