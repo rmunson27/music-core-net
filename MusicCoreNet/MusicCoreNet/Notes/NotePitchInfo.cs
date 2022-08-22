@@ -115,5 +115,13 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
         > 0 => 1,
     };
     #endregion
+
+    #region ToString
+    /// <summary>
+    /// Gets a string that represents the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString() => $"Pitch {{ Class = {Class}, Octave = {Octave} }}";
+    #endregion
     #endregion
 }
