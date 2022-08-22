@@ -26,4 +26,17 @@ internal static class Maths
         if (n < 0 && remainder != 0) { remainder += d; quot--; }
         return quot;
     }
+
+    /// <summary>
+    /// Computes the floor remainder of the numerator and denominator passed in.
+    /// </summary>
+    /// <param name="n"></param>
+    /// <param name="d"></param>
+    /// <returns></returns>
+    public static int FloorRem(int n, int d)
+    {
+        var remainder = n % d;
+        if (n < 0 && remainder != 0) remainder += d;
+        return remainder;
+    }
 }

@@ -68,7 +68,7 @@ public static class NoteLetters
     /// <param name="letter"></param>
     /// <returns></returns>
     /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
-    private static int ARelativeHalfSteps(this NoteLetter letter) => letter switch
+    internal static int ARelativeHalfSteps(this NoteLetter letter) => letter switch
     {
         A => 0,
         B => 2,

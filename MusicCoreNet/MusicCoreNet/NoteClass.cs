@@ -1,4 +1,5 @@
 ﻿using Rem.Core.ComponentModel;
+using Rem.Music.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -85,6 +86,15 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode() => HashCode.Combine(Letter, Accidental);
+
+    /// <summary>
+    /// Determines if this <see cref="NoteClass"/> is enharmonically equivalent to another.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool IsEnharmonicallyEquivalentTo(NoteClass other)
+        => Maths.FloorRem(Letter.ARelativeHalfSteps() + Accidental.IntValue, 12)
+            == Maths.FloorRem(other.Letter.ARelativeHalfSteps() + other.Accidental.IntValue, 12);
     #endregion
 
     #region Conversion
