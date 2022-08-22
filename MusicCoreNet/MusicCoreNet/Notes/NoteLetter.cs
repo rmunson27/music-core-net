@@ -21,7 +21,7 @@ public static class NoteLetters
     /// <param name="letter"></param>
     /// <returns></returns>
     /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
-    public static NotePitchClass GetPitchClass(this NoteLetter letter) => letter switch
+    internal static NotePitchClass GetPitchClass(this NoteLetter letter) => letter switch
     {
         A => NotePitchClass.A,
         B => NotePitchClass.B,

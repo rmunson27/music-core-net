@@ -95,7 +95,7 @@ public readonly record struct SimpleIntervalNumber
     /// <paramref name="Index"/> did not indicate any perfect or major interval.
     /// </exception>
     /// <see cref="CircleOfFifthsIndex"/>
-    public static SimpleIntervalNumber FromCircleOfFifthsIndex(
+    internal static SimpleIntervalNumber FromCircleOfFifthsIndex(
         [GreaterThanOrEqualToInteger(-1), LessThanOrEqualToInteger(5)] int Index) => Index switch
     {
         >= -1 and <= 1 => PerfectableSimpleIntervalNumbers.FromCircleOfFifthsIndex(Index),
@@ -196,7 +196,7 @@ public readonly record struct SimpleIntervalNumber
     /// The interval used in the comparison will be perfect if the current instance is perfectable and major otherwise.
     /// </remarks>
     /// <returns></returns>
-    public int CircleOfFifthsIndex() => IsPerfectable()
+    internal int CircleOfFifthsIndex() => IsPerfectable()
                                             ? InternalNumber.Perfectable.CircleOfFifthsIndex()
                                             : InternalNumber.NonPerfectable.CircleOfFifthsIndex();
 
@@ -388,7 +388,7 @@ public static class PerfectableSimpleIntervalNumbers
     /// <returns></returns>
     /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
     [return: GreaterThanOrEqualToInteger(-1), LessThanOrEqualToInteger(1)]
-    public static int CircleOfFifthsIndex([NamedEnum] this PerfectableSimpleIntervalNumber pn) => pn switch
+    internal static int CircleOfFifthsIndex([NamedEnum] this PerfectableSimpleIntervalNumber pn) => pn switch
     {
         Fourth => -1,
         Unison => 0,
@@ -418,7 +418,7 @@ public static class PerfectableSimpleIntervalNumbers
     /// <param name="pn"></param>
     /// <returns></returns>
     [return: NonNegative]
-    public static int PerfectHalfSteps(this PerfectableSimpleIntervalNumber pn) => pn switch
+    internal static int PerfectHalfSteps(this PerfectableSimpleIntervalNumber pn) => pn switch
     {
         Unison => 0,
         Fourth => 5,
@@ -436,7 +436,7 @@ public static class PerfectableSimpleIntervalNumbers
     /// <paramref name="Index"/> did not indicate any perfect interval.
     /// </exception>
     /// <seealso cref="SimpleIntervalNumbers.CircleOfFifthsIndex(PerfectableSimpleIntervalNumber)"/>
-    public static PerfectableSimpleIntervalNumber FromCircleOfFifthsIndex(
+    internal static PerfectableSimpleIntervalNumber FromCircleOfFifthsIndex(
         [GreaterThanOrEqualToInteger(-1), LessThanOrEqualToInteger(1)] int Index)
         => Index switch
         {
@@ -485,7 +485,7 @@ public static class NonPerfectableSimpleIntervalNumbers
     /// <returns></returns>
     /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
     [return: GreaterThanOrEqualToInteger(2), LessThanOrEqualToInteger(5)]
-    public static int CircleOfFifthsIndex([NamedEnum] this NonPerfectableSimpleIntervalNumber npn)
+    internal static int CircleOfFifthsIndex([NamedEnum] this NonPerfectableSimpleIntervalNumber npn)
         => npn switch
         {
             Second => 2,
@@ -518,7 +518,7 @@ public static class NonPerfectableSimpleIntervalNumbers
     /// <param name="npn"></param>
     /// <returns></returns>
     [return: Positive]
-    public static int MajorHalfSteps(this NonPerfectableSimpleIntervalNumber npn) => npn switch
+    internal static int MajorHalfSteps(this NonPerfectableSimpleIntervalNumber npn) => npn switch
     {
         Second => 2,
         Third => 4,
@@ -537,7 +537,7 @@ public static class NonPerfectableSimpleIntervalNumbers
     /// <paramref name="Index"/> did not indicate any major interval.
     /// </exception>
     /// <seealso cref="SimpleIntervalNumbers.CircleOfFifthsIndex(NonPerfectableSimpleIntervalNumber)"/>
-    public static NonPerfectableSimpleIntervalNumber FromCircleOfFifthsIndex(
+    internal static NonPerfectableSimpleIntervalNumber FromCircleOfFifthsIndex(
         [GreaterThanOrEqualToInteger(2), LessThanOrEqualToInteger(5)] int Index)
         => Index switch
         {
