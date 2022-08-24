@@ -43,6 +43,9 @@ public static class IntervalNumbers
 /// <summary>
 /// Represents a number of a simple interval, that can be either perfectable or non-perfectable.
 /// </summary>
+/// <remarks>
+/// The default value of this struct represents a unison.
+/// </remarks>
 public readonly record struct SimpleIntervalNumber
     : IEquatable<PerfectableSimpleIntervalNumber>, IEquatable<NonPerfectableSimpleIntervalNumber>
 {
@@ -90,6 +93,18 @@ public readonly record struct SimpleIntervalNumber
     public IntervalPerfectability Perfectability { get; }
 
     private readonly InternalNumberStruct InternalNumber;
+
+    /// <summary>
+    /// Gets a perfectable interval number that is not the (invalid) default.
+    /// </summary>
+    /// <remarks>
+    /// If this is the default, then the value returned will be <see cref="Unison"/>.
+    /// <para/>
+    /// This should only be called in cases when the instance is guaranteed to wrap a <see cref="Perfectable"/> number,
+    /// or else the behavior is undefined.
+    /// </remarks>
+    private PerfectableSimpleIntervalNumber NonDefaultPerfectable
+        => InternalNumber.Perfectable == default ? Unison : InternalNumber.Perfectable;
     #endregion
 
     #region Constructors
@@ -102,7 +117,11 @@ public readonly record struct SimpleIntervalNumber
     public SimpleIntervalNumber([NamedEnum] PerfectableSimpleIntervalNumber Number)
     {
         InternalNumber = new();
-        InternalNumber.Perfectable = Throw.IfEnumArgUnnamed(Number, nameof(Number));
+
+        // Store unisons as the default, so that all instances are internally unambiguous
+        // The instance will externally treat the (invalid) default as a unison
+        InternalNumber.Perfectable = Throw.IfEnumArgUnnamed(Number, nameof(Number)) == Unison ? default : Number;
+
         Perfectability = Perfectable;
     }
 
@@ -156,7 +175,7 @@ public readonly record struct SimpleIntervalNumber
     {
         if (IsPerfectable())
         {
-            Perfectable = InternalNumber.Perfectable;
+            Perfectable = NonDefaultPerfectable;
             NonPerfectable = default;
             return true;
         }
@@ -178,7 +197,7 @@ public readonly record struct SimpleIntervalNumber
     {
         if (IsPerfectable())
         {
-            Number = InternalNumber.Perfectable;
+            Number = NonDefaultPerfectable;
             return true;
         }
         else
@@ -234,7 +253,7 @@ public readonly record struct SimpleIntervalNumber
     /// </remarks>
     /// <returns></returns>
     internal int CircleOfFifthsIndex() => IsPerfectable()
-                                            ? InternalNumber.Perfectable.CircleOfFifthsIndex()
+                                            ? NonDefaultPerfectable.CircleOfFifthsIndex()
                                             : InternalNumber.NonPerfectable.CircleOfFifthsIndex();
 
     /// <summary>
@@ -242,7 +261,7 @@ public readonly record struct SimpleIntervalNumber
     /// </summary>
     /// <returns></returns>
     public SimpleIntervalNumber Inversion() => IsPerfectable()
-                                                ? new(InternalNumber.Perfectable.Inversion())
+                                                ? new(NonDefaultPerfectable.Inversion())
                                                 : new(InternalNumber.NonPerfectable.Inversion());
     #endregion
 
@@ -270,7 +289,7 @@ public readonly record struct SimpleIntervalNumber
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode() => IsPerfectable()
-                                            ? InternalNumber.Perfectable.GetHashCode()
+                                            ? NonDefaultPerfectable.GetHashCode()
                                             : InternalNumber.NonPerfectable.GetHashCode();
 
     #region Operators And Explicit `IEquatable` Implementations
@@ -378,7 +397,7 @@ public readonly record struct SimpleIntervalNumber
     /// </exception>
     public static explicit operator PerfectableSimpleIntervalNumber(SimpleIntervalNumber number)
         => number.IsPerfectable()
-            ? number.InternalNumber.Perfectable
+            ? number.NonDefaultPerfectable
             : throw new InvalidCastException("Value did not represent a perfectable simple interval number.");
 
     /// <summary>
