@@ -436,6 +436,15 @@ public readonly record struct SimpleIntervalNumber
             ? number.InternalNumber.NonPerfectable
             : throw new InvalidCastException("Value did not represent a non-perfectable simple interval number.");
     #endregion
+
+    #region ToString
+    /// <summary>
+    /// Gets a string that represents the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+        => IsPerfectable() ? NonDefaultPerfectable.ToString() : InternalNumber.NonPerfectable.ToString();
+    #endregion
     #endregion
 
     #region Types
