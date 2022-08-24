@@ -41,7 +41,7 @@ public static class IntervalNumbers
 }
 
 /// <summary>
-/// Represents a number of a simple interval, that can be either perfectable or non-perfectable.
+/// Represents the number of a simple interval, that can be either perfectable or non-perfectable.
 /// </summary>
 /// <remarks>
 /// The default value of this struct represents a unison.
