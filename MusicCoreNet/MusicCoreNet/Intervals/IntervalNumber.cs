@@ -12,6 +12,7 @@ namespace Rem.Music;
 using static PerfectableSimpleIntervalNumber;
 using static NonPerfectableSimpleIntervalNumber;
 
+#region Classes
 /// <summary>
 /// Static functionality relating to interval numbers.
 /// </summary>
@@ -39,6 +40,9 @@ public static class IntervalNumbers
         _ => throw new Exception("Bug - should not happen ever."),
     };
 }
+#endregion
+
+#region Structs
 
 /// <summary>
 /// Represents the number of a simple interval, that can be either perfectable or non-perfectable.
@@ -449,7 +453,9 @@ public readonly record struct SimpleIntervalNumber
     }
     #endregion
 }
+#endregion
 
+#region Enums
 /// <summary>
 /// Static functionality for the <see cref="PerfectableSimpleIntervalNumber"/> enum.
 /// </summary>
@@ -670,4 +676,5 @@ public enum IntervalPerfectability : byte
     /// </summary>
     NonPerfectable,
 }
+#endregion
 
