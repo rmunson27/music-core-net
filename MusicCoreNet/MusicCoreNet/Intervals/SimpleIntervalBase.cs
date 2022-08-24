@@ -23,9 +23,6 @@ public sealed record class PerfectableSimpleIntervalBase(
 {
     #region Properties And Fields
     /// <inheritdoc/>
-    [Positive] public override int NumberValue => (int)Number;
-
-    /// <inheritdoc/>
     public override int HalfSteps => Number.PerfectHalfSteps() + Quality.PerfectBasedIndex;
 
     /// <inheritdoc/>
@@ -129,9 +126,6 @@ public sealed record class NonPerfectableSimpleIntervalBase(
     NonPerfectableIntervalQuality Quality, [NamedEnum] NonPerfectableSimpleIntervalNumber Number) : SimpleIntervalBase
 {
     #region Properties And Fields
-    /// <inheritdoc/>
-    [Positive] public override int NumberValue => (int)Number;
-
     private protected override SimpleIntervalNumber NumberInternal => Number;
 
     /// <inheritdoc/>
@@ -259,7 +253,7 @@ public abstract record class SimpleIntervalBase
     /// <remarks>
     /// For a simple example, accessing this property on a second will yield 2.
     /// </remarks>
-    [Positive] public abstract int NumberValue { get; }
+    [Positive] public int NumberValue => Number.Value;
 
     /// <summary>
     /// Gets the number of the interval represented by this instance.

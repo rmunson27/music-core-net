@@ -88,6 +88,11 @@ public readonly record struct SimpleIntervalNumber
 
     #region Properties And Fields
     /// <summary>
+    /// Gets the integer value of this number.
+    /// </summary>
+    public int Value => IsPerfectable() ? (int)NonDefaultPerfectable : (int)InternalNumber.NonPerfectable;
+
+    /// <summary>
     /// Gets the perfectability of this instance.
     /// </summary>
     public IntervalPerfectability Perfectability { get; }
@@ -158,6 +163,21 @@ public readonly record struct SimpleIntervalNumber
         >= 2 and <= 5 => NonPerfectableSimpleIntervalNumbers.FromCircleOfFifthsIndex(Index),
         _ => throw new ArgumentOutOfRangeException(
                 nameof(Index), Index, "Index did not indicate any perfect or major interval."),
+    };
+
+    /// <summary>
+    /// Creates a new <see cref="SimpleIntervalNumber"/> from the integer value passed in.
+    /// </summary>
+    /// <param name="Value"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="Value"/> was not in the range 1..7.
+    /// </exception>
+    public static SimpleIntervalNumber FromValue(int Value) => Value switch
+    {
+        1 or 4 or 5 => (PerfectableSimpleIntervalNumber)Value,
+        2 or 3 or 6 or 7 => (NonPerfectableSimpleIntervalNumber)Value,
+        _ => throw new ArgumentOutOfRangeException(nameof(Value), Value, "Value was not in the range 1..7."),
     };
     #endregion
 
