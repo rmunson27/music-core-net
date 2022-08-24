@@ -46,6 +46,43 @@ public static class IntervalNumbers
 public readonly record struct SimpleIntervalNumber
     : IEquatable<PerfectableSimpleIntervalNumber>, IEquatable<NonPerfectableSimpleIntervalNumber>
 {
+    #region Constants
+    /// <summary>
+    /// The <see cref="PerfectableSimpleIntervalNumber"/> representing a fourth.
+    /// </summary>
+    [NamedEnum] public const PerfectableSimpleIntervalNumber Fourth = PerfectableSimpleIntervalNumber.Fourth;
+
+    /// <summary>
+    /// The <see cref="PerfectableSimpleIntervalNumber"/> representing a unison.
+    /// </summary>
+    [NamedEnum] public const PerfectableSimpleIntervalNumber Unison = PerfectableSimpleIntervalNumber.Unison;
+
+    /// <summary>
+    /// The <see cref="PerfectableSimpleIntervalNumber"/> representing a fifth.
+    /// </summary>
+    [NamedEnum] public const PerfectableSimpleIntervalNumber Fifth = PerfectableSimpleIntervalNumber.Fifth;
+
+    /// <summary>
+    /// The <see cref="NonPerfectableSimpleIntervalNumber"/> representing a second.
+    /// </summary>
+    [NamedEnum] public const NonPerfectableSimpleIntervalNumber Second = NonPerfectableSimpleIntervalNumber.Second;
+
+    /// <summary>
+    /// The <see cref="NonPerfectableSimpleIntervalNumber"/> representing a third.
+    /// </summary>
+    [NamedEnum] public const NonPerfectableSimpleIntervalNumber Third = NonPerfectableSimpleIntervalNumber.Third;
+
+    /// <summary>
+    /// The <see cref="NonPerfectableSimpleIntervalNumber"/> representing a sixth.
+    /// </summary>
+    [NamedEnum] public const NonPerfectableSimpleIntervalNumber Sixth = NonPerfectableSimpleIntervalNumber.Sixth;
+
+    /// <summary>
+    /// The <see cref="NonPerfectableSimpleIntervalNumber"/> representing a seventh.
+    /// </summary>
+    [NamedEnum] public const NonPerfectableSimpleIntervalNumber Seventh = NonPerfectableSimpleIntervalNumber.Seventh;
+    #endregion
+
     #region Properties And Fields
     /// <summary>
     /// Gets the perfectability of this instance.
