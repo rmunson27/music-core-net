@@ -301,6 +301,30 @@ public abstract record class SimpleIntervalBase
     #region Methods
     #region Factory
     /// <summary>
+    /// Creates a new <see cref="SimpleIntervalBase"/> with the quality and number passed in.
+    /// </summary>
+    /// <param name="Quality"></param>
+    /// <param name="Number"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">
+    /// The perfectability of the quality and number passed in do not match.
+    /// </exception>
+    public static SimpleIntervalBase FromQualityAndNumber(IntervalQuality Quality, SimpleIntervalNumber Number)
+    {
+        if (Quality.IsPerfectable(out var pQuality) && Number.IsPerfectable(out var pNumber))
+        {
+            return new PerfectableSimpleIntervalBase(pQuality, pNumber);
+        }
+        else if (Quality.IsNonPerfectable(out var npQuality) && Number.IsNonPerfectable(out var npNumber))
+        {
+            return new NonPerfectableSimpleIntervalBase(npQuality, npNumber);
+        }
+        else throw new ArgumentException(
+                $"Quality perfectability ({Quality.Perfectability}) did not match"
+                    + $" number perfectability ({Number.Perfectability}).");
+    }
+
+    /// <summary>
     /// Creates a new <see cref="SimpleIntervalBase"/> spanning the number of half steps passed in with the simplest
     /// possible interval quality.
     /// </summary>

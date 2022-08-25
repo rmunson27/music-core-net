@@ -124,6 +124,22 @@ public readonly record struct Interval(
         = Throw.IfArgNegative(AdditionalOctaves, nameof(AdditionalOctaves));
     #endregion
 
+    #region Constructors
+    /// <summary>
+    /// Constructs a new <see cref="Interval"/> with the given quality and number.
+    /// </summary>
+    /// <param name="Quality"></param>
+    /// <param name="Number"></param>
+    /// <exception cref="ArgumentException">
+    /// The perfectability of the quality and number did not match.
+    /// </exception>
+    public Interval(IntervalQuality Quality, IntervalNumber Number)
+        : this(
+              Base: SimpleIntervalBase.FromQualityAndNumber(Quality, Number.Base),
+              AdditionalOctaves: Number.AdditionalOctaves)
+    { }
+    #endregion
+
     #region Methods
     #region Equality
     /// <summary>
