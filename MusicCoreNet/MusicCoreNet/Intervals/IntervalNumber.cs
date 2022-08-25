@@ -12,36 +12,6 @@ namespace Rem.Music;
 using static PerfectableSimpleIntervalNumber;
 using static NonPerfectableSimpleIntervalNumber;
 
-#region Classes
-/// <summary>
-/// Static functionality relating to interval numbers.
-/// </summary>
-public static class IntervalNumbers
-{
-    /// <summary>
-    /// Gets the perfectability of the interval named by the number passed in.
-    /// </summary>
-    /// <param name="number"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="number"/> was not positive.</exception>
-    public static IntervalPerfectability GetPerfectability([Positive] int number)
-        // The numbers starts at 1 (unison), and there are seven values before the perfectability cycle repeats
-        // Figure out where the number is in the cycle to determine the result
-        => ((Throw.IfArgNotPositive(number, nameof(number)) - 1) % 7 + 1) switch
-        {
-            1 or 4 or 5 => Perfectable,
-            _ => NonPerfectable,
-        };
-
-    internal static IntervalPerfectability GetPerfectabilityFromUnisonBasedIndex(int index) => index switch
-    {
-        >= -1 and <= 1 => Perfectable,
-        >= 2 and <= 5 => NonPerfectable,
-        _ => throw new Exception("Bug - should not happen ever."),
-    };
-}
-#endregion
-
 #region Structs
 /// <summary>
 /// Represents the number of an interval.

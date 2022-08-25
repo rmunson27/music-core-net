@@ -482,14 +482,15 @@ public abstract record class SimpleIntervalBase
 
         #region Return
         // The perfectability of the number passed in determines what kind of interval base we are creating
-        return IntervalNumbers.GetPerfectabilityFromUnisonBasedIndex(newUnisonBasedNumberIndex) switch
+        var number = SimpleIntervalNumber.FromCircleOfFifthsIndex(newUnisonBasedNumberIndex);
+        return number.Perfectability switch
         {
             Perfectable => new PerfectableSimpleIntervalBase(
                             PerfectableIntervalQuality.FromPerfectBasedIndex(newQualityIndex),
-                            PerfectableSimpleIntervalNumbers.FromCircleOfFifthsIndex(newUnisonBasedNumberIndex)),
+                            (PerfectableSimpleIntervalNumber)number),
             _ => new NonPerfectableSimpleIntervalBase(
                     NonPerfectableIntervalQuality.FromMajorBasedIndex(newQualityIndex),
-                    NonPerfectableSimpleIntervalNumbers.FromCircleOfFifthsIndex(newUnisonBasedNumberIndex)),
+                    (NonPerfectableSimpleIntervalNumber)number),
         };
         #endregion
     }
