@@ -95,7 +95,7 @@ public readonly record struct SimpleIntervalNumber
     /// <summary>
     /// Gets the integer value of this number.
     /// </summary>
-    public int Value => IsPerfectable() ? (int)NonDefaultPerfectable : (int)InternalNumber.NonPerfectable;
+    [Positive] public int Value => IsPerfectable() ? (int)NonDefaultPerfectable : (int)InternalNumber.NonPerfectable;
 
     /// <summary>
     /// Gets the perfectability of this instance.
