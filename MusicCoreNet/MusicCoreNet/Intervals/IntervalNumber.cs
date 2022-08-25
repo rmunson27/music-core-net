@@ -51,7 +51,8 @@ public static class IntervalNumbers
 /// The default value of this struct represents a unison.
 /// </remarks>
 public readonly record struct SimpleIntervalNumber
-    : IEquatable<PerfectableSimpleIntervalNumber>, IEquatable<NonPerfectableSimpleIntervalNumber>
+    : IEquatable<PerfectableSimpleIntervalNumber>, IEquatable<NonPerfectableSimpleIntervalNumber>, IEquatable<int>,
+      IComparable<SimpleIntervalNumber>, IComparable<int>
 {
     #region Constants
     /// <summary>
@@ -396,10 +397,205 @@ public readonly record struct SimpleIntervalNumber
     public bool Equals(NonPerfectableSimpleIntervalNumber number)
         => IsNonPerfectable(out var thisNumber) && thisNumber == number;
     #endregion
+
+    #region int
+    /// <summary>
+    /// Determines if the interval number has a value that is not equal to the integer passed in.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator !=(int lhs, SimpleIntervalNumber rhs) => !(lhs == rhs);
+
+    /// <summary>
+    /// Determines if the interval number has a value that is equal to the integer passed in.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator ==(int lhs, SimpleIntervalNumber rhs) => lhs == rhs.Value;
+
+    /// <summary>
+    /// Determines if the interval number has a value that is not equal to the integer passed in.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator !=(SimpleIntervalNumber lhs, int rhs) => !(lhs == rhs);
+
+    /// <summary>
+    /// Determines if the interval number has a value that is equal to the integer passed in.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator ==(SimpleIntervalNumber lhs, int rhs) => lhs.Value == rhs;
+
+    /// <summary>
+    /// Determines if this instance has a value equal to the integer passed in.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public bool Equals(int value) => Value == value;
+    #endregion
+    #endregion
+    #endregion
+
+    #region Comparison
+    #region SimpleIntervalNumber
+    /// <summary>
+    /// Determines if the left-hand <see cref="SimpleIntervalNumber"/> is greater than the
+    /// right-hand <see cref="SimpleIntervalNumber"/>.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator >(SimpleIntervalNumber lhs, SimpleIntervalNumber rhs) => lhs.CompareTo(rhs) > 0;
+
+    /// <summary>
+    /// Determines if the left-hand <see cref="SimpleIntervalNumber"/> is less than the
+    /// right-hand <see cref="SimpleIntervalNumber"/>.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator <(SimpleIntervalNumber lhs, SimpleIntervalNumber rhs) => lhs.CompareTo(rhs) < 0;
+
+    /// <summary>
+    /// Determines if the left-hand <see cref="SimpleIntervalNumber"/> is greater than or equal to the
+    /// right-hand <see cref="SimpleIntervalNumber"/>.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator >=(SimpleIntervalNumber lhs, SimpleIntervalNumber rhs) => lhs.CompareTo(rhs) >= 0;
+
+    /// <summary>
+    /// Determines if the left-hand <see cref="SimpleIntervalNumber"/> is less than or equal to the
+    /// right-hand <see cref="SimpleIntervalNumber"/>.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator <=(SimpleIntervalNumber lhs, SimpleIntervalNumber rhs) => lhs.CompareTo(rhs) <= 0;
+
+    /// <summary>
+    /// Compares this instance to another instance of the same type.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public int CompareTo(SimpleIntervalNumber other) => Value.CompareTo(other.Value);
+    #endregion
+
+    #region int
+    /// <summary>
+    /// Determines if the <see cref="SimpleIntervalNumber"/> passed in has a value that is greater than the
+    /// <see cref="int"/> passed in.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    /// <seealso cref="Value"/>
+    public static bool operator >(SimpleIntervalNumber lhs, int rhs) => lhs.CompareTo(rhs) > 0;
+
+    /// <summary>
+    /// Determines if the <see cref="SimpleIntervalNumber"/> passed in has a value that is less than the
+    /// <see cref="int"/> passed in.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    /// <seealso cref="Value"/>
+    public static bool operator <(SimpleIntervalNumber lhs, int rhs) => lhs.CompareTo(rhs) < 0;
+
+    /// <summary>
+    /// Determines if the <see cref="SimpleIntervalNumber"/> passed in has a value that is greater than or equal to the
+    /// <see cref="int"/> passed in.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    /// <seealso cref="Value"/>
+    public static bool operator >=(SimpleIntervalNumber lhs, int rhs) => lhs.CompareTo(rhs) >= 0;
+
+    /// <summary>
+    /// Determines if the <see cref="SimpleIntervalNumber"/> passed in has a value that is less than or equal to the
+    /// <see cref="int"/> passed in.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    /// <seealso cref="Value"/>
+    public static bool operator <=(SimpleIntervalNumber lhs, int rhs) => lhs.CompareTo(rhs) <= 0;
+
+    /// <summary>
+    /// Determines if the <see cref="int"/> passed in is greater than the value of the <see cref="SimpleIntervalNumber"/>
+    /// passed in.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    /// <seealso cref="Value"/>
+    public static bool operator >(int lhs, SimpleIntervalNumber rhs) => rhs.CompareTo(lhs) < 0;
+
+    /// <summary>
+    /// Determines if the <see cref="int"/> passed in is less than the value of the <see cref="SimpleIntervalNumber"/>
+    /// passed in.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    /// <seealso cref="Value"/>
+    public static bool operator <(int lhs, SimpleIntervalNumber rhs) => rhs.CompareTo(lhs) > 0;
+
+    /// <summary>
+    /// Determines if the <see cref="int"/> passed in is greater than or equal to the value of the
+    /// <see cref="SimpleIntervalNumber"/> passed in.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    /// <seealso cref="Value"/>
+    public static bool operator >=(int lhs, SimpleIntervalNumber rhs) => rhs.CompareTo(lhs) <= 0;
+
+    /// <summary>
+    /// Determines if the <see cref="int"/> passed in is less than or equal to the value of the
+    /// <see cref="SimpleIntervalNumber"/> passed in.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    /// <seealso cref="Value"/>
+    public static bool operator <=(int lhs, SimpleIntervalNumber rhs) => rhs.CompareTo(lhs) >= 0;
+
+    /// <summary>
+    /// Compares the value of this instance to the integer passed in.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    /// <seealso cref="Value"/>
+    public int CompareTo(int value) => Value.CompareTo(value);
     #endregion
     #endregion
 
     #region Conversion
+    /// <summary>
+    /// Implicitly converts an instance of this struct to an <see cref="int"/>.
+    /// </summary>
+    /// <param name="number"></param>
+    public static implicit operator int(SimpleIntervalNumber number) => number.Value;
+
+    /// <summary>
+    /// Explicitly converts an <see cref="int"/> to an instance of this struct.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <exception cref="InvalidCastException">The <see cref="int"/> value was not in the range 1..7.</exception>
+    public static explicit operator SimpleIntervalNumber(int value)
+        => value < 1 || value > 7
+            ? throw new InvalidCastException(
+                "Cannot cast integer outside of the range 1..7 to a simple interval number.")
+            : FromValue(value);
+
     /// <summary>
     /// Implicitly converts a <see cref="PerfectableSimpleIntervalNumber"/> to an instance of this struct.
     /// </summary>

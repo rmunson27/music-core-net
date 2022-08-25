@@ -34,6 +34,18 @@ public class SimpleIntervalNumberTest
     }
 
     /// <summary>
+    /// Tests casting from an <see cref="int"/> to a <see cref="SimpleIntervalNumber"/>.
+    /// </summary>
+    [TestMethod]
+    public void TestIntCast()
+    {
+        Assert.AreEqual(Third, (SimpleIntervalNumber)3);
+        Assert.AreEqual(Fifth, (SimpleIntervalNumber)5);
+        Assert.ThrowsException<InvalidCastException>(() => (SimpleIntervalNumber)8);
+        Assert.ThrowsException<InvalidCastException>(() => (SimpleIntervalNumber)0);
+    }
+
+    /// <summary>
     /// Ensures that the default instance of <see cref="SimpleIntervalNumber"/> is as advertised in the documentation.
     /// </summary>
     [TestMethod]
