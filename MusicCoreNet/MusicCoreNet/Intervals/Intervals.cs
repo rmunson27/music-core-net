@@ -85,7 +85,7 @@ public readonly record struct Interval(
     /// Gets the number of this interval.
     /// </summary>
     [DoesNotReturnIfInstanceDefault]
-    [Positive] public int Number => Base.NumberValue + AdditionalOctaves * 7;
+    public IntervalNumber Number => new(Base.Number, AdditionalOctaves);
 
     /// <summary>
     /// Gets the quality of this interval.
