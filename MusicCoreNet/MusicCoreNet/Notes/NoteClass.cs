@@ -53,7 +53,7 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
     /// Gets the pitch class of this instance.
     /// </summary>
     public NotePitchClass PitchClass
-        => (NotePitchClass)Maths.FloorRem(Letter.ARelativeHalfSteps() + Accidental.IntValue, 12);
+        => (NotePitchClass)Maths.FloorRem(Letter.HalfStepsDownToA() + Accidental.IntValue, 12);
     #endregion
 
     #region Methods

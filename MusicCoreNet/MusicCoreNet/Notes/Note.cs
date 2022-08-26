@@ -33,9 +33,9 @@ public readonly record struct Note(NoteClass Class, int Octave)
         get
         {
             var octaveFixup = Maths.FloorDivRem(
-                                Class.Letter.CRelativeHalfSteps() + Class.Accidental.IntValue, 12,
+                                Class.Letter.HalfStepsDownToC() + Class.Accidental.IntValue, 12,
                                 out var cRelativeClassValue);
-            return new(NotePitchClasses.FromCRelativeIndex(cRelativeClassValue), Octave + octaveFixup);
+            return new(NotePitchClasses.FromSemitonesDownToC(cRelativeClassValue), Octave + octaveFixup);
         }
     }
     #endregion

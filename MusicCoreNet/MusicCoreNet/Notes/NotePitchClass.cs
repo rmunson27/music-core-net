@@ -14,26 +14,41 @@ namespace Rem.Music;
 public static class NotePitchClasses
 {
     /// <summary>
-    /// Gets the index of the current <see cref="NotePitchClass"/> instance relative to <see cref="NotePitchClass.C"/>.
+    /// Gets the number of semitones from the current <see cref="NotePitchClass"/> instance up
+    /// to <see cref="NotePitchClass.C"/>.
     /// </summary>
     /// <remarks>
     /// This is important for computing octave information.
     /// </remarks>
     /// <param name="pitchClass"></param>
     /// <returns></returns>
-    internal static int CRelativeIndex(this NotePitchClass pitchClass)
+    internal static int SemitonesUpToC(this NotePitchClass pitchClass)
+        // Convert from A relative: Subtract from 15 (12 so are going up instead of down, then subtract -3 so C is at 0)
+        // Then mod by 12 (so is in range)
+        => (15 - (int)pitchClass) % 12;
+
+    /// <summary>
+    /// Gets the number of semitones from the current <see cref="NotePitchClass"/> instance down
+    /// to <see cref="NotePitchClass.C"/>.
+    /// </summary>
+    /// <remarks>
+    /// This is important for computing octave information.
+    /// </remarks>
+    /// <param name="pitchClass"></param>
+    /// <returns></returns>
+    internal static int SemitonesDownToC(this NotePitchClass pitchClass)
         // Convert from A relative: +9 (-3 so C is at 0, +12 so is positive), %12 (so is in range)
         => ((int)pitchClass + 9) % 12;
 
     /// <summary>
-    /// Gets a <see cref="NotePitchClass"/> from an index relative to <see cref="NotePitchClass.C"/>.
+    /// Gets a <see cref="NotePitchClass"/> from a number of semitones down to <see cref="NotePitchClass.C"/>.
     /// </summary>
     /// <remarks>
     /// This is important for computing octave information.
     /// </remarks>
     /// <param name="index"></param>
     /// <returns></returns>
-    internal static NotePitchClass FromCRelativeIndex(int index)
+    internal static NotePitchClass FromSemitonesDownToC(int index)
         // Convert to A relative: +15 (+3 so A is at 0, +12 so is positive), %12 (so is in range)
         => (NotePitchClass)((index + 15) % 12);
 

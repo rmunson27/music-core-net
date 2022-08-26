@@ -77,7 +77,7 @@ public static class NoteLetters
     {
         var newLetter = letter.Plus(number);
 
-        var halfSteps = newLetter.ARelativeHalfSteps() - letter.ARelativeHalfSteps() + 12;
+        var halfSteps = newLetter.HalfStepsDownToA() - letter.HalfStepsDownToA() + 12;
         differenceQuality = IntervalQuality.OfSimplestIntervalWithHalfSteps(halfSteps)
                                 ?? (letter == F
                                         ? PerfectableIntervalQuality.Augmented()
@@ -115,7 +115,7 @@ public static class NoteLetters
         Throw.IfEnumArgUnnamed(letter, nameof(letter));
         Throw.IfEnumArgUnnamed(other, nameof(other));
 
-        var halfSteps = (letter.ARelativeHalfSteps() - other.ARelativeHalfSteps() + 12) % 12;
+        var halfSteps = (letter.HalfStepsDownToA() - other.HalfStepsDownToA() + 12) % 12;
         return SimpleIntervalBase.SimplestWithHalfSteps(halfSteps) switch
         {
             null => letter switch
@@ -129,8 +129,8 @@ public static class NoteLetters
     }
 
     /// <summary>
-    /// Gets the number of half steps from the C note below or equal to the natural note represented by the current
-    /// <see cref="NoteLetter"/> instance to the current instance.
+    /// Gets the number of half steps from a natural note represented by the current instance up to the nearest C
+    /// note above or equal to it.
     /// </summary>
     /// <remarks>
     /// This is important for computing octave information.
@@ -138,17 +138,29 @@ public static class NoteLetters
     /// <param name="letter"></param>
     /// <returns></returns>
     /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
-    internal static int CRelativeHalfSteps([NamedEnum] this NoteLetter letter)
-        => letter.GetPitchClass().CRelativeIndex();
+    internal static int HalfStepsUpToC([NamedEnum] this NoteLetter letter) => letter.GetPitchClass().SemitonesUpToC();
 
     /// <summary>
-    /// Gets the number of half steps from the A note below or equal to the natural note represented by the current
-    /// <see cref="NoteLetter"/> instance to the current instance.
+    /// Gets the number of half steps from a natural note represented by the current instance down to the nearest C
+    /// note below or equal to it.
+    /// </summary>
+    /// <remarks>
+    /// This is important for computing octave information.
+    /// </remarks>
+    /// <param name="letter"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
+    internal static int HalfStepsDownToC([NamedEnum] this NoteLetter letter)
+        => letter.GetPitchClass().SemitonesDownToC();
+
+    /// <summary>
+    /// Gets the number of half steps from a natural note represented by the current instance down to the nearest A
+    /// note below or equal to it.
     /// </summary>
     /// <param name="letter"></param>
     /// <returns></returns>
     /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
-    internal static int ARelativeHalfSteps([NamedEnum] this NoteLetter letter) => letter switch
+    internal static int HalfStepsDownToA([NamedEnum] this NoteLetter letter) => letter switch
     {
         A => 0,
         B => 2,
