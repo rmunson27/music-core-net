@@ -13,7 +13,10 @@ namespace RemTest.Music;
 [TestClass]
 public class NoteTest
 {
-    private static readonly ImmutableArray<(Note Left, Note Right, Interval Result)> DifferenceTests
+    /// <summary>
+    /// A series of tuples containing a pair of notes and an interval difference between the first and the second.
+    /// </summary>
+    private static readonly ImmutableArray<(Note First, Note Second, Interval Difference)> Differences
         = ImmutableArray.CreateRange(new[]
         {
             (Notes.F().Sharp().WithOctave(4), Notes.C().Sharp().WithOctave(3),
@@ -36,18 +39,46 @@ public class NoteTest
         });
 
     /// <summary>
-    /// Tests of the <see cref="Note"/> subtraction operator.
+    /// Tests the <see cref="Note"/> interval addition operator.
+    /// </summary>
+    [TestMethod]
+    public void TestAddition()
+    {
+        foreach (var (First, Second, Difference) in Differences)
+        {
+            Assert.AreEqual(
+                First, Second + Difference,
+                $"Invalid {Second.ToMusicalNotationString()} + {Difference} result.");
+        }
+    }
+
+    /// <summary>
+    /// Tests the <see cref="Note"/> interval subtraction operator.
+    /// </summary>
+    [TestMethod]
+    public void TestSubtraction()
+    {
+        foreach (var (First, Second, Difference) in Differences)
+        {
+            Assert.AreEqual(
+                Second, First - Difference,
+                $"Invalid {First.ToMusicalNotationString()} - {Difference} result.");
+        }
+    }
+
+    /// <summary>
+    /// Tests of the <see cref="Note"/> difference operator.
     /// </summary>
     [TestMethod]
     public void TestDifference()
     {
-        foreach (var (Left, Right, Result) in DifferenceTests)
+        foreach (var (Left, Right, Difference) in Differences)
         {
             Assert.AreEqual(
-                Result, Left - Right,
+                Difference, Left - Right,
                 $"Unexpected {Left.ToMusicalNotationString()} - {Right.ToMusicalNotationString()} result.");
             Assert.AreEqual(
-                -(SignedInterval)Result, Right - Left,
+                -(SignedInterval)Difference, Right - Left,
                 $"Unexpected {Right.ToMusicalNotationString()} - {Left.ToMusicalNotationString()} result.");
         }
     }

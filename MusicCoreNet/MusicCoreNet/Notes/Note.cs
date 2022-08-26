@@ -65,6 +65,48 @@ public readonly record struct Note(NoteClass Class, int Octave)
 
     #region Arithmetic
     /// <summary>
+    /// Gets a <see cref="Note"/> equivalent to the note passed in with the <see cref="Interval"/> passed in subtracted.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static Note operator -(Note lhs, in Interval rhs)
+    {
+        var newClass = lhs.Class - rhs.Base;
+
+        // Class addition underflows if we have hit the next octave down
+        // This would be less than 0, but subtract 1 since the number contributes 1 less than its value to the letter
+        // when subtracting
+        var classAdditionUnderflows = lhs.Letter.CBasedIndex() - rhs.Base.Number < -1;
+
+        var newOctave = lhs.Octave - rhs.AdditionalOctaves;
+        if (classAdditionUnderflows) newOctave--;
+
+        return new(newClass, newOctave);
+    }
+
+    /// <summary>
+    /// Gets a <see cref="Note"/> equivalent to the note passed in with the <see cref="Interval"/> passed in added.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static Note operator +(Note lhs, in Interval rhs)
+    {
+        var newClass = lhs.Class + rhs.Base;
+
+        // Class addition overflows if we have hit the next octave up
+        // This would be greater than 6, but add 1 since the number contributes 1 less than its value to the letter
+        // when adding
+        var classAdditionOverflows = lhs.Letter.CBasedIndex() + rhs.Base.Number > 7;
+
+        var newOctave = lhs.Octave + rhs.AdditionalOctaves;
+        if (classAdditionOverflows) newOctave++;
+
+        return new(newClass, newOctave);
+    }
+
+    /// <summary>
     /// Finds the difference between the <see cref="Note"/> values passed in.
     /// </summary>
     /// <param name="lhs"></param>
