@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace RemTest.Music;
 
 /// <summary>
-/// Tests of the <see cref="SimpleIntervalBase"/> class and subclasses.
+/// Tests of the <see cref="SimpleIntervalBase"/> struct.
 /// </summary>
 [TestClass]
 public class SimpleIntervalBaseTest
