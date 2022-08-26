@@ -386,7 +386,7 @@ public readonly record struct IntervalQuality
     /// </remarks>
     /// <param name="degree"></param>
     /// <returns></returns>
-    public IntervalQuality Shift(int degree)
+    internal IntervalQuality Shift(int degree)
         => IsPerfectable()
             ? new(new PerfectableIntervalQuality(degree + InternalQuality.Perfectable.PerfectBasedIndex))
             : new(new NonPerfectableIntervalQuality(degree + InternalQuality.NonPerfectable.MajorBasedIndex));

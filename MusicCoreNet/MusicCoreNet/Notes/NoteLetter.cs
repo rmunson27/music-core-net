@@ -57,7 +57,7 @@ public static class NoteLetters
                 F => Intervals.Diminished().Fifth(),
                 _ => throw new Exception("Bug - should never happen."),
             },
-            var sib => sib,
+            SimpleIntervalBase sib => sib,
         };
     }
 

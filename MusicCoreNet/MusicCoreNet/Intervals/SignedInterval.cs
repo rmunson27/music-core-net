@@ -1,5 +1,4 @@
 ﻿using Rem.Core.Attributes;
-using Rem.Core.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +34,8 @@ public sealed record class SignedInterval
     /// <summary>
     /// Gets the interval this instance represents.
     /// </summary>
-    [NonDefaultableStruct] public Interval Interval { get; }
+    public Interval Interval => _interval;
+    private readonly Interval _interval;
 
     /// <summary>
     /// Gets the sign of this instance.
@@ -45,20 +45,20 @@ public sealed record class SignedInterval
     #endregion
 
     #region Constructor
-    private SignedInterval([NonDefaultableStruct] Interval Interval, sbyte Sign)
+    private SignedInterval(in Interval Interval, sbyte Sign)
     {
+        _interval = Interval;
+        _sign = Sign;
+
         // If the interval is a unison, we need sign fixups to handle potential ambiguity (i.e. a diminished unison in
         // the positive direction is equivalent to an augmented unison in the negative direction)
-        if (Interval.Number == 1)
+        if (_interval.Number == 1)
         {
             // If the sign is negative, invert the base of the underlying interval and represent as a unison
             // with positive sign
-            if (Sign < 0) Interval = Interval with { Base = -Interval.Base };
-            Sign = 1;
+            if (_sign < 0) _interval = _interval with { Base = -_interval.Base };
+            _sign = 1;
         }
-
-        this.Interval = Interval;
-        _sign = Sign;
     }
     #endregion
 
@@ -69,18 +69,14 @@ public sealed record class SignedInterval
     /// </summary>
     /// <param name="Interval"></param>
     /// <returns></returns>
-    /// <exception cref="StructArgumentDefaultException"><paramref name="Interval"/> was the default.</exception>
-    public static SignedInterval Positive([NonDefaultableStruct] Interval Interval)
-        => new(Throw.IfStructArgDefault(Interval, nameof(Interval)), 1);
+    public static SignedInterval Positive(in Interval Interval) => new(in Interval, 1);
 
     /// <summary>
     /// Creates a new <see cref="SignedInterval"/> representing the interval passed in in the negative direction.
     /// </summary>
     /// <param name="Interval"></param>
     /// <returns></returns>
-    /// <exception cref="StructArgumentDefaultException"><paramref name="Interval"/> was the default.</exception>
-    public static SignedInterval Negative([NonDefaultableStruct] Interval Interval)
-        => new(Throw.IfStructArgDefault(Interval, nameof(Interval)), -1);
+    public static SignedInterval Negative(in Interval Interval) => new(in Interval, -1);
     #endregion
 
     #region Equality
@@ -117,7 +113,7 @@ public sealed record class SignedInterval
 
         return lhs._sign == rhs._sign
                 ? SubtractRelativeToLeftHandSign(lhs, rhs)
-                : new(lhs.Interval + rhs.Interval, lhs._sign);
+                : new(lhs._interval + rhs._interval, lhs._sign);
     }
 
     /// <summary>
@@ -135,14 +131,14 @@ public sealed record class SignedInterval
         Throw.IfArgNull(rhs, nameof(rhs));
 
         return lhs._sign == rhs._sign
-                ? new(lhs.Interval + rhs.Interval, lhs._sign)
+                ? new(lhs._interval + rhs._interval, lhs._sign)
                 : SubtractRelativeToLeftHandSign(lhs, rhs);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static SignedInterval SubtractRelativeToLeftHandSign(SignedInterval lhs, SignedInterval rhs)
     {
-        Interval.SubtractInPlace(lhs.Interval, rhs.Interval, out var newBase, out var newOctaves);
+        Interval.SubtractInPlace(in lhs._interval, in rhs._interval, out var newBase, out var newOctaves);
 
         if (newOctaves < 0)
         {
@@ -156,7 +152,7 @@ public sealed record class SignedInterval
             // the 0 octave range, but with a negative sign EXCEPT the -1 octave itself
             // Correct the range unless the base value is an octave multiple
             var finalOctaves = -newOctaves;
-            if (finalBase.NumberValue != 1) finalOctaves--;
+            if (finalBase.Number != 1) finalOctaves--;
 
             return new(new(finalBase, finalOctaves), (sbyte)-lhs._sign);
         }
@@ -172,7 +168,7 @@ public sealed record class SignedInterval
     public static SignedInterval operator -(SignedInterval interval)
     {
         Throw.IfArgNull(interval, nameof(interval));
-        return new(interval.Interval, (sbyte)-interval._sign);
+        return new(in interval._interval, (sbyte)-interval._sign);
     }
     #endregion
 
@@ -181,7 +177,7 @@ public sealed record class SignedInterval
     /// Implicitly converts a <see cref="Music.Interval"/> to a positive <see cref="SignedInterval"/>.
     /// </summary>
     /// <param name="interval"></param>
-    public static implicit operator SignedInterval(Interval interval) => new(interval, 1);
+    public static implicit operator SignedInterval(in Interval interval) => new(in interval, 1);
 
     /// <summary>
     /// Implicitly converts a <see cref="SimpleIntervalBase"/> to a positive <see cref="SignedInterval"/>.
@@ -197,7 +193,7 @@ public sealed record class SignedInterval
     /// <returns></returns>
     public override string ToString()
     {
-        var result = Interval.ToString();
+        var result = _interval.ToString();
         if (_sign < 0) result = "-" + result;
         return result;
     }

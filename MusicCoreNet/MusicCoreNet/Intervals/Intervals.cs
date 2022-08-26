@@ -61,9 +61,7 @@ public static class Intervals
 /// <param name="AdditionalOctaves">
 /// The number of additional octaves added onto the base to make up the interval.
 /// </param>
-public readonly record struct Interval(
-    SimpleIntervalBase Base, [NonNegative] int AdditionalOctaves)
-    : IDefaultableStruct
+public readonly record struct Interval(SimpleIntervalBase Base, [NonNegative] int AdditionalOctaves)
 {
     #region Constants
     /// <summary>
@@ -78,38 +76,20 @@ public readonly record struct Interval(
     #endregion
 
     #region Properties And Fields
-    /// <inheritdoc/>
-    public bool IsDefault => _base is null;
-
     /// <summary>
     /// Gets the number of this interval.
     /// </summary>
-    [DoesNotReturnIfInstanceDefault]
     public IntervalNumber Number => new(Base.Number, AdditionalOctaves);
 
     /// <summary>
     /// Gets the quality of this interval.
     /// </summary>
-    [DoesNotReturnIfInstanceDefault]
     public IntervalQuality Quality => Base.Quality;
 
     /// <summary>
     /// Gets the perfectability of this interval.
     /// </summary>
-    [DoesNotReturnIfInstanceDefault]
     public IntervalPerfectability Perfectability => Base.Perfectability;
-
-    /// <summary>
-    /// Gets or initializes the base defining the quality and base number of this interval.
-    /// </summary>
-    /// <exception cref="PropertySetNullException">This property was initialized to <see langword="null"/>.</exception>
-    [MaybeDefaultIfInstanceDefault]
-    public SimpleIntervalBase Base
-    {
-        get => _base;
-        init => _base = Throw.IfPropSetNull(value);
-    }
-    private readonly SimpleIntervalBase _base = Throw.IfArgNull(Base, nameof(Base));
 
     /// <summary>
     /// Gets or initializes the number of additional octaves added on to the base to make up the interval.
@@ -124,23 +104,21 @@ public readonly record struct Interval(
         = Throw.IfArgNegative(AdditionalOctaves, nameof(AdditionalOctaves));
     #endregion
 
-    #region Constructors
+    #region Methods
+    #region Factory
     /// <summary>
-    /// Constructs a new <see cref="Interval"/> with the given quality and number.
+    /// Creates a new <see cref="Interval"/> with the given quality and number.
     /// </summary>
     /// <param name="Quality"></param>
     /// <param name="Number"></param>
+    /// <returns></returns>
     /// <exception cref="ArgumentException">
     /// The perfectability of the quality and number did not match.
     /// </exception>
-    public Interval(IntervalQuality Quality, IntervalNumber Number)
-        : this(
-              Base: SimpleIntervalBase.FromQualityAndNumber(Quality, Number.Base),
-              AdditionalOctaves: Number.AdditionalOctaves)
-    { }
+    public static Interval Create(IntervalQuality Quality, IntervalNumber Number)
+        => new(SimpleIntervalBase.Create(Quality, Number.Base), Number.AdditionalOctaves);
     #endregion
 
-    #region Methods
     #region Equality
     /// <summary>
     /// Determines if the current instance is equal to another object of the same type.
@@ -163,14 +141,8 @@ public readonly record struct Interval(
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    /// <exception cref="StructArgumentDefaultException">
-    /// Either <paramref name="lhs"/> or <paramref name="rhs"/> was the default.
-    /// </exception>
-    public static Interval operator +([NonDefaultableStruct] Interval lhs, [NonDefaultableStruct] Interval rhs)
+    public static Interval operator +(in Interval lhs, in Interval rhs)
     {
-        Throw.IfStructArgDefault(lhs, nameof(lhs));
-        Throw.IfStructArgDefault(rhs, nameof(rhs));
-
         var newBase = lhs.Base.PlusWithOverflow(rhs.Base, out var baseAdditionOverflows);
 
         var newAdditionalOctaves = lhs.AdditionalOctaves + rhs.AdditionalOctaves;
@@ -185,15 +157,12 @@ public readonly record struct Interval(
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    /// <exception cref="StructArgumentDefaultException">
-    /// Either <paramref name="lhs"/> or <paramref name="rhs"/> was the default.
-    /// </exception>
     /// <exception cref="OverflowException">
     /// The difference between the intervals underflows past a unison.
     /// <para/>
     /// This will occur if <paramref name="lhs"/> is less than <paramref name="rhs"/>.
     /// </exception>
-    public static Interval operator -([NonDefaultableStruct] Interval lhs, [NonDefaultableStruct] Interval rhs)
+    public static Interval operator -(in Interval lhs, in Interval rhs)
     {
         SubtractInPlace(in lhs, in rhs, out var newBase, out var newAdditionalOctaves);
         if (newAdditionalOctaves < 0) throw new OverflowException("The difference underflows past a unison.");
@@ -214,12 +183,9 @@ public readonly record struct Interval(
     /// <param name="newAdditionalOctaves"></param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static void SubtractInPlace(
-        [NonDefaultableStruct] in Interval lhs, [NonDefaultableStruct] in Interval rhs,
+        in Interval lhs, in Interval rhs,
         out SimpleIntervalBase newBase, out int newAdditionalOctaves)
     {
-        Throw.IfStructArgDefault(lhs, nameof(lhs));
-        Throw.IfStructArgDefault(rhs, nameof(rhs));
-
         newBase = lhs.Base.MinusWithUnderflow(rhs.Base, out var baseAdditionUnderflows);
 
         newAdditionalOctaves = lhs.AdditionalOctaves - rhs.AdditionalOctaves;
@@ -240,7 +206,6 @@ public readonly record struct Interval(
     /// Gets a string that represents the current instance.
     /// </summary>
     /// <returns></returns>
-    [DoesNotReturnIfInstanceDefault]
     public override string ToString() => $"{nameof(Interval)} {{ Quality = {Quality}, Number = {Number} }}";
     #endregion
     #endregion

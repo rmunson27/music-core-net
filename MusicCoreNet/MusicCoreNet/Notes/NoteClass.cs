@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -67,15 +66,10 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
     /// <returns></returns>
     public static SimpleIntervalBase operator -(NoteClass lhs, NoteClass rhs)
     {
-#pragma warning disable CS8509 // This should handle everything
-        return lhs.Letter.Minus(rhs.Letter) switch
-#pragma warning restore CS8509
-        {
-            PerfectableSimpleIntervalBase pi
-                => pi with { Quality = pi.Quality.Shift(lhs.Accidental.IntValue - rhs.Accidental.IntValue) },
-            NonPerfectableSimpleIntervalBase npi
-                => npi with { Quality = npi.Quality.Shift(lhs.Accidental.IntValue - rhs.Accidental.IntValue) },
-        };
+        var letterDifference = lhs.Letter.Minus(rhs.Letter);
+        return new(
+                letterDifference.Quality.Shift(lhs.Accidental.IntValue - rhs.Accidental.IntValue),
+                letterDifference.Number);
     }
     #endregion
 

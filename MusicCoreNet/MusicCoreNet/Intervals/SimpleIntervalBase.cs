@@ -1,5 +1,4 @@
 ﻿using Rem.Core.Attributes;
-using Rem.Core.ComponentModel;
 using Rem.Music.Internal;
 using System;
 using System.Collections.Generic;
@@ -11,259 +10,40 @@ using System.Threading.Tasks;
 namespace Rem.Music;
 
 /// <summary>
-/// Represents a perfectable simple interval base that spans less than one octave.
-/// </summary>
-/// <param name="Quality">The quality of the interval.</param>
-/// <param name="Number">The number of the interval.</param>
-/// <exception cref="InvalidEnumArgumentException">
-/// <paramref name="Number"/> was an unnamed enum value.
-/// </exception>
-public sealed record class PerfectableSimpleIntervalBase(
-    PerfectableIntervalQuality Quality, [NamedEnum] PerfectableSimpleIntervalNumber Number) : SimpleIntervalBase
-{
-    #region Properties And Fields
-    /// <inheritdoc/>
-    public override int HalfSteps => Number.PerfectHalfSteps() + Quality.PerfectBasedIndex;
-
-    /// <inheritdoc/>
-    private protected override int QualityPerfectOrMajorBasedIndex => Quality.PerfectBasedIndex;
-
-    private protected override IntervalQuality QualityInternal => Quality;
-
-    private protected override SimpleIntervalNumber NumberInternal => Number;
-
-    /// <summary>
-    /// Gets or initializes the quality of the interval represented by the current instance.
-    /// </summary>
-    public new PerfectableIntervalQuality Quality { get; init; } = Quality;
-
-    /// <inheritdoc/>
-    public override IntervalPerfectability Perfectability => Perfectable;
-
-    /// <summary>
-    /// Gets or initializes the number of this interval.
-    /// </summary>
-    /// <exception cref="InvalidEnumPropertySetException">
-    /// This property was initialized to an unnamed enum value.
-    /// </exception>
-    [NamedEnum] public new PerfectableSimpleIntervalNumber Number
-    {
-        get => _number;
-        init => _number = Throw.IfEnumPropSetUnnamed(value);
-    }
-    private readonly PerfectableSimpleIntervalNumber _number = Throw.IfEnumArgUnnamed(Number, nameof(Number));
-    #endregion
-
-    #region Methods
-    #region Classification
-    /// <inheritdoc/>
-    public override bool IsAugmented([NonZero] out int Degree) => Quality.IsAugmented(out Degree);
-
-    /// <inheritdoc/>
-    public override bool IsAugmented() => Quality.IsAugmented();
-
-    /// <inheritdoc/>
-    public override bool IsDiminished([NonNegative] out int Degree) => Quality.IsDiminished(out Degree);
-
-    /// <inheritdoc/>
-    public override bool IsDiminished() => Quality.IsDiminished();
-    #endregion
-
-    #region Equality
-    /// <summary>
-    /// Determines if this object is equal to another object of the same type.
-    /// </summary>
-    /// <param name="other"></param>
-    /// <returns></returns>
-    public bool Equals(PerfectableSimpleIntervalBase? other)
-        => other is not null && Number == other.Number && Quality == other.Quality;
-
-    /// <summary>
-    /// Gets a hash code for the current instance.
-    /// </summary>
-    /// <returns></returns>
-    public override int GetHashCode() => HashCode.Combine(Quality, Number);
-    #endregion
-
-    #region Arithmetic
-    private protected override SimpleIntervalBase InversionInternal() => Inversion();
-
-    /// <summary>
-    /// Gets the inversion of the <see cref="PerfectableSimpleIntervalBase"/> instance passed in.
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"><paramref name="value"/> was <see langword="null"/>.</exception>
-    public static PerfectableSimpleIntervalBase operator -(PerfectableSimpleIntervalBase value)
-        => Throw.IfArgNull(value, nameof(value)).Inversion();
-
-    /// <summary>
-    /// Gets a <see cref="PerfectableSimpleIntervalBase"/> equivalent to the inversion of the current instance.
-    /// </summary>
-    /// <returns></returns>
-    public new PerfectableSimpleIntervalBase Inversion() => new(Quality.Inversion(), Number.Inversion());
-    #endregion
-
-    #region ToString
-    /// <summary>
-    /// Gets a string that represents the current instance.
-    /// </summary>
-    /// <returns></returns>
-    public override string ToString() => $"{nameof(SimpleIntervalBase)} {{ Quality = {Quality}, Number = {Number} }}";
-    #endregion
-    #endregion
-}
-
-/// <summary>
-/// Represents a non-perfectable simple interval base that spans less than one octave.
-/// </summary>
-/// <param name="Quality">The quality of the interval.</param>
-/// <param name="Number">The number of the interval.</param>
-/// <exception cref="InvalidEnumArgumentException">
-/// <paramref name="Number"/> was an unnamed enum value.
-/// </exception>
-public sealed record class NonPerfectableSimpleIntervalBase(
-    NonPerfectableIntervalQuality Quality, [NamedEnum] NonPerfectableSimpleIntervalNumber Number) : SimpleIntervalBase
-{
-    #region Properties And Fields
-    private protected override SimpleIntervalNumber NumberInternal => Number;
-
-    /// <inheritdoc/>
-    public override int HalfSteps => Number.MajorHalfSteps() + Quality.MajorBasedIndex;
-
-    /// <inheritdoc/>
-    private protected override int QualityPerfectOrMajorBasedIndex => Quality.MajorBasedIndex;
-
-    private protected override IntervalQuality QualityInternal => Quality;
-
-    /// <summary>
-    /// Gets or initializes the quality of the interval represented by the current instance.
-    /// </summary>
-    public new NonPerfectableIntervalQuality Quality { get; init; } = Quality;
-
-    /// <inheritdoc/>
-    public override IntervalPerfectability Perfectability => NonPerfectable;
-
-    /// <summary>
-    /// Gets or initializes the number of this interval.
-    /// </summary>
-    /// <exception cref="InvalidEnumPropertySetException">
-    /// This property was initialized to an unnamed enum value.
-    /// </exception>
-    [NamedEnum] public new NonPerfectableSimpleIntervalNumber Number
-    {
-        get => _number;
-        init => _number = Throw.IfEnumPropSetUnnamed(value);
-    }
-    private readonly NonPerfectableSimpleIntervalNumber _number = Throw.IfEnumArgUnnamed(Number, nameof(Number));
-    #endregion
-
-    #region Methods
-    #region Classification
-    /// <inheritdoc/>
-    public override bool IsAugmented([NonZero] out int Degree) => Quality.IsAugmented(out Degree);
-
-    /// <inheritdoc/>
-    public override bool IsAugmented() => Quality.IsAugmented();
-
-    /// <inheritdoc/>
-    public override bool IsDiminished([NonNegative] out int Degree) => Quality.IsDiminished(out Degree);
-
-    /// <inheritdoc/>
-    public override bool IsDiminished() => Quality.IsDiminished();
-    #endregion
-
-    #region Equality
-    /// <summary>
-    /// Determines if this object is equal to another object of the same type.
-    /// </summary>
-    /// <param name="other"></param>
-    /// <returns></returns>
-    public bool Equals(NonPerfectableSimpleIntervalBase? other)
-        => other is not null && Number == other.Number && Quality == other.Quality;
-
-    /// <summary>
-    /// Gets a hash code for the current instance.
-    /// </summary>
-    /// <returns></returns>
-    public override int GetHashCode() => HashCode.Combine(Quality, Number);
-    #endregion
-
-    #region Arithmetic
-    private protected override SimpleIntervalBase InversionInternal() => Inversion();
-
-    /// <summary>
-    /// Gets the inversion of the <see cref="NonPerfectableSimpleIntervalBase"/> instance passed in.
-    /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"><paramref name="value"/> was <see langword="null"/>.</exception>
-    public static NonPerfectableSimpleIntervalBase operator -(NonPerfectableSimpleIntervalBase value)
-        => Throw.IfArgNull(value, nameof(value)).Inversion();
-
-    /// <summary>
-    /// Gets a <see cref="NonPerfectableSimpleIntervalBase"/> equivalent to the inversion of the current instance.
-    /// </summary>
-    /// <returns></returns>
-    public new NonPerfectableSimpleIntervalBase Inversion() => new(Quality.Inversion(), Number.Inversion());
-    #endregion
-
-    #region ToString
-    /// <summary>
-    /// Gets a string that represents the current instance.
-    /// </summary>
-    /// <returns></returns>
-    public override string ToString() => $"{nameof(SimpleIntervalBase)} {{ Quality = {Quality}, Number = {Number} }}";
-    #endregion
-    #endregion
-}
-
-/// <summary>
 /// Represents a simple interval base that spans less than one octave.
 /// </summary>
 /// <remarks>
 /// This type is used as a base to construct intervals used in this library.
-/// <para/>
-/// The only possible subclasses of this class are <see cref="PerfectableSimpleIntervalBase"/>
-/// and <see cref="NonPerfectableSimpleIntervalBase"/>.
 /// </remarks>
-public abstract record class SimpleIntervalBase
+public readonly record struct SimpleIntervalBase
 {
     #region Constants
     /// <summary>
     /// A <see cref="SimpleIntervalBase"/> representing a perfect fourth.
     /// </summary>
-    public static readonly PerfectableSimpleIntervalBase PerfectFourth = Intervals.Perfect().Fourth();
+    public static readonly SimpleIntervalBase PerfectFourth = Intervals.Perfect().Fourth();
 
     /// <summary>
     /// A <see cref="SimpleIntervalBase"/> representing a perfect unison.
     /// </summary>
-    public static readonly PerfectableSimpleIntervalBase PerfectUnison = Intervals.Perfect().Unison();
+    public static readonly SimpleIntervalBase PerfectUnison = Intervals.Perfect().Unison();
 
     /// <summary>
     /// A <see cref="SimpleIntervalBase"/> representing a perfect fifth.
     /// </summary>
-    public static readonly PerfectableSimpleIntervalBase PerfectFifth = Intervals.Perfect().Fifth();
+    public static readonly SimpleIntervalBase PerfectFifth = Intervals.Perfect().Fifth();
     #endregion
 
     #region Properties
     /// <summary>
-    /// Gets an integer representing the number of the interval.
-    /// </summary>
-    /// <remarks>
-    /// For a simple example, accessing this property on a second will yield 2.
-    /// </remarks>
-    [Positive] public int NumberValue => Number.Value;
-
-    /// <summary>
     /// Gets the number of the interval represented by this instance.
     /// </summary>
-    public SimpleIntervalNumber Number => NumberInternal;
+    public SimpleIntervalNumber Number { get; }
 
     /// <summary>
-    /// Allows more specific number types to exist as properties in subclasses.
+    /// Gets the quality of the interval represented by the current instance.
     /// </summary>
-    private protected abstract SimpleIntervalNumber NumberInternal { get; }
+    public IntervalQuality Quality { get; }
 
     /// <summary>
     /// Gets the circle of fifths index of this instance relative to a perfect unison.
@@ -271,31 +51,28 @@ public abstract record class SimpleIntervalBase
     public int CircleOfFifthsIndex => Number.CircleOfFifthsIndex() + Quality.PerfectOrMajorBasedIndex * 7;
 
     /// <summary>
-    /// Gets the quality of the interval represented by the current instance.
-    /// </summary>
-    public IntervalQuality Quality => QualityInternal;
-
-    /// <summary>
-    /// Allows subclasses to supply their own interval qualities with specific perfectability.
-    /// </summary>
-    private protected abstract IntervalQuality QualityInternal { get; }
-
-    /// <summary>
     /// Gets the number of half steps spanning the simple interval represented by this object.
     /// </summary>
-    public abstract int HalfSteps { get; }
+    public int HalfSteps => Number.PerfectOrMajorHalfSteps + Quality.PerfectOrMajorBasedIndex;
 
     /// <summary>
     /// Gets the perfectability of the current instance.
     /// </summary>
-    public abstract IntervalPerfectability Perfectability { get; }
+    public IntervalPerfectability Perfectability => Number.Perfectability; // Should be the same for quality and number
+    #endregion
 
+    #region Constructor
     /// <summary>
-    /// Gets the <see cref="PerfectableIntervalQuality.PerfectBasedIndex"/> or
-    /// <see cref="NonPerfectableIntervalQuality.MajorBasedIndex"/> property based on which type of interval
-    /// this is.
+    /// Constructs a new instance of the <see cref="SimpleIntervalBase"/> struct with the quality and number
+    /// passed in.
     /// </summary>
-    private protected abstract int QualityPerfectOrMajorBasedIndex { get; }
+    /// <param name="Quality"></param>
+    /// <param name="Number"></param>
+    internal SimpleIntervalBase(IntervalQuality Quality, SimpleIntervalNumber Number)
+    {
+        this.Quality = Quality;
+        this.Number = Number;
+    }
     #endregion
 
     #region Methods
@@ -307,21 +84,18 @@ public abstract record class SimpleIntervalBase
     /// <param name="Number"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException">
-    /// The perfectability of the quality and number passed in do not match.
+    /// The perfectabilities of the quality and number did not match.
     /// </exception>
-    public static SimpleIntervalBase FromQualityAndNumber(IntervalQuality Quality, SimpleIntervalNumber Number)
+    public static SimpleIntervalBase Create(IntervalQuality Quality, SimpleIntervalNumber Number)
     {
-        if (Quality.IsPerfectable(out var pQuality) && Number.IsPerfectable(out var pNumber))
+        if (Quality.Perfectability != Number.Perfectability)
         {
-            return new PerfectableSimpleIntervalBase(pQuality, pNumber);
+            throw new ArgumentException(
+                $"Quality perfectability '{Quality.Perfectability}' did not match number perfectability "
+                    + $" '{Number.Perfectability}'.");
         }
-        else if (Quality.IsNonPerfectable(out var npQuality) && Number.IsNonPerfectable(out var npNumber))
-        {
-            return new NonPerfectableSimpleIntervalBase(npQuality, npNumber);
-        }
-        else throw new ArgumentException(
-                $"Quality perfectability ({Quality.Perfectability}) did not match"
-                    + $" number perfectability ({Number.Perfectability}).");
+
+        return new(Quality, Number);
     }
 
     /// <summary>
@@ -371,27 +145,128 @@ public abstract record class SimpleIntervalBase
         if (numberCircleOfFifthsIndex == -1) qualityCircleOfFifthsIndex++;
 
         var number = SimpleIntervalNumber.FromCircleOfFifthsIndex(numberCircleOfFifthsIndex);
-        return number.IsPerfectable(out var pNumber, out var npNumber)
-                ? new PerfectableSimpleIntervalBase(
-                    PerfectableIntervalQuality.FromPerfectBasedIndex(qualityCircleOfFifthsIndex), pNumber)
-                : new NonPerfectableSimpleIntervalBase(
-                    NonPerfectableIntervalQuality.FromMajorBasedIndex(qualityCircleOfFifthsIndex), npNumber);
+        IntervalQuality quality = number.IsPerfectable()
+                                    ? PerfectableIntervalQuality.FromPerfectBasedIndex(qualityCircleOfFifthsIndex)
+                                    : NonPerfectableIntervalQuality.FromMajorBasedIndex(qualityCircleOfFifthsIndex);
+        return new(quality, number);
     }
+
+    /// <summary>
+    /// Creates a new perfectable instance of this struct with the supplied quality and number.
+    /// </summary>
+    /// <param name="Quality"></param>
+    /// <param name="Number"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidEnumArgumentException"><paramref name="Number"/> was an unnamed enum value.</exception>
+    public static SimpleIntervalBase CreatePerfectable(
+        PerfectableIntervalQuality Quality, [NamedEnum] PerfectableSimpleIntervalNumber Number)
+        => new(Quality, Throw.IfEnumArgUnnamed(Number, nameof(Number)));
+
+    /// <summary>
+    /// Creates a new non-perfectable instance of this struct with the supplied quality and number.
+    /// </summary>
+    /// <param name="Quality"></param>
+    /// <param name="Number"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidEnumArgumentException"><paramref name="Number"/> was an unnamed enum value.</exception>
+    public static SimpleIntervalBase CreateNonPerfectable(
+        NonPerfectableIntervalQuality Quality, [NamedEnum] NonPerfectableSimpleIntervalNumber Number)
+        => new(Quality, Throw.IfEnumArgUnnamed(Number, nameof(Number)));
     #endregion
 
     #region Classification
     #region Perfectability
     /// <summary>
+    /// Gets whether or not this instance represents a perfectable interval, returning the perfectable quality and
+    /// number in <see langword="out"/> parameters if so and returning the non-perfectable quality and number in
+    /// <see langword="out"/> parameters if not.
+    /// </summary>
+    /// <param name="PerfectableQuality"></param>
+    /// <param name="PerfectableNumber"></param>
+    /// <param name="NonPerfectableQuality"></param>
+    /// <param name="NonPerfectableNumber"></param>
+    /// <returns></returns>
+    public bool IsPerfectable(
+        out PerfectableIntervalQuality PerfectableQuality,
+        out PerfectableSimpleIntervalNumber PerfectableNumber,
+        out NonPerfectableIntervalQuality NonPerfectableQuality,
+        out NonPerfectableSimpleIntervalNumber NonPerfectableNumber)
+    {
+        if (
+            Quality.IsPerfectable(out var pQuality, out var npQuality)
+                & Number.IsPerfectable(out var pNumber, out var npNumber))
+        {
+            (PerfectableQuality, PerfectableNumber) = (pQuality, pNumber);
+            (NonPerfectableQuality, NonPerfectableNumber) = (default, default);
+            return true;
+        }
+        else
+        {
+            (PerfectableQuality, PerfectableNumber) = (default, default);
+            (NonPerfectableQuality, NonPerfectableNumber) = (npQuality, npNumber);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Gets whether or not this instance represents a perfectable interval, returning the perfectable quality and
+    /// number in <see langword="out"/> parameters if so.
+    /// </summary>
+    /// <param name="Quality"></param>
+    /// <param name="Number"></param>
+    /// <returns></returns>
+    public bool IsPerfectable(
+        out PerfectableIntervalQuality Quality, out PerfectableSimpleIntervalNumber Number)
+    {
+        if (this.Quality.IsPerfectable(out var pQuality) && this.Number.IsPerfectable(out var pNumber))
+        {
+            Quality = pQuality;
+            Number = pNumber;
+            return true;
+        }
+        else
+        {
+            Quality = default;
+            Number = default;
+            return false;
+        }
+    }
+
+    /// <summary>
     /// Gets whether or not this instance represents a perfectable interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsPerfectable() => Perfectability == Perfectable;
+    public bool IsPerfectable() => Perfectability == IntervalPerfectability.Perfectable;
+
+    /// <summary>
+    /// Gets whether or not this instance represents a non-perfectable interval, returning the non-perfectable quality
+    /// and number in <see langword="out"/> parameters if so.
+    /// </summary>
+    /// <param name="Quality"></param>
+    /// <param name="Number"></param>
+    /// <returns></returns>
+    public bool IsNonPerfectable(
+        out NonPerfectableIntervalQuality Quality, out NonPerfectableSimpleIntervalNumber Number)
+    {
+        if (this.Quality.IsNonPerfectable(out var npQuality) && this.Number.IsNonPerfectable(out var npNumber))
+        {
+            Quality = npQuality;
+            Number = npNumber;
+            return true;
+        }
+        else
+        {
+            Quality = default;
+            Number = default;
+            return false;
+        }
+    }
 
     /// <summary>
     /// Gets whether or not this instance represents a non-perfectable interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsNonPerfectable() => Perfectability == NonPerfectable;
+    public bool IsNonPerfectable() => Perfectability == IntervalPerfectability.NonPerfectable;
     #endregion
 
     #region Specific Qualities
@@ -401,13 +276,13 @@ public abstract record class SimpleIntervalBase
     /// </summary>
     /// <param name="Degree"></param>
     /// <returns></returns>
-    public abstract bool IsAugmented([NonZero] out int Degree);
+    public bool IsAugmented([NonZero] out int Degree) => Quality.IsAugmented(out Degree);
 
     /// <summary>
     /// Gets whether or not this interval base is augmented.
     /// </summary>
     /// <returns></returns>
-    public abstract bool IsAugmented();
+    public bool IsAugmented() => Quality.IsAugmented();
 
     /// <summary>
     /// Gets whether or not this interval is diminished, setting <paramref name="Degree"/> to the degree to which it
@@ -415,13 +290,13 @@ public abstract record class SimpleIntervalBase
     /// </summary>
     /// <param name="Degree"></param>
     /// <returns></returns>
-    public abstract bool IsDiminished([NonZero] out int Degree);
+    public bool IsDiminished([NonZero] out int Degree) => Quality.IsDiminished(out Degree);
 
     /// <summary>
     /// Gets whether or not this interval base is diminished.
     /// </summary>
     /// <returns></returns>
-    public abstract bool IsDiminished();
+    public bool IsDiminished() => Quality.IsDiminished();
     #endregion
     #endregion
 
@@ -438,7 +313,7 @@ public abstract record class SimpleIntervalBase
     {
         // Subtraction underflows past a unison depending on the difference between the interval numbers
         // Add 1 to the difference, as for example, a third (3) minus a unison (1) is a third (3), not a second (2).
-        underflows = NumberValue - other.NumberValue + 1 <= 0;
+        underflows = Number - other.Number + 1 <= 0;
 
         return this - other;
     }
@@ -453,9 +328,6 @@ public abstract record class SimpleIntervalBase
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    /// <exception cref="ArgumentNullException">
-    /// Either <paramref name="lhs"/> or <paramref name="rhs"/> was <see langword="null"/>.
-    /// </exception>
     public static SimpleIntervalBase operator -(SimpleIntervalBase lhs, SimpleIntervalBase rhs) => lhs + (-rhs);
 
     /// <summary>
@@ -470,7 +342,7 @@ public abstract record class SimpleIntervalBase
     {
         // Addition overflows past an octave depending on the sum of the interval numbers
         // Subtract 1 from the sum, as for example, a unison (1) plus a unison (1) is a unison (1), not a second (2). 
-        overflows = NumberValue + other.NumberValue - 1 >= 8;
+        overflows = Number + other.Number - 1 >= 8;
 
         return this + other;
     }
@@ -485,38 +357,27 @@ public abstract record class SimpleIntervalBase
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    /// <exception cref="ArgumentNullException">
-    /// Either <paramref name="lhs"/> or <paramref name="rhs"/> was <see langword="null"/>.
-    /// </exception>
     public static SimpleIntervalBase operator +(SimpleIntervalBase lhs, SimpleIntervalBase rhs)
     {
-        Throw.IfArgNull(lhs, nameof(lhs));
-        Throw.IfArgNull(rhs, nameof(rhs));
-
         #region Number
         var newUnisonBasedNumberIndex = lhs.Number.CircleOfFifthsIndex() + rhs.Number.CircleOfFifthsIndex();
         var ubni_determinant = newUnisonBasedNumberIndex + 1; // Get rid of the -1 label for fourths
         var qualityShift = Maths.FloorDivRem(ubni_determinant, 7, out ubni_determinant);
         newUnisonBasedNumberIndex = ubni_determinant - 1; // Add back the -1 label for fourths
+        var newNumber = SimpleIntervalNumber.FromCircleOfFifthsIndex(newUnisonBasedNumberIndex);
         #endregion
 
         #region Quality
-        var newQualityIndex = lhs.QualityPerfectOrMajorBasedIndex + rhs.QualityPerfectOrMajorBasedIndex + qualityShift;
+        var newQualityIndex = lhs.Quality.PerfectOrMajorBasedIndex
+                                + rhs.Quality.PerfectOrMajorBasedIndex
+                                + qualityShift;
+
+        IntervalQuality newQuality = newNumber.IsPerfectable()
+                                        ? PerfectableIntervalQuality.FromPerfectBasedIndex(newQualityIndex)
+                                        : NonPerfectableIntervalQuality.FromMajorBasedIndex(newQualityIndex);
         #endregion
 
-        #region Return
-        // The perfectability of the number passed in determines what kind of interval base we are creating
-        var number = SimpleIntervalNumber.FromCircleOfFifthsIndex(newUnisonBasedNumberIndex);
-        return number.Perfectability switch
-        {
-            Perfectable => new PerfectableSimpleIntervalBase(
-                            PerfectableIntervalQuality.FromPerfectBasedIndex(newQualityIndex),
-                            (PerfectableSimpleIntervalNumber)number),
-            _ => new NonPerfectableSimpleIntervalBase(
-                    NonPerfectableIntervalQuality.FromMajorBasedIndex(newQualityIndex),
-                    (NonPerfectableSimpleIntervalNumber)number),
-        };
-        #endregion
+        return new(newQuality, newNumber);
     }
 
     /// <summary>
@@ -524,21 +385,28 @@ public abstract record class SimpleIntervalBase
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    /// <exception cref="ArgumentNullException"><paramref name="value"/> was <see langword="null"/>.</exception>
-    public static SimpleIntervalBase operator -(SimpleIntervalBase value)
-        => Throw.IfArgNull(value, nameof(value)).Inversion();
+    public static SimpleIntervalBase operator -(SimpleIntervalBase value) => value.Inversion();
 
     /// <summary>
     /// Gets a <see cref="SimpleIntervalBase"/> equivalent to the inversion of the current instance.
     /// </summary>
     /// <returns></returns>
-    public SimpleIntervalBase Inversion() => InversionInternal();
+    public SimpleIntervalBase Inversion() => new(Quality.Inversion(), Number.Inversion());
+    #endregion
+
+    #region Equality
+    /// <summary>
+    /// Determines if this instance is equal to another instance of this type.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool Equals(SimpleIntervalBase other) => Quality == other.Quality && Number == other.Number;
 
     /// <summary>
-    /// Allows <see cref="Inversion"/> to be implemented with a covariant return type in subclasses.
+    /// Gets a hash code for the current instance.
     /// </summary>
     /// <returns></returns>
-    private protected abstract SimpleIntervalBase InversionInternal();
+    public override int GetHashCode() => HashCode.Combine(Quality, Number);
     #endregion
 
     #region Conversion

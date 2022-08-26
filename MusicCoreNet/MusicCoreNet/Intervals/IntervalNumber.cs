@@ -402,6 +402,14 @@ public readonly record struct SimpleIntervalNumber
 
     #region Properties And Fields
     /// <summary>
+    /// Gets the number of half steps in a perfect or major interval numbered with this instance depending on whether
+    /// or not it is perfectable.
+    /// </summary>
+    [NonNegative] internal int PerfectOrMajorHalfSteps => IsPerfectable()
+                                                            ? NonDefaultPerfectable.PerfectHalfSteps()
+                                                            : InternalNumber.NonPerfectable.MajorHalfSteps();
+
+    /// <summary>
     /// Gets the integer value of this number.
     /// </summary>
     [Positive] public int Value => IsPerfectable() ? (int)NonDefaultPerfectable : (int)InternalNumber.NonPerfectable;

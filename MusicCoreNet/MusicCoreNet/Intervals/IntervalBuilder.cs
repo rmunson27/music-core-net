@@ -1,6 +1,4 @@
-﻿using Rem.Core.Attributes;
-using Rem.Core.ComponentModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -37,24 +35,24 @@ public readonly struct AugmentedIntervalBuilder
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public PerfectableSimpleIntervalBase Fourth()
-        => new(PerfectableIntervalQuality.Augmented(Degree), PerfectableSimpleIntervalNumber.Fourth);
+    public SimpleIntervalBase Fourth()
+        => new(PerfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Fourth);
 
     /// <summary>
     /// Creates a unison with the augmented quality represented by this instance.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public PerfectableSimpleIntervalBase Unison()
-        => new(PerfectableIntervalQuality.Augmented(Degree), PerfectableSimpleIntervalNumber.Unison);
+    public SimpleIntervalBase Unison()
+        => new(PerfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Unison);
 
     /// <summary>
     /// Creates a fifth with the augmented quality represented by this instance.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public PerfectableSimpleIntervalBase Fifth()
-        => new(PerfectableIntervalQuality.Augmented(Degree), PerfectableSimpleIntervalNumber.Fifth);
+    public SimpleIntervalBase Fifth()
+        => new(PerfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Fifth);
     #endregion
 
     #region Non-Perfectable
@@ -63,32 +61,32 @@ public readonly struct AugmentedIntervalBuilder
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public NonPerfectableSimpleIntervalBase Second()
-        => new(NonPerfectableIntervalQuality.Augmented(Degree), NonPerfectableSimpleIntervalNumber.Second);
+    public SimpleIntervalBase Second()
+        => new(NonPerfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Second);
 
     /// <summary>
     /// Creates a sixth with the augmented quality represented by this instance.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public NonPerfectableSimpleIntervalBase Sixth()
-        => new(NonPerfectableIntervalQuality.Augmented(Degree), NonPerfectableSimpleIntervalNumber.Sixth);
+    public SimpleIntervalBase Sixth()
+        => new(NonPerfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Sixth);
 
     /// <summary>
     /// Creates a third with the augmented quality represented by this instance.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public NonPerfectableSimpleIntervalBase Third()
-        => new(NonPerfectableIntervalQuality.Augmented(Degree), NonPerfectableSimpleIntervalNumber.Third);
+    public SimpleIntervalBase Third()
+        => new(NonPerfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Third);
 
     /// <summary>
     /// Creates a seventh with the augmented quality represented by this instance.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public NonPerfectableSimpleIntervalBase Seventh()
-        => new(NonPerfectableIntervalQuality.Augmented(Degree), NonPerfectableSimpleIntervalNumber.Seventh);
+    public SimpleIntervalBase Seventh()
+        => new(NonPerfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Seventh);
     #endregion
     #endregion
 }
@@ -121,24 +119,24 @@ public readonly struct DiminishedIntervalBuilder
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public PerfectableSimpleIntervalBase Fourth()
-        => new(PerfectableIntervalQuality.Diminished(Degree), PerfectableSimpleIntervalNumber.Fourth);
+    public SimpleIntervalBase Fourth()
+        => new(PerfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Fourth);
 
     /// <summary>
     /// Creates a unison with the diminished quality represented by this instance.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public PerfectableSimpleIntervalBase Unison()
-        => new(PerfectableIntervalQuality.Diminished(Degree), PerfectableSimpleIntervalNumber.Unison);
+    public SimpleIntervalBase Unison()
+        => new(PerfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Unison);
 
     /// <summary>
     /// Creates a fifth with the diminished quality represented by this instance.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public PerfectableSimpleIntervalBase Fifth()
-        => new(PerfectableIntervalQuality.Diminished(Degree), PerfectableSimpleIntervalNumber.Fifth);
+    public SimpleIntervalBase Fifth()
+        => new(PerfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Fifth);
     #endregion
 
     #region Non-Perfectable
@@ -147,32 +145,32 @@ public readonly struct DiminishedIntervalBuilder
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public NonPerfectableSimpleIntervalBase Second()
-        => new(NonPerfectableIntervalQuality.Diminished(Degree), NonPerfectableSimpleIntervalNumber.Second);
+    public SimpleIntervalBase Second()
+        => new(NonPerfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Second);
 
     /// <summary>
     /// Creates a sixth with the diminished quality represented by this instance.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public NonPerfectableSimpleIntervalBase Sixth()
-        => new(NonPerfectableIntervalQuality.Diminished(Degree), NonPerfectableSimpleIntervalNumber.Sixth);
+    public SimpleIntervalBase Sixth()
+        => new(NonPerfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Sixth);
 
     /// <summary>
     /// Creates a third with the diminished quality represented by this instance.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public NonPerfectableSimpleIntervalBase Third()
-        => new(NonPerfectableIntervalQuality.Diminished(Degree), NonPerfectableSimpleIntervalNumber.Third);
+    public SimpleIntervalBase Third()
+        => new(NonPerfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Third);
 
     /// <summary>
     /// Creates a seventh with the diminished quality represented by this instance.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public NonPerfectableSimpleIntervalBase Seventh()
-        => new(NonPerfectableIntervalQuality.Diminished(Degree), NonPerfectableSimpleIntervalNumber.Seventh);
+    public SimpleIntervalBase Seventh()
+        => new(NonPerfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Seventh);
     #endregion
     #endregion
 }
@@ -187,32 +185,32 @@ public readonly struct MajorIntervalBuilder
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public NonPerfectableSimpleIntervalBase Second()
-        => new(NonPerfectableIntervalQuality.Major, NonPerfectableSimpleIntervalNumber.Second);
+    public SimpleIntervalBase Second()
+        => new(NonPerfectableIntervalQuality.Major, SimpleIntervalNumber.Second);
 
     /// <summary>
     /// Creates a major third.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public NonPerfectableSimpleIntervalBase Third()
-        => new(NonPerfectableIntervalQuality.Major, NonPerfectableSimpleIntervalNumber.Third);
+    public SimpleIntervalBase Third()
+        => new(NonPerfectableIntervalQuality.Major, SimpleIntervalNumber.Third);
 
     /// <summary>
     /// Creates a major sixth.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public NonPerfectableSimpleIntervalBase Sixth()
-        => new(NonPerfectableIntervalQuality.Major, NonPerfectableSimpleIntervalNumber.Sixth);
+    public SimpleIntervalBase Sixth()
+        => new(NonPerfectableIntervalQuality.Major, SimpleIntervalNumber.Sixth);
 
     /// <summary>
     /// Creates a major seventh.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public NonPerfectableSimpleIntervalBase Seventh()
-        => new(NonPerfectableIntervalQuality.Major, NonPerfectableSimpleIntervalNumber.Seventh);
+    public SimpleIntervalBase Seventh()
+        => new(NonPerfectableIntervalQuality.Major, SimpleIntervalNumber.Seventh);
 }
 
 /// <summary>
@@ -225,32 +223,32 @@ public readonly struct MinorIntervalBuilder
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public NonPerfectableSimpleIntervalBase Second()
-        => new(NonPerfectableIntervalQuality.Minor, NonPerfectableSimpleIntervalNumber.Second);
+    public SimpleIntervalBase Second()
+        => new(NonPerfectableIntervalQuality.Minor, SimpleIntervalNumber.Second);
 
     /// <summary>
     /// Creates a minor third.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public NonPerfectableSimpleIntervalBase Third()
-        => new(NonPerfectableIntervalQuality.Minor, NonPerfectableSimpleIntervalNumber.Third);
+    public SimpleIntervalBase Third()
+        => new(NonPerfectableIntervalQuality.Minor, SimpleIntervalNumber.Third);
 
     /// <summary>
     /// Creates a minor sixth.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public NonPerfectableSimpleIntervalBase Sixth()
-        => new(NonPerfectableIntervalQuality.Minor, NonPerfectableSimpleIntervalNumber.Sixth);
+    public SimpleIntervalBase Sixth()
+        => new(NonPerfectableIntervalQuality.Minor, SimpleIntervalNumber.Sixth);
 
     /// <summary>
     /// Creates a minor seventh.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public NonPerfectableSimpleIntervalBase Seventh()
-        => new(NonPerfectableIntervalQuality.Minor, NonPerfectableSimpleIntervalNumber.Seventh);
+    public SimpleIntervalBase Seventh()
+        => new(NonPerfectableIntervalQuality.Minor, SimpleIntervalNumber.Seventh);
 }
 
 /// <summary>
@@ -263,23 +261,23 @@ public readonly struct PerfectIntervalBuilder
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public PerfectableSimpleIntervalBase Fourth()
-        => new(PerfectableIntervalQuality.Perfect, PerfectableSimpleIntervalNumber.Fourth);
+    public SimpleIntervalBase Fourth()
+        => new(PerfectableIntervalQuality.Perfect, SimpleIntervalNumber.Fourth);
 
     /// <summary>
     /// Creates a perfect unison.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public PerfectableSimpleIntervalBase Unison()
-        => new(PerfectableIntervalQuality.Perfect, PerfectableSimpleIntervalNumber.Unison);
+    public SimpleIntervalBase Unison()
+        => new(PerfectableIntervalQuality.Perfect, SimpleIntervalNumber.Unison);
 
     /// <summary>
     /// Creates a perfect fifth.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public PerfectableSimpleIntervalBase Fifth()
-        => new(PerfectableIntervalQuality.Perfect, PerfectableSimpleIntervalNumber.Fifth);
+    public SimpleIntervalBase Fifth()
+        => new(PerfectableIntervalQuality.Perfect, SimpleIntervalNumber.Fifth);
 }
 
