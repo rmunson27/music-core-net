@@ -201,6 +201,41 @@ public readonly record struct Accidental
 }
 
 /// <summary>
+/// Extension methods and other static functionality for the <see cref="AccidentalType"/> enum and other
+/// related enums.
+/// </summary>
+public static class AccidentalTypes
+{
+    /// <summary>
+    /// Converts the current instance to an <see cref="AccidentalType"/>.
+    /// </summary>
+    /// <remarks>
+    /// This can be treated as an implicit conversion - all (named) instances of
+    /// <see cref="NonNaturalAccidentalType"/> are representable as named instances
+    /// of <see cref="AccidentalType"/>.
+    /// </remarks>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static AccidentalType ToAccidentalType(this NonNaturalAccidentalType type) => (AccidentalType)type;
+}
+
+/// <summary>
+/// Represents the type of a non-natural accidental.
+/// </summary>
+public enum NonNaturalAccidentalType : sbyte
+{
+    /// <summary>
+    /// Represents flat accidentals.
+    /// </summary>
+    Flat = AccidentalType.Flat,
+
+    /// <summary>
+    /// Represents sharp accidentals.
+    /// </summary>
+    Sharp = AccidentalType.Sharp,
+}
+
+/// <summary>
 /// Represents the type of an accidental.
 /// </summary>
 public enum AccidentalType : sbyte

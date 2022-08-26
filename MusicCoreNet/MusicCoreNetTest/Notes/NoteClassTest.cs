@@ -110,6 +110,53 @@ public class NoteClassTest
     }
 
     /// <summary>
+    /// Tests the <see cref="NoteClass.SimplestWithPitchClass(NotePitchClass, NonNaturalAccidentalType)"/>
+    /// factory method.
+    /// </summary>
+    [TestMethod]
+    public void TestSimplestWithPitchClass()
+    {
+        // Non-ambiguous tests
+        TestSimplestWithPitchClassPair(NotePitchClass.C, NoteLetter.C);
+        TestSimplestWithPitchClassPair(NotePitchClass.D, NoteLetter.D);
+        TestSimplestWithPitchClassPair(NotePitchClass.E, NoteLetter.E);
+        TestSimplestWithPitchClassPair(NotePitchClass.F, NoteLetter.F);
+        TestSimplestWithPitchClassPair(NotePitchClass.G, NoteLetter.G);
+        TestSimplestWithPitchClassPair(NotePitchClass.A, NoteLetter.A);
+        TestSimplestWithPitchClassPair(NotePitchClass.B, NoteLetter.B);
+
+        // Ambiguous tests
+        TestAmbiguousSimplestWithPitchClassPair(NotePitchClass.CD, NoteLetter.C, NoteLetter.D);
+        TestAmbiguousSimplestWithPitchClassPair(NotePitchClass.DE, NoteLetter.D, NoteLetter.E);
+        TestAmbiguousSimplestWithPitchClassPair(NotePitchClass.FG, NoteLetter.F, NoteLetter.G);
+        TestAmbiguousSimplestWithPitchClassPair(NotePitchClass.GA, NoteLetter.G, NoteLetter.A);
+        TestAmbiguousSimplestWithPitchClassPair(NotePitchClass.AB, NoteLetter.A, NoteLetter.B);
+    }
+
+    private static void TestAmbiguousSimplestWithPitchClassPair(
+        NotePitchClass pitchClass, NoteLetter sharpLetter, NoteLetter flatLetter)
+    {
+        TestSimplestWithPitchClassPair(
+            pitchClass, new(sharpLetter, Accidental.Sharp()), NonNaturalAccidentalType.Sharp);
+        TestSimplestWithPitchClassPair(
+            pitchClass, new(flatLetter, Accidental.Flat()), NonNaturalAccidentalType.Flat);
+    }
+
+    private static void TestSimplestWithPitchClassPair(
+        NotePitchClass pitchClass, NoteClass expectedNote,
+        NonNaturalAccidentalType? nonNaturalAccidentalType = null)
+    {
+        Assert.AreEqual(
+            expectedNote,
+            NoteClass.SimplestWithPitchClass(pitchClass, nonNaturalAccidentalType ?? NonNaturalAccidentalType.Flat),
+            $"Invalid {nameof(NoteClass.SimplestWithPitchClass)}"
+                + $"({pitchClass}, {(nonNaturalAccidentalType?.ToString() ?? "_")}) result.");
+        Assert.AreEqual(
+            pitchClass, expectedNote.PitchClass,
+            $"Note '{expectedNote.ToMusicalNotationString()}' did not have the expected pitch class.");
+    }
+
+    /// <summary>
     /// Tests of the <see cref="NoteClass.operator -(NoteClass, NoteClass)"/> method.
     /// </summary>
     [TestMethod]

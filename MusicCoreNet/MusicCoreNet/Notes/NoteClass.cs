@@ -1,4 +1,5 @@
-﻿using Rem.Core.ComponentModel;
+﻿using Rem.Core.Attributes;
+using Rem.Core.ComponentModel;
 using Rem.Music.Internal;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,50 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
     #endregion
 
     #region Methods
+    #region Factory
+    /// <summary>
+    /// Gets the <see cref="NoteClass"/> with the pitch class passed in that has the simplest possible accidental
+    /// (i.e. closest to natural), using the specified <see cref="NonNaturalAccidentalType"/> to assign accidentals
+    /// if necessary.
+    /// </summary>
+    /// <param name="pitchClass">The pitch class of the result.</param>
+    /// <param name="nonNaturalAccidentalType">
+    /// An accidental type to use to assign accidentals in ambiguous cases.
+    /// <para/>
+    /// For example, if <see cref="NotePitchClass.GA"/> is passed in, the result will be G# if
+    /// <paramref name="nonNaturalAccidentalType"/> is set to <see cref="NonNaturalAccidentalType.Sharp"/> and Ab if
+    /// it is set to <see cref="NonNaturalAccidentalType.Flat"/>.
+    /// </param>
+    /// <returns></returns>
+    /// <exception cref="InvalidEnumArgumentException">
+    /// Either <paramref name="pitchClass"/> or <paramref name="nonNaturalAccidentalType"/> was an unnamed enum value.
+    /// </exception>
+    public static NoteClass SimplestWithPitchClass(
+        [NamedEnum] NotePitchClass pitchClass, [NamedEnum] NonNaturalAccidentalType nonNaturalAccidentalType)
+    {
+        Throw.IfEnumArgUnnamed(pitchClass, nameof(pitchClass));
+
+        var sharpResult = Throw.IfEnumArgUnnamed(nonNaturalAccidentalType, nameof(nonNaturalAccidentalType))
+                            == NonNaturalAccidentalType.Sharp;
+
+        return pitchClass switch
+        {
+            NotePitchClass.A => NoteLetter.A,
+            NotePitchClass.AB => sharpResult ? Notes.A().Sharp() : Notes.B().Flat(),
+            NotePitchClass.B => NoteLetter.B,
+            NotePitchClass.C => NoteLetter.C,
+            NotePitchClass.CD => sharpResult ? Notes.C().Sharp() : Notes.D().Flat(),
+            NotePitchClass.D => NoteLetter.D,
+            NotePitchClass.DE => sharpResult ? Notes.D().Sharp() : Notes.E().Flat(),
+            NotePitchClass.E => NoteLetter.E,
+            NotePitchClass.F => NoteLetter.F,
+            NotePitchClass.FG => sharpResult ? Notes.F().Sharp() : Notes.G().Flat(),
+            NotePitchClass.G => NoteLetter.G,
+            _ => sharpResult ? Notes.G().Sharp() : Notes.A().Flat(),
+        };
+    }
+    #endregion
+
     #region Arithmetic
     /// <summary>
     /// Gets a <see cref="NoteClass"/> equivalent to the current instance with the supplied
