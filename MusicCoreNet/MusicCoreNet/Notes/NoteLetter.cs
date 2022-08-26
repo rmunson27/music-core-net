@@ -55,7 +55,6 @@ public static class NoteLetters
     public static NoteLetter Plus([NamedEnum] this NoteLetter lhs, SimpleIntervalNumber rhs)
     {
         Throw.IfEnumArgUnnamed(lhs, nameof(lhs));
-
         return (NoteLetter)(((int)lhs + rhs.Value - 1) % 7);
     }
 
@@ -63,21 +62,21 @@ public static class NoteLetters
     /// Finds the difference between the current <see cref="NoteLetter"/> instance and
     /// another <see cref="NoteLetter"/>.
     /// </summary>
-    /// <param name="lhs"></param>
-    /// <param name="rhs"></param>
+    /// <param name="letter"></param>
+    /// <param name="other"></param>
     /// <returns></returns>
     /// <exception cref="InvalidEnumArgumentException">
-    /// Either the current instance or <paramref name="rhs"/> was an unnamed enum value.
+    /// Either the current instance or <paramref name="other"/> was an unnamed enum value.
     /// </exception>
-    public static SimpleIntervalBase Minus(this NoteLetter lhs, NoteLetter rhs)
+    public static SimpleIntervalBase Minus([NamedEnum] this NoteLetter letter, [NamedEnum] NoteLetter other)
     {
-        Throw.IfEnumArgUnnamed(lhs, nameof(lhs));
-        Throw.IfEnumArgUnnamed(rhs, nameof(rhs));
+        Throw.IfEnumArgUnnamed(letter, nameof(letter));
+        Throw.IfEnumArgUnnamed(other, nameof(other));
 
-        var halfSteps = (lhs.ARelativeHalfSteps() - rhs.ARelativeHalfSteps() + 12) % 12;
+        var halfSteps = (letter.ARelativeHalfSteps() - other.ARelativeHalfSteps() + 12) % 12;
         return SimpleIntervalBase.SimplestQualityWithHalfSteps(halfSteps) switch
         {
-            null => lhs switch
+            null => letter switch
             {
                 B => Intervals.Augmented().Fourth(),
                 F => Intervals.Diminished().Fifth(),
