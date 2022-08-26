@@ -1036,7 +1036,7 @@ public enum IntervalQualityType : sbyte
     Minor = -1,
 
     /// <summary>
-    /// Represents perfect interval qualities.
+    /// Represents the perfect interval quality.
     /// </summary>
     Perfect = 0,
 
