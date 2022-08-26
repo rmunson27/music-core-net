@@ -35,6 +35,24 @@ public static class NoteLetters
 
     /// <summary>
     /// Gets a <see cref="NoteLetter"/> equivalent to the current instance with the supplied
+    /// <see cref="SimpleIntervalNumber"/> subtracted, returning the quality of the difference between the current
+    /// instance and the result in an <see langword="out"/> parameter.
+    /// </summary>
+    /// <param name="letter"></param>
+    /// <param name="number"></param>
+    /// <param name="differenceQuality"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
+    internal static NoteLetter Minus(
+        [NamedEnum] this NoteLetter letter, SimpleIntervalNumber number, out IntervalQuality differenceQuality)
+    {
+        var sum = letter.Plus(number.Inversion(), out differenceQuality);
+        differenceQuality = differenceQuality.Inversion(); // Invert since we are going down instead of up
+        return sum;
+    }
+
+    /// <summary>
+    /// Gets a <see cref="NoteLetter"/> equivalent to the current instance with the supplied
     /// <see cref="SimpleIntervalNumber"/> subtracted.
     /// </summary>
     /// <param name="lhs"></param>
@@ -43,6 +61,30 @@ public static class NoteLetters
     /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
     public static NoteLetter Minus([NamedEnum] this NoteLetter lhs, SimpleIntervalNumber rhs)
         => lhs.Plus(rhs.Inversion());
+
+    /// <summary>
+    /// Gets a <see cref="NoteLetter"/> equivalent to the current instance with the supplied
+    /// <see cref="SimpleIntervalNumber"/> added, returning the quality of the difference between the current
+    /// instance and the result in an <see langword="out"/> parameter.
+    /// </summary>
+    /// <param name="letter"></param>
+    /// <param name="number"></param>
+    /// <param name="differenceQuality"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
+    internal static NoteLetter Plus(
+        [NamedEnum] this NoteLetter letter, SimpleIntervalNumber number, out IntervalQuality differenceQuality)
+    {
+        var newLetter = letter.Plus(number);
+
+        var halfSteps = newLetter.ARelativeHalfSteps() - letter.ARelativeHalfSteps() + 12;
+        differenceQuality = IntervalQuality.SimplestOfIntervalWithHalfSteps(halfSteps)
+                                ?? (letter == F
+                                        ? PerfectableIntervalQuality.Augmented()
+                                        : PerfectableIntervalQuality.Diminished());
+
+        return newLetter;
+    }
 
     /// <summary>
     /// Gets a <see cref="NoteLetter"/> equivalent to the current instance with the supplied

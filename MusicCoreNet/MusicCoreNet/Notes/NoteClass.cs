@@ -58,6 +58,30 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
     #region Methods
     #region Arithmetic
     /// <summary>
+    /// Gets a <see cref="NoteClass"/> equivalent to the current instance with the supplied
+    /// <see cref="SimpleIntervalBase"/> subtracted.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static NoteClass operator -(NoteClass lhs, SimpleIntervalBase rhs) => lhs + rhs.Inversion();
+
+    /// <summary>
+    /// Gets a <see cref="NoteClass"/> equivalent to the current instance with the supplied
+    /// <see cref="SimpleIntervalBase"/> added.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static NoteClass operator +(NoteClass lhs, SimpleIntervalBase rhs)
+    {
+        var newLetter = lhs._letter.Plus(rhs.Number, out var differenceQuality);
+        return new(
+            newLetter,
+            lhs.Accidental.Shift(rhs.Quality.PerfectOrMajorBasedIndex - differenceQuality.PerfectOrMajorBasedIndex));
+    }
+
+    /// <summary>
     /// Gets the difference between the two <see cref="NoteClass"/> instances passed in as an instance
     /// of <see cref="SimpleIntervalBase"/>.
     /// </summary>

@@ -13,6 +13,54 @@ namespace RemTest.Music;
 [TestClass]
 public class NoteClassTest
 {
+    /// <summary>
+    /// A list of tuples containing two <see cref="NoteClass"/> instances and a <see cref="SimpleIntervalBase"/>
+    /// representing the difference between the first and the second.
+    /// </summary>
+    private static readonly ImmutableArray<(NoteClass First, NoteClass Second, SimpleIntervalBase Difference)> Differences
+        = ImmutableArray.CreateRange(new[]
+        {
+            (Notes.A().Natural(), Notes.C().Natural(), Intervals.Major().Sixth()),
+            (Notes.F().Sharp(), Notes.C().Natural(), Intervals.Augmented().Fourth()),
+            (Notes.G().Sharp(), Notes.B().Flat(), Intervals.Augmented().Sixth()),
+            (Notes.B().Sharp(), Notes.D().Flat(), Intervals.Augmented(2).Sixth()),
+            (Notes.E().Natural(), Notes.G().Sharp(), Intervals.Minor().Sixth()),
+        });
+
+    /// <summary>
+    /// Tests the <see cref="NoteClass.operator +(NoteClass, SimpleIntervalBase)"/> method.
+    /// </summary>
+    [TestMethod]
+    public void TestAddition()
+    {
+        foreach (var (First, Second, Difference) in Differences)
+        {
+            Assert.AreEqual(
+                First, Second + Difference,
+                $"Invalid {Second.ToMusicalNotationString()} + {Difference} result.");
+            Assert.AreEqual(
+                Second, First + Difference.Inversion(),
+                $"Invalid {First.ToMusicalNotationString()} + {Difference.Inversion()} result.");
+        }
+    }
+
+    /// <summary>
+    /// Tests the <see cref="NoteClass.operator -(NoteClass, SimpleIntervalBase)"/> method.
+    /// </summary>
+    [TestMethod]
+    public void TestSubtraction()
+    {
+        foreach (var (First, Second, Difference) in Differences)
+        {
+            Assert.AreEqual(
+                Second, First - Difference,
+                $"Invalid {First.ToMusicalNotationString()} - {Difference} result.");
+            Assert.AreEqual(
+                First, Second - Difference.Inversion(),
+                $"Invalid {Second.ToMusicalNotationString()} + {Difference.Inversion()} result.");
+        }
+    }
+
     private static readonly ImmutableArray<(NoteClass First, NoteClass Second)> EnharmonicEquivalentPairs
         = ImmutableArray.CreateRange(new[]
         {
@@ -67,16 +115,15 @@ public class NoteClassTest
     [TestMethod]
     public void TestDifference()
     {
-        TestDifferencePair(Notes.A().Natural(), Notes.C().Natural(), Intervals.Major().Sixth());
-        TestDifferencePair(Notes.F().Sharp(), Notes.C().Natural(), Intervals.Augmented().Fourth());
-        TestDifferencePair(Notes.G().Sharp(), Notes.B().Flat(), Intervals.Augmented().Sixth());
-        TestDifferencePair(Notes.B().Sharp(), Notes.D().Flat(), Intervals.Augmented(2).Sixth());
-        TestDifferencePair(Notes.E().Natural(), Notes.G().Sharp(), Intervals.Minor().Sixth());
-    }
-    
-    private static void TestDifferencePair(NoteClass lhs, NoteClass rhs, SimpleIntervalBase expectedResult)
-    {
-        Assert.AreEqual(expectedResult, lhs - rhs);
-        Assert.AreEqual(expectedResult.Inversion(), rhs - lhs);
+        foreach (var (First, Second, Difference) in Differences)
+        {
+            Assert.AreEqual(
+                Difference, First - Second,
+                $"Invalid {First.ToMusicalNotationString()} - {Second.ToMusicalNotationString()} result.");
+            Assert.AreEqual(
+                Difference.Inversion(),
+                Second - First,
+                $"Invalid {Second.ToMusicalNotationString()} - {First.ToMusicalNotationString()} result.");
+        }
     }
 }

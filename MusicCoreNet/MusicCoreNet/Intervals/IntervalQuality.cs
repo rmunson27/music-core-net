@@ -89,6 +89,33 @@ public readonly record struct IntervalQuality
     #region Methods
     #region Factory
     /// <summary>
+    /// Gets the simplest (i.e. closest to perfect) interval quality of an interval spanning the given number of
+    /// half steps, or <see langword="null"/> if the number of half steps is 6 (as this is a tritone and therefore
+    /// ambiguous between augmented and diminished).
+    /// </summary>
+    /// <param name="halfSteps"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="halfSteps"/> was negative.</exception>
+    internal static IntervalQuality? SimplestOfIntervalWithHalfSteps([NonNegative] int halfSteps)
+        => (halfSteps % 12) switch
+        {
+            0 => Perfect,
+            1 => Minor,
+            2 => Major,
+            3 => Minor,
+            4 => Major,
+            5 => Perfect,
+            6 => null,
+            7 => Perfect,
+            8 => Minor,
+            9 => Major,
+            10 => Minor,
+            11 => Major,
+            _ => throw new ArgumentOutOfRangeException(
+                    nameof(halfSteps), halfSteps, $"Parameter cannot be negative."),
+        };
+
+    /// <summary>
     /// Creates a new <see cref="IntervalQuality"/> from a corresponding perfect-based circle of fifths index.
     /// </summary>
     /// <returns></returns>
