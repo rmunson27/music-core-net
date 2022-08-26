@@ -10,13 +10,6 @@ using System.Threading.Tasks;
 namespace Rem.Music;
 
 /// <summary>
-/// Static functionality relating to intervals.
-/// </summary>
-public static class Intervals
-{
-}
-
-/// <summary>
 /// Represents a musical interval between two notes.
 /// </summary>
 /// <param name="Base">An object defining the quality and base number of the interval.</param>
