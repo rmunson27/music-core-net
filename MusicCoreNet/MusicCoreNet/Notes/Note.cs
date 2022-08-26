@@ -65,6 +65,26 @@ public readonly record struct Note(NoteClass Class, int Octave)
 
     #region Arithmetic
     /// <summary>
+    /// Gets a <see cref="Note"/> equivalent to the note passed in with the <see cref="SignedInterval"/> passed
+    /// in subtracted.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static Note operator -(Note lhs, SignedInterval rhs)
+        => rhs.Sign < 0 ? lhs + rhs._interval : lhs - rhs._interval;
+
+    /// <summary>
+    /// Gets a <see cref="Note"/> equivalent to the note passed in with the <see cref="SignedInterval"/> passed
+    /// in added.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static Note operator +(Note lhs, SignedInterval rhs)
+        => rhs.Sign < 0 ? lhs - rhs._interval : lhs + rhs._interval;
+
+    /// <summary>
     /// Gets a <see cref="Note"/> equivalent to the note passed in with the <see cref="Interval"/> passed in subtracted.
     /// </summary>
     /// <param name="lhs"></param>

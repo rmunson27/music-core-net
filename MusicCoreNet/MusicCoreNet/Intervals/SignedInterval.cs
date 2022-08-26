@@ -35,7 +35,7 @@ public sealed record class SignedInterval
     /// Gets the interval this instance represents.
     /// </summary>
     public Interval Interval => _interval;
-    private readonly Interval _interval;
+    internal readonly Interval _interval;
 
     /// <summary>
     /// Gets the sign of this instance.

@@ -39,7 +39,7 @@ public class NoteTest
         });
 
     /// <summary>
-    /// Tests the <see cref="Note"/> interval addition operator.
+    /// Tests the <see cref="Note"/> interval addition operators.
     /// </summary>
     [TestMethod]
     public void TestAddition()
@@ -49,11 +49,19 @@ public class NoteTest
             Assert.AreEqual(
                 First, Second + Difference,
                 $"Invalid {Second.ToMusicalNotationString()} + {Difference} result.");
+
+            SignedInterval signedDifference = Difference;
+            Assert.AreEqual(
+                First, Second + signedDifference,
+                $"Invalid {Second.ToMusicalNotationString()} + {signedDifference} result.");
+            Assert.AreEqual(
+                Second, First + (-signedDifference),
+                $"Invalid {First.ToMusicalNotationString()} + {-signedDifference} result.");
         }
     }
 
     /// <summary>
-    /// Tests the <see cref="Note"/> interval subtraction operator.
+    /// Tests the <see cref="Note"/> interval subtraction operators.
     /// </summary>
     [TestMethod]
     public void TestSubtraction()
@@ -63,6 +71,14 @@ public class NoteTest
             Assert.AreEqual(
                 Second, First - Difference,
                 $"Invalid {First.ToMusicalNotationString()} - {Difference} result.");
+
+            SignedInterval signedDifference = Difference;
+            Assert.AreEqual(
+                Second, First - signedDifference,
+                $"Invalid {First.ToMusicalNotationString()} - {signedDifference} result.");
+            Assert.AreEqual(
+                First, Second - (-signedDifference),
+                $"Invalid {First.ToMusicalNotationString()} - {-signedDifference} result.");
         }
     }
 
