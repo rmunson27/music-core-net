@@ -616,6 +616,21 @@ public readonly record struct PerfectableIntervalQuality
     public PerfectableIntervalQuality Inversion() => new(-PerfectBasedIndex);
     #endregion
 
+    #region Equality
+    /// <summary>
+    /// Determines if the current instance is equal to another object of the same type.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool Equals(PerfectableIntervalQuality other) => PerfectBasedIndex == other.PerfectBasedIndex;
+
+    /// <summary>
+    /// Gets a hash code for the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode() => PerfectBasedIndex;
+    #endregion
+
     #region ToString
     /// <summary>
     /// Gets a string that represents the current instance.
@@ -732,6 +747,21 @@ public readonly record struct NonPerfectableIntervalQuality
     /// </summary>
     /// <returns></returns>
     public NonPerfectableIntervalQuality Inversion() => new(-MajorBasedIndex - 1);
+    #endregion
+
+    #region Equality
+    /// <summary>
+    /// Determines if the current instance is equal to another object of the same type.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool Equals(NonPerfectableIntervalQuality other) => MajorBasedIndex == other.MajorBasedIndex;
+
+    /// <summary>
+    /// Gets a hash code for the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode() => MajorBasedIndex;
     #endregion
 
     #region Classification
