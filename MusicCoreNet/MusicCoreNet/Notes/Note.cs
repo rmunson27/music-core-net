@@ -177,6 +177,42 @@ public readonly record struct Note(NoteClass Class, int Octave)
     }
     #endregion
 
+    #region Computation
+    /// <summary>
+    /// Gets a <see cref="Note"/> enharmonically equivalent to the current instance with the accidental simplified
+    /// as much as possible (i.e. calling the method on a Cb note will yield a B note).
+    /// </summary>
+    /// <remarks>
+    /// The accidental type of the current instance will be used to resolve ambiguity if necessary.
+    /// For example, calling this method on a G#x note will yield an A# note, whereas calling it on a Cbb note will
+    /// yield a Bb note.
+    /// </remarks>
+    /// <returns></returns>
+    public Note SimplifyAccidental()
+    {
+        var simplifiedClass = Class.SimplifyAccidental();
+        var accidentalDiff = simplifiedClass.Accidental.IntValue - Accidental.IntValue;
+        var octave = Octave;
+
+        if (accidentalDiff < 0) // Accidental is lower, so letter is higher
+        {
+            var octaveRelativeHalfSteps = Letter.HalfStepsUpToC() + accidentalDiff;
+            octave -= Maths.FloorDiv(octaveRelativeHalfSteps, 12);
+
+            // If we went up to C (rather than already being at C) add an octave since we have moved up to the
+            // next octave
+            if (octaveRelativeHalfSteps % 12 == 0 && Letter != NoteLetter.C) octave++;
+        }
+        else if (accidentalDiff > 0) // Accidental is higher, so letter is lower
+        {
+            var octaveRelativeHalfSteps = Letter.HalfStepsDownToC() - accidentalDiff;
+            octave += Maths.FloorDiv(octaveRelativeHalfSteps, 12);
+        }
+
+        return new(simplifiedClass, octave);
+    }
+    #endregion
+
     #region ToString
     /// <summary>
     /// Gets a string that represents the current instance.

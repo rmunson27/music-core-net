@@ -14,6 +14,22 @@ namespace RemTest.Music;
 public class NoteTest
 {
     /// <summary>
+    /// Tests the <see cref="Note.SimplifyAccidental"/> method.
+    /// </summary>
+    [TestMethod]
+    public void TestSimplifyAccidental()
+    {
+        // Normal cases (described by behavior of NoteClass method)
+        Assert.AreEqual(Notes.A().Flat().WithOctave(4), Notes.B().Flat(3).WithOctave(4).SimplifyAccidental());
+        Assert.AreEqual(Notes.F().Natural().WithOctave(4), Notes.B().Flat(6).WithOctave(4).SimplifyAccidental());
+
+        // Octave change cases
+        Assert.AreEqual(Notes.C().Sharp().WithOctave(4), Notes.A().Sharp(4).WithOctave(3).SimplifyAccidental());
+        Assert.AreEqual(Notes.B().Flat().WithOctave(3), Notes.E().Flat(6).WithOctave(4).SimplifyAccidental());
+        Assert.AreEqual(Notes.C().Natural().WithOctave(3), Notes.C().Sharp(24).WithOctave(1).SimplifyAccidental());
+    }
+
+    /// <summary>
     /// A series of tuples containing a pair of notes and an interval difference between the first and the second.
     /// </summary>
     private static readonly ImmutableArray<(Note First, Note Second, Interval Difference)> Differences
