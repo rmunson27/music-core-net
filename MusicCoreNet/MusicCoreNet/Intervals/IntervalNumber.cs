@@ -469,6 +469,53 @@ public readonly record struct SimpleIntervalNumber
     #region Methods
     #region Factory
     /// <summary>
+    /// Gets the number of the simplest (i.e. closest to perfect) interval spanning the given number of half steps,
+    /// or a number based on the supplied tritone quality type if the number of half steps indicates a tritone (6 half
+    /// steps, as this case is ambiguous between augmented and diminished).
+    /// </summary>
+    /// <param name="halfSteps"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="halfSteps"/> was negative or >= 12.
+    /// </exception>
+    /// <exception cref="InvalidEnumArgumentException">
+    /// <paramref name="tritoneQualityType"/> was an unnamed enum value.
+    /// </exception>
+    internal static SimpleIntervalNumber OfSimplestIntervalWithHalfSteps(
+        [NonNegative, LessThanInteger(12)] int halfSteps, [NamedEnum] NonBasicIntervalQualityType tritoneQualityType)
+        => OfSimplestIntervalWithHalfSteps(halfSteps)
+            ?? (Throw.IfEnumArgUnnamed(tritoneQualityType, nameof(tritoneQualityType))
+                    == NonBasicIntervalQualityType.Augmented
+                    ? Fourth
+                    : Fifth);
+
+    /// <summary>
+    /// Gets the number of the simplest (i.e. closest to perfect) interval less than an octave spanning the given
+    /// number of half steps, or <see langword="null"/> if the number of half steps is 6 (as this is a tritone and
+    /// therefore ambiguous between augmented and diminished).
+    /// </summary>
+    /// <param name="halfSteps"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="halfSteps"/> was negative or >= 12.
+    /// </exception>
+    internal static SimpleIntervalNumber? OfSimplestIntervalWithHalfSteps(
+        [NonNegative, LessThanInteger(12)] int halfSteps)
+        => halfSteps switch
+        {
+            0 => Unison,
+            1 or 2 => Second,
+            3 or 4 => Third,
+            5 => Fourth,
+            6 => null,
+            7 => Fifth,
+            8 or 9 => Sixth,
+            10 or 11 => Seventh,
+            _ => throw new ArgumentOutOfRangeException(
+                    nameof(halfSteps), halfSteps, "Half steps must be in the range 0..11."),
+        };
+
+    /// <summary>
     /// Gets the <see cref="SimpleIntervalNumber"/> of a major or perfect interval with the circle-of-fifths
     /// perfect-unison-based index passed in.
     /// </summary>

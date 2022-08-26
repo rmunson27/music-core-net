@@ -10,11 +10,9 @@ using System.Threading.Tasks;
 namespace Rem.Music;
 
 /// <summary>
-/// Represents a simple interval base that spans less than one octave.
+/// A type representing a simple interval (spanning less than one octave) that is used as the base for
+/// general intervals.
 /// </summary>
-/// <remarks>
-/// This type is used as a base to construct intervals used in this library.
-/// </remarks>
 public readonly record struct SimpleIntervalBase
 {
     #region Constants
@@ -102,33 +100,48 @@ public readonly record struct SimpleIntervalBase
     /// Creates a new <see cref="SimpleIntervalBase"/> spanning the number of half steps passed in with the simplest
     /// possible interval quality (i.e. closest to perfect).
     /// </summary>
-    /// <param name="halfSteps"></param>
+    /// <param name="halfSteps">The number of half steps to span.</param>
+    /// <param name="tritoneQualityType">
+    /// The type of quality to assign to a tritone (6 half steps).
+    /// <para/>
+    /// This resolves the ambiguity between an augmented fourth and a diminished fifth.
+    /// </param>
+    /// <returns>
+    /// The <see cref="SimpleIntervalBase"/> spanning <paramref name="halfSteps"/> half steps with the simplest
+    /// possible interval quality, or the result of applying <paramref name="tritoneQualityType"/> to a fourth or a
+    /// fifth as appropriate if <paramref name="halfSteps"/> indicates a tritone.
+    /// </returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="halfSteps"/> was negative or >= 12.
+    /// </exception>
+    /// <exception cref="InvalidEnumArgumentException">
+    /// <paramref name="tritoneQualityType"/> was an unnamed enum value.
+    /// </exception>
+    public static SimpleIntervalBase SimplestWithHalfSteps(
+        [NonNegative, LessThanInteger(12)] int halfSteps, [NamedEnum] NonBasicIntervalQualityType tritoneQualityType)
+        => new(
+            IntervalQuality.OfSimplestIntervalWithHalfSteps(halfSteps, tritoneQualityType),
+            SimpleIntervalNumber.OfSimplestIntervalWithHalfSteps(halfSteps, tritoneQualityType));
+
+    /// <summary>
+    /// Creates a new <see cref="SimpleIntervalBase"/> spanning the number of half steps passed in with the simplest
+    /// possible interval quality (i.e. closest to perfect).
+    /// </summary>
+    /// <param name="halfSteps">The number of half steps to span.</param>
     /// <returns>
     /// The <see cref="SimpleIntervalBase"/> spanning <paramref name="halfSteps"/> half steps with the simplest
     /// possible interval quality, or <see langword="null"/> if <paramref name="halfSteps"/> is equal to 6 (a tritone,
     /// as this case is ambiguous between an augmented fourth and a diminished fifth).
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="halfSteps"/> was negative or greater than or equal to 12.
+    /// <paramref name="halfSteps"/> was negative or >= 12.
     /// </exception>
-    public static SimpleIntervalBase? SimplestQualityWithHalfSteps([NonNegative, LessThanInteger(12)] int halfSteps)
-        => halfSteps switch
-        {
-            0 => PerfectUnison,
-            1 => Intervals.Minor().Second(),
-            2 => Intervals.Major().Second(),
-            3 => Intervals.Minor().Third(),
-            4 => Intervals.Major().Third(),
-            5 => Intervals.Perfect().Fourth(),
-            6 => null,
-            7 => Intervals.Perfect().Fifth(),
-            8 => Intervals.Minor().Sixth(),
-            9 => Intervals.Major().Sixth(),
-            10 => Intervals.Minor().Seventh(),
-            11 => Intervals.Major().Seventh(),
-            _ => throw new ArgumentOutOfRangeException(
-                    nameof(halfSteps), halfSteps, $"Parameter must be in the range [0, 11]."),
-        };
+    public static SimpleIntervalBase? SimplestWithHalfSteps([NonNegative, LessThanInteger(12)] int halfSteps)
+        => IntervalQuality.OfSimplestIntervalWithHalfSteps(halfSteps) is IntervalQuality quality
+            ? new(
+                quality,
+                (SimpleIntervalNumber)SimpleIntervalNumber.OfSimplestIntervalWithHalfSteps(halfSteps)!)
+            : null;
 
     /// <summary>
     /// Creates a new <see cref="SimpleIntervalBase"/> from its perfect-unison-based circle of fifths index.

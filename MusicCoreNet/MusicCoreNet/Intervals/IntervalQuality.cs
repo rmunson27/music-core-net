@@ -1,6 +1,7 @@
 ﻿using Rem.Core.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -89,28 +90,39 @@ public readonly record struct IntervalQuality
     #region Methods
     #region Factory
     /// <summary>
-    /// Gets the simplest (i.e. closest to perfect) interval quality of an interval spanning the given number of
-    /// half steps, or <see langword="null"/> if the number of half steps is 6 (as this is a tritone and therefore
-    /// ambiguous between augmented and diminished).
+    /// Gets the quality of the simplest (i.e. closest to perfect) interval spanning the given number of half steps,
+    /// or a quality of the supplied tritone quality type if the number of half steps indicates a tritone (6 half
+    /// steps, as this case is ambiguous between augmented and diminished).
     /// </summary>
     /// <param name="halfSteps"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="halfSteps"/> was negative.</exception>
-    internal static IntervalQuality? SimplestOfIntervalWithHalfSteps([NonNegative] int halfSteps)
+    /// <exception cref="InvalidEnumArgumentException">
+    /// <paramref name="tritoneQualityType"/> was an unnamed enum value.
+    /// </exception>
+    internal static IntervalQuality OfSimplestIntervalWithHalfSteps(
+        [NonNegative] int halfSteps, [NamedEnum] NonBasicIntervalQualityType tritoneQualityType)
+        => OfSimplestIntervalWithHalfSteps(halfSteps)
+            ?? (Throw.IfEnumArgUnnamed(tritoneQualityType, nameof(tritoneQualityType))
+                    == NonBasicIntervalQualityType.Augmented
+                    ? PerfectableIntervalQuality.Augmented()
+                    : PerfectableIntervalQuality.Diminished());
+
+    /// <summary>
+    /// Gets the quality of the simplest (i.e. closest to perfect) interval spanning the given number of half steps,
+    /// or <see langword="null"/> if the number of half steps is 6 (as this is a tritone and therefore ambiguous
+    /// between augmented and diminished).
+    /// </summary>
+    /// <param name="halfSteps"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="halfSteps"/> was negative.</exception>
+    internal static IntervalQuality? OfSimplestIntervalWithHalfSteps([NonNegative] int halfSteps)
         => (halfSteps % 12) switch
         {
-            0 => Perfect,
-            1 => Minor,
-            2 => Major,
-            3 => Minor,
-            4 => Major,
-            5 => Perfect,
+            1 or 3 or 8 or 10 => Minor,
+            0 or 5 or 7 => Perfect,
+            2 or 4 or 9 or 11 => Major,
             6 => null,
-            7 => Perfect,
-            8 => Minor,
-            9 => Major,
-            10 => Minor,
-            11 => Major,
             _ => throw new ArgumentOutOfRangeException(
                     nameof(halfSteps), halfSteps, $"Parameter cannot be negative."),
         };
@@ -472,6 +484,16 @@ public readonly record struct PerfectableIntervalQuality
 
     #region Properties And Fields
     /// <summary>
+    /// Gets the type of this perfectable interval quality.
+    /// </summary>
+    public PerfectableIntervalQualityType Type => PerfectBasedIndex switch
+    {
+        < 0 => PerfectableIntervalQualityType.Diminished,
+        0 => PerfectableIntervalQualityType.Perfect,
+        > 0 => PerfectableIntervalQualityType.Augmented,
+    };
+
+    /// <summary>
     /// Represents this quality as an index based on <see cref="Perfect"/>.
     /// </summary>
     public int PerfectBasedIndex { get; }
@@ -562,13 +584,13 @@ public readonly record struct PerfectableIntervalQuality
     /// Gets whether or not this interval quality represents an augmented interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsAugmented() => PerfectBasedIndex > 0;
+    public bool IsAugmented() => Type == PerfectableIntervalQualityType.Augmented;
 
     /// <summary>
     /// Gets whether or not this interval quality represents a perfect interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsPerfect() => PerfectBasedIndex == 0;
+    public bool IsPerfect() => Type == PerfectableIntervalQualityType.Perfect;
 
     /// <summary>
     /// Gets whether or not this interval quality represents a diminished interval, setting the
@@ -594,7 +616,7 @@ public readonly record struct PerfectableIntervalQuality
     /// Gets whether or not this interval quality represents a diminished interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsDiminished() => PerfectBasedIndex < 0;
+    public bool IsDiminished() => Type == PerfectableIntervalQualityType.Diminished;
     #endregion
 
     #region Computation
@@ -664,6 +686,17 @@ public readonly record struct NonPerfectableIntervalQuality
     #endregion
 
     #region Properties And Fields
+    /// <summary>
+    /// Gets the type of this non-perfectable interval quality.
+    /// </summary>
+    public NonPerfectableIntervalQualityType Type => MajorBasedIndex switch
+    {
+        < -1 => NonPerfectableIntervalQualityType.Diminished,
+        -1 => NonPerfectableIntervalQualityType.Minor,
+        0 => NonPerfectableIntervalQualityType.Major,
+        > 0 => NonPerfectableIntervalQualityType.Augmented,
+    };
+
     /// <summary>
     /// Represents this quality as an index based on <see cref="Major"/>.
     /// </summary>
@@ -789,19 +822,19 @@ public readonly record struct NonPerfectableIntervalQuality
     /// Gets whether or not this interval quality represents an augmented interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsAugmented() => MajorBasedIndex > 0;
+    public bool IsAugmented() => Type == NonPerfectableIntervalQualityType.Augmented;
 
     /// <summary>
     /// Gets whether or not this interval quality represents a major interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsMajor() => MajorBasedIndex == 0;
+    public bool IsMajor() => Type == NonPerfectableIntervalQualityType.Major;
 
     /// <summary>
     /// Gets whether or not this interval quality represents a minor interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsMinor() => MajorBasedIndex == -1;
+    public bool IsMinor() => Type == NonPerfectableIntervalQualityType.Minor;
 
     /// <summary>
     /// Gets whether or not this interval quality represents a diminished interval, setting the
@@ -827,7 +860,7 @@ public readonly record struct NonPerfectableIntervalQuality
     /// Gets whether or not this interval quality represents a diminished interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsDiminished() => MajorBasedIndex < -1;
+    public bool IsDiminished() => Type == NonPerfectableIntervalQualityType.Diminished;
     #endregion
 
     #region ToString
@@ -844,3 +877,177 @@ public readonly record struct NonPerfectableIntervalQuality
     #endregion
     #endregion
 }
+
+/// <summary>
+/// Extension methods and other static functionality for the <see cref="IntervalQualityType"/> and other related enums.
+/// </summary>
+public static class IntervalQualityTypes
+{
+    /// <summary>
+    /// Converts the current instance to an <see cref="IntervalQualityType"/>.
+    /// </summary>
+    /// <remarks>
+    /// This can be treated as an implicit conversion - all (named) instances of
+    /// <see cref="NonBasicIntervalQualityType"/> are representable as named instances
+    /// of <see cref="IntervalQualityType"/>.
+    /// </remarks>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static IntervalQualityType ToIntervalQualityType(this NonBasicIntervalQualityType type)
+        => (IntervalQualityType)type;
+
+    /// <summary>
+    /// Converts the current instance to an <see cref="IntervalQualityType"/>.
+    /// </summary>
+    /// <remarks>
+    /// This can be treated as an implicit conversion - all (named) instances of
+    /// <see cref="BasicIntervalQualityType"/> are representable as named instances
+    /// of <see cref="IntervalQualityType"/>.
+    /// </remarks>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static IntervalQualityType ToIntervalQualityType(this BasicIntervalQualityType type)
+        => (IntervalQualityType)type;
+
+    /// <summary>
+    /// Converts the current instance to an <see cref="IntervalQualityType"/>.
+    /// </summary>
+    /// <remarks>
+    /// This can be treated as an implicit conversion - all (named) instances of
+    /// <see cref="PerfectableIntervalQualityType"/> are representable as named instances
+    /// of <see cref="IntervalQualityType"/>.
+    /// </remarks>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static IntervalQualityType ToIntervalQualityType(this PerfectableIntervalQualityType type)
+        => (IntervalQualityType)type;
+
+    /// <summary>
+    /// Converts the current instance to an <see cref="IntervalQualityType"/>.
+    /// </summary>
+    /// <remarks>
+    /// This can be treated as an implicit conversion - all (named) instances of
+    /// <see cref="NonPerfectableIntervalQualityType"/> are representable as named instances
+    /// of <see cref="IntervalQualityType"/>.
+    /// </remarks>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static IntervalQualityType ToIntervalQualityType(this NonPerfectableIntervalQualityType type)
+        => (IntervalQualityType)type;
+}
+
+/// <summary>
+/// Represents the type of a non-basic interval quality (not major, perfect or minor).
+/// </summary>
+public enum NonBasicIntervalQualityType : sbyte
+{
+    /// <summary>
+    /// Represents diminished interval qualities.
+    /// </summary>
+    Diminished = IntervalQualityType.Diminished,
+
+    /// <summary>
+    /// Represents augmented interval qualities.
+    /// </summary>
+    Augmented = IntervalQualityType.Augmented,
+}
+
+/// <summary>
+/// Represents the type of a basic interval quality (major, perfect or minor).
+/// </summary>
+public enum BasicIntervalQualityType : sbyte
+{
+    /// <summary>
+    /// Represents minor interval qualities.
+    /// </summary>
+    Minor = IntervalQualityType.Minor,
+
+    /// <summary>
+    /// Represents perfect interval qualities.
+    /// </summary>
+    Perfect = IntervalQualityType.Perfect,
+
+    /// <summary>
+    /// Represents major interval qualities.
+    /// </summary>
+    Major = IntervalQualityType.Major,
+}
+
+/// <summary>
+/// Represents the type of a perfectable interval quality.
+/// </summary>
+public enum PerfectableIntervalQualityType : sbyte
+{
+    /// <summary>
+    /// Represents diminished interval qualities.
+    /// </summary>
+    Diminished = IntervalQualityType.Diminished,
+
+    /// <summary>
+    /// Represents perfect interval qualities.
+    /// </summary>
+    Perfect = IntervalQualityType.Perfect,
+
+    /// <summary>
+    /// Represents augmented interval qualities.
+    /// </summary>
+    Augmented = IntervalQualityType.Augmented,
+}
+
+/// <summary>
+/// Represents the type of a non-perfectable interval quality.
+/// </summary>
+public enum NonPerfectableIntervalQualityType : sbyte
+{
+    /// <summary>
+    /// Represents diminished interval qualities.
+    /// </summary>
+    Diminished = IntervalQualityType.Diminished,
+
+    /// <summary>
+    /// Represents minor interval qualities.
+    /// </summary>
+    Minor = IntervalQualityType.Minor,
+
+    /// <summary>
+    /// Represents major interval qualities.
+    /// </summary>
+    Major = IntervalQualityType.Major,
+
+    /// <summary>
+    /// Represents augmented interval qualities.
+    /// </summary>
+    Augmented = IntervalQualityType.Augmented,
+}
+
+/// <summary>
+/// Represents the type of an interval quality.
+/// </summary>
+public enum IntervalQualityType : sbyte
+{
+    /// <summary>
+    /// Represents diminished interval qualities.
+    /// </summary>
+    Diminished = -2,
+
+    /// <summary>
+    /// Represents minor interval qualities.
+    /// </summary>
+    Minor = -1,
+
+    /// <summary>
+    /// Represents perfect interval qualities.
+    /// </summary>
+    Perfect = 0,
+
+    /// <summary>
+    /// Represents major interval qualities.
+    /// </summary>
+    Major = 1,
+
+    /// <summary>
+    /// Represents augmented interval qualities.
+    /// </summary>
+    Augmented = 2,
+}
+

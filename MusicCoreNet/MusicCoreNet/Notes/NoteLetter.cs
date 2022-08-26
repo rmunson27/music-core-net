@@ -78,7 +78,7 @@ public static class NoteLetters
         var newLetter = letter.Plus(number);
 
         var halfSteps = newLetter.ARelativeHalfSteps() - letter.ARelativeHalfSteps() + 12;
-        differenceQuality = IntervalQuality.SimplestOfIntervalWithHalfSteps(halfSteps)
+        differenceQuality = IntervalQuality.OfSimplestIntervalWithHalfSteps(halfSteps)
                                 ?? (letter == F
                                         ? PerfectableIntervalQuality.Augmented()
                                         : PerfectableIntervalQuality.Diminished());
@@ -116,7 +116,7 @@ public static class NoteLetters
         Throw.IfEnumArgUnnamed(other, nameof(other));
 
         var halfSteps = (letter.ARelativeHalfSteps() - other.ARelativeHalfSteps() + 12) % 12;
-        return SimpleIntervalBase.SimplestQualityWithHalfSteps(halfSteps) switch
+        return SimpleIntervalBase.SimplestWithHalfSteps(halfSteps) switch
         {
             null => letter switch
             {
