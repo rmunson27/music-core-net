@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace RemTest.Music;
 
 using static PerfectableSimpleIntervalNumber;
-using static NonPerfectableSimpleIntervalNumber;
+using static ImperfectableSimpleIntervalNumber;
 
 /// <summary>
 /// Tests of the simple interval number types included in the library.

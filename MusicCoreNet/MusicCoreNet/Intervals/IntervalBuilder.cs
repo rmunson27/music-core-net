@@ -55,14 +55,14 @@ public readonly struct AugmentedIntervalBuilder
         => new(PerfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Fifth);
     #endregion
 
-    #region Non-Perfectable
+    #region Imperfectable
     /// <summary>
     /// Creates a second with the augmented quality represented by this instance.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Second()
-        => new(NonPerfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Second);
+        => new(ImperfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Second);
 
     /// <summary>
     /// Creates a sixth with the augmented quality represented by this instance.
@@ -70,7 +70,7 @@ public readonly struct AugmentedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Sixth()
-        => new(NonPerfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Sixth);
+        => new(ImperfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Sixth);
 
     /// <summary>
     /// Creates a third with the augmented quality represented by this instance.
@@ -78,7 +78,7 @@ public readonly struct AugmentedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Third()
-        => new(NonPerfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Third);
+        => new(ImperfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Third);
 
     /// <summary>
     /// Creates a seventh with the augmented quality represented by this instance.
@@ -86,7 +86,7 @@ public readonly struct AugmentedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Seventh()
-        => new(NonPerfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Seventh);
+        => new(ImperfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Seventh);
     #endregion
     #endregion
 }
@@ -139,14 +139,14 @@ public readonly struct DiminishedIntervalBuilder
         => new(PerfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Fifth);
     #endregion
 
-    #region Non-Perfectable
+    #region Imperfectable
     /// <summary>
     /// Creates a second with the diminished quality represented by this instance.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Second()
-        => new(NonPerfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Second);
+        => new(ImperfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Second);
 
     /// <summary>
     /// Creates a sixth with the diminished quality represented by this instance.
@@ -154,7 +154,7 @@ public readonly struct DiminishedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Sixth()
-        => new(NonPerfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Sixth);
+        => new(ImperfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Sixth);
 
     /// <summary>
     /// Creates a third with the diminished quality represented by this instance.
@@ -162,7 +162,7 @@ public readonly struct DiminishedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Third()
-        => new(NonPerfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Third);
+        => new(ImperfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Third);
 
     /// <summary>
     /// Creates a seventh with the diminished quality represented by this instance.
@@ -170,7 +170,7 @@ public readonly struct DiminishedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Seventh()
-        => new(NonPerfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Seventh);
+        => new(ImperfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Seventh);
     #endregion
     #endregion
 }
@@ -186,7 +186,7 @@ public readonly struct MajorIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Second()
-        => new(NonPerfectableIntervalQuality.Major, SimpleIntervalNumber.Second);
+        => new(ImperfectableIntervalQuality.Major, SimpleIntervalNumber.Second);
 
     /// <summary>
     /// Creates a major third.
@@ -194,7 +194,7 @@ public readonly struct MajorIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Third()
-        => new(NonPerfectableIntervalQuality.Major, SimpleIntervalNumber.Third);
+        => new(ImperfectableIntervalQuality.Major, SimpleIntervalNumber.Third);
 
     /// <summary>
     /// Creates a major sixth.
@@ -202,7 +202,7 @@ public readonly struct MajorIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Sixth()
-        => new(NonPerfectableIntervalQuality.Major, SimpleIntervalNumber.Sixth);
+        => new(ImperfectableIntervalQuality.Major, SimpleIntervalNumber.Sixth);
 
     /// <summary>
     /// Creates a major seventh.
@@ -210,7 +210,7 @@ public readonly struct MajorIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Seventh()
-        => new(NonPerfectableIntervalQuality.Major, SimpleIntervalNumber.Seventh);
+        => new(ImperfectableIntervalQuality.Major, SimpleIntervalNumber.Seventh);
 }
 
 /// <summary>
@@ -224,7 +224,7 @@ public readonly struct MinorIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Second()
-        => new(NonPerfectableIntervalQuality.Minor, SimpleIntervalNumber.Second);
+        => new(ImperfectableIntervalQuality.Minor, SimpleIntervalNumber.Second);
 
     /// <summary>
     /// Creates a minor third.
@@ -232,7 +232,7 @@ public readonly struct MinorIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Third()
-        => new(NonPerfectableIntervalQuality.Minor, SimpleIntervalNumber.Third);
+        => new(ImperfectableIntervalQuality.Minor, SimpleIntervalNumber.Third);
 
     /// <summary>
     /// Creates a minor sixth.
@@ -240,7 +240,7 @@ public readonly struct MinorIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Sixth()
-        => new(NonPerfectableIntervalQuality.Minor, SimpleIntervalNumber.Sixth);
+        => new(ImperfectableIntervalQuality.Minor, SimpleIntervalNumber.Sixth);
 
     /// <summary>
     /// Creates a minor seventh.
@@ -248,7 +248,7 @@ public readonly struct MinorIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Seventh()
-        => new(NonPerfectableIntervalQuality.Minor, SimpleIntervalNumber.Seventh);
+        => new(ImperfectableIntervalQuality.Minor, SimpleIntervalNumber.Seventh);
 }
 
 /// <summary>

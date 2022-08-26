@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Rem.Music;
 
 using static PerfectableSimpleIntervalNumber;
-using static NonPerfectableSimpleIntervalNumber;
+using static ImperfectableSimpleIntervalNumber;
 
 #region Structs
 /// <summary>
@@ -38,9 +38,9 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
     public bool IsPerfectable => Base.IsPerfectable();
 
     /// <summary>
-    /// Gets whether or not this instance is non-perfectable.
+    /// Gets whether or not this instance is imperfectable.
     /// </summary>
-    public bool IsNonPerfectable => Base.IsNonPerfectable();
+    public bool IsImperfectable => Base.IsImperfectable();
 
     /// <summary>
     /// Gets the <see cref="SimpleIntervalNumber"/> base that this instance adds octaves to.
@@ -327,13 +327,13 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
     public static implicit operator IntervalNumber([NamedEnum] PerfectableSimpleIntervalNumber number) => new(number);
 
     /// <summary>
-    /// Implicitly converts a <see cref="NonPerfectableSimpleIntervalNumber"/> to an instance of this struct.
+    /// Implicitly converts a <see cref="ImperfectableSimpleIntervalNumber"/> to an instance of this struct.
     /// </summary>
     /// <exception cref="InvalidEnumArgumentException">
-    /// The <see cref="NonPerfectableSimpleIntervalNumber"/> to convert was an unnamed enum value.
+    /// The <see cref="ImperfectableSimpleIntervalNumber"/> to convert was an unnamed enum value.
     /// </exception>
     /// <param name="number"></param>
-    public static implicit operator IntervalNumber([NamedEnum] NonPerfectableSimpleIntervalNumber number)
+    public static implicit operator IntervalNumber([NamedEnum] ImperfectableSimpleIntervalNumber number)
         => new(number);
 
     /// <summary>
@@ -354,13 +354,13 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
 }
 
 /// <summary>
-/// Represents the number of a simple interval, that can be either perfectable or non-perfectable.
+/// Represents the number of a simple interval, that can be either perfectable or imperfectable.
 /// </summary>
 /// <remarks>
 /// The default value of this struct represents a unison.
 /// </remarks>
 public readonly record struct SimpleIntervalNumber
-    : IEquatable<PerfectableSimpleIntervalNumber>, IEquatable<NonPerfectableSimpleIntervalNumber>, IEquatable<int>,
+    : IEquatable<PerfectableSimpleIntervalNumber>, IEquatable<ImperfectableSimpleIntervalNumber>, IEquatable<int>,
       IComparable<SimpleIntervalNumber>, IComparable<int>
 {
     #region Constants
@@ -380,24 +380,24 @@ public readonly record struct SimpleIntervalNumber
     [NamedEnum] public const PerfectableSimpleIntervalNumber Fifth = PerfectableSimpleIntervalNumber.Fifth;
 
     /// <summary>
-    /// The <see cref="NonPerfectableSimpleIntervalNumber"/> representing a second.
+    /// The <see cref="ImperfectableSimpleIntervalNumber"/> representing a second.
     /// </summary>
-    [NamedEnum] public const NonPerfectableSimpleIntervalNumber Second = NonPerfectableSimpleIntervalNumber.Second;
+    [NamedEnum] public const ImperfectableSimpleIntervalNumber Second = ImperfectableSimpleIntervalNumber.Second;
 
     /// <summary>
-    /// The <see cref="NonPerfectableSimpleIntervalNumber"/> representing a third.
+    /// The <see cref="ImperfectableSimpleIntervalNumber"/> representing a third.
     /// </summary>
-    [NamedEnum] public const NonPerfectableSimpleIntervalNumber Third = NonPerfectableSimpleIntervalNumber.Third;
+    [NamedEnum] public const ImperfectableSimpleIntervalNumber Third = ImperfectableSimpleIntervalNumber.Third;
 
     /// <summary>
-    /// The <see cref="NonPerfectableSimpleIntervalNumber"/> representing a sixth.
+    /// The <see cref="ImperfectableSimpleIntervalNumber"/> representing a sixth.
     /// </summary>
-    [NamedEnum] public const NonPerfectableSimpleIntervalNumber Sixth = NonPerfectableSimpleIntervalNumber.Sixth;
+    [NamedEnum] public const ImperfectableSimpleIntervalNumber Sixth = ImperfectableSimpleIntervalNumber.Sixth;
 
     /// <summary>
-    /// The <see cref="NonPerfectableSimpleIntervalNumber"/> representing a seventh.
+    /// The <see cref="ImperfectableSimpleIntervalNumber"/> representing a seventh.
     /// </summary>
-    [NamedEnum] public const NonPerfectableSimpleIntervalNumber Seventh = NonPerfectableSimpleIntervalNumber.Seventh;
+    [NamedEnum] public const ImperfectableSimpleIntervalNumber Seventh = ImperfectableSimpleIntervalNumber.Seventh;
     #endregion
 
     #region Properties And Fields
@@ -407,12 +407,12 @@ public readonly record struct SimpleIntervalNumber
     /// </summary>
     [NonNegative] internal int PerfectOrMajorHalfSteps => IsPerfectable()
                                                             ? NonDefaultPerfectable.PerfectHalfSteps()
-                                                            : InternalNumber.NonPerfectable.MajorHalfSteps();
+                                                            : InternalNumber.Imperfectable.MajorHalfSteps();
 
     /// <summary>
     /// Gets the integer value of this number.
     /// </summary>
-    [Positive] public int Value => IsPerfectable() ? (int)NonDefaultPerfectable : (int)InternalNumber.NonPerfectable;
+    [Positive] public int Value => IsPerfectable() ? (int)NonDefaultPerfectable : (int)InternalNumber.Imperfectable;
 
     /// <summary>
     /// Gets the perfectability of this instance.
@@ -454,15 +454,15 @@ public readonly record struct SimpleIntervalNumber
 
     /// <summary>
     /// Constructs a new instance of the <see cref="SimpleIntervalNumber"/> struct representing the
-    /// <see cref="NonPerfectableSimpleIntervalNumber"/> passed in.
+    /// <see cref="ImperfectableSimpleIntervalNumber"/> passed in.
     /// </summary>
     /// <param name="Number"></param>
     /// <exception cref="InvalidEnumArgumentException"><paramref name="Number"/> was an unnamed enum value.</exception>
-    public SimpleIntervalNumber([NamedEnum] NonPerfectableSimpleIntervalNumber Number)
+    public SimpleIntervalNumber([NamedEnum] ImperfectableSimpleIntervalNumber Number)
     {
         InternalNumber = new();
-        InternalNumber.NonPerfectable = Throw.IfEnumArgUnnamed(Number, nameof(Number));
-        Perfectability = NonPerfectable;
+        InternalNumber.Imperfectable = Throw.IfEnumArgUnnamed(Number, nameof(Number));
+        Perfectability = Imperfectable;
     }
     #endregion
 
@@ -529,7 +529,7 @@ public readonly record struct SimpleIntervalNumber
         [GreaterThanOrEqualToInteger(-1), LessThanOrEqualToInteger(5)] int Index) => Index switch
     {
         >= -1 and <= 1 => PerfectableSimpleIntervalNumbers.FromCircleOfFifthsIndex(Index),
-        >= 2 and <= 5 => NonPerfectableSimpleIntervalNumbers.FromCircleOfFifthsIndex(Index),
+        >= 2 and <= 5 => ImperfectableSimpleIntervalNumbers.FromCircleOfFifthsIndex(Index),
         _ => throw new ArgumentOutOfRangeException(
                 nameof(Index), Index, "Index did not indicate any perfect or major interval."),
     };
@@ -545,7 +545,7 @@ public readonly record struct SimpleIntervalNumber
     public static SimpleIntervalNumber FromValue(int Value) => Value switch
     {
         1 or 4 or 5 => (PerfectableSimpleIntervalNumber)Value,
-        2 or 3 or 6 or 7 => (NonPerfectableSimpleIntervalNumber)Value,
+        2 or 3 or 6 or 7 => (ImperfectableSimpleIntervalNumber)Value,
         _ => throw new ArgumentOutOfRangeException(nameof(Value), Value, "Value was not in the range 1..7."),
     };
     #endregion
@@ -554,24 +554,24 @@ public readonly record struct SimpleIntervalNumber
     #region Perfectable
     /// <summary>
     /// Gets whether or not this instance is perfectable, setting <paramref name="Perfectable"/> to the perfectable
-    /// number value if so and setting <paramref name="NonPerfectable"/> to the non-perfectable value otherwise.
+    /// number value if so and setting <paramref name="Imperfectable"/> to the imperfectable value otherwise.
     /// </summary>
     /// <param name="Perfectable"></param>
-    /// <param name="NonPerfectable"></param>
+    /// <param name="Imperfectable"></param>
     /// <returns></returns>
     public bool IsPerfectable(
-        out PerfectableSimpleIntervalNumber Perfectable, out NonPerfectableSimpleIntervalNumber NonPerfectable)
+        out PerfectableSimpleIntervalNumber Perfectable, out ImperfectableSimpleIntervalNumber Imperfectable)
     {
         if (IsPerfectable())
         {
             Perfectable = NonDefaultPerfectable;
-            NonPerfectable = default;
+            Imperfectable = default;
             return true;
         }
         else
         {
             Perfectable = default;
-            NonPerfectable = InternalNumber.NonPerfectable;
+            Imperfectable = InternalNumber.Imperfectable;
             return false;
         }
     }
@@ -603,18 +603,18 @@ public readonly record struct SimpleIntervalNumber
     public bool IsPerfectable() => Perfectability == Perfectable;
     #endregion
 
-    #region Non-Perfectable
+    #region Imperfectable
     /// <summary>
-    /// Gets whether or not this instance is non-perfectable, setting the non-perfectable number value in an
+    /// Gets whether or not this instance is imperfectable, setting the imperfectable number value in an
     /// <see langword="out"/> parameter if so.
     /// </summary>
     /// <param name="Number"></param>
     /// <returns></returns>
-    public bool IsNonPerfectable(out NonPerfectableSimpleIntervalNumber Number)
+    public bool IsImperfectable(out ImperfectableSimpleIntervalNumber Number)
     {
-        if (IsNonPerfectable())
+        if (IsImperfectable())
         {
-            Number = InternalNumber.NonPerfectable;
+            Number = InternalNumber.Imperfectable;
             return true;
         }
         else
@@ -625,10 +625,10 @@ public readonly record struct SimpleIntervalNumber
     }
 
     /// <summary>
-    /// Gets whether or not this instance is non-perfectable.
+    /// Gets whether or not this instance is imperfectable.
     /// </summary>
     /// <returns></returns>
-    public bool IsNonPerfectable() => Perfectability == NonPerfectable;
+    public bool IsImperfectable() => Perfectability == Imperfectable;
     #endregion
     #endregion
 
@@ -643,7 +643,7 @@ public readonly record struct SimpleIntervalNumber
     /// <returns></returns>
     internal int CircleOfFifthsIndex() => IsPerfectable()
                                             ? NonDefaultPerfectable.CircleOfFifthsIndex()
-                                            : InternalNumber.NonPerfectable.CircleOfFifthsIndex();
+                                            : InternalNumber.Imperfectable.CircleOfFifthsIndex();
 
     /// <summary>
     /// Gets the inversion of the current instance.
@@ -651,7 +651,7 @@ public readonly record struct SimpleIntervalNumber
     /// <returns></returns>
     public SimpleIntervalNumber Inversion() => IsPerfectable()
                                                 ? new(NonDefaultPerfectable.Inversion())
-                                                : new(InternalNumber.NonPerfectable.Inversion());
+                                                : new(InternalNumber.Imperfectable.Inversion());
     #endregion
 
     #region Equality
@@ -667,7 +667,7 @@ public readonly record struct SimpleIntervalNumber
             return Perfectability switch
             {
                 Perfectable => InternalNumber.Perfectable == other.InternalNumber.Perfectable,
-                _ => InternalNumber.NonPerfectable == other.InternalNumber.NonPerfectable,
+                _ => InternalNumber.Imperfectable == other.InternalNumber.Imperfectable,
             };
         }
         else return false;
@@ -679,7 +679,7 @@ public readonly record struct SimpleIntervalNumber
     /// <returns></returns>
     public override int GetHashCode() => IsPerfectable()
                                             ? NonDefaultPerfectable.GetHashCode()
-                                            : InternalNumber.NonPerfectable.GetHashCode();
+                                            : InternalNumber.Imperfectable.GetHashCode();
 
     #region Operators And Explicit `IEquatable` Implementations
     #region Perfectable
@@ -720,14 +720,14 @@ public readonly record struct SimpleIntervalNumber
         => IsPerfectable(out var thisNumber) && thisNumber == number;
     #endregion
 
-    #region Non-Perfectable
+    #region Imperfectable
     /// <summary>
     /// Determines if the interval numbers passed in are not equal.
     /// </summary>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static bool operator !=(SimpleIntervalNumber lhs, NonPerfectableSimpleIntervalNumber rhs)
+    public static bool operator !=(SimpleIntervalNumber lhs, ImperfectableSimpleIntervalNumber rhs)
         => !lhs.Equals(rhs);
 
     /// <summary>
@@ -736,7 +736,7 @@ public readonly record struct SimpleIntervalNumber
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static bool operator ==(SimpleIntervalNumber lhs, NonPerfectableSimpleIntervalNumber rhs)
+    public static bool operator ==(SimpleIntervalNumber lhs, ImperfectableSimpleIntervalNumber rhs)
         => lhs.Equals(rhs);
 
     /// <summary>
@@ -745,7 +745,7 @@ public readonly record struct SimpleIntervalNumber
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static bool operator !=(NonPerfectableSimpleIntervalNumber lhs, SimpleIntervalNumber rhs)
+    public static bool operator !=(ImperfectableSimpleIntervalNumber lhs, SimpleIntervalNumber rhs)
         => !rhs.Equals(lhs);
 
     /// <summary>
@@ -754,12 +754,12 @@ public readonly record struct SimpleIntervalNumber
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static bool operator ==(NonPerfectableSimpleIntervalNumber lhs, SimpleIntervalNumber rhs)
+    public static bool operator ==(ImperfectableSimpleIntervalNumber lhs, SimpleIntervalNumber rhs)
         => rhs.Equals(lhs);
 
     /// <inheritdoc/>
-    public bool Equals(NonPerfectableSimpleIntervalNumber number)
-        => IsNonPerfectable(out var thisNumber) && thisNumber == number;
+    public bool Equals(ImperfectableSimpleIntervalNumber number)
+        => IsImperfectable(out var thisNumber) && thisNumber == number;
     #endregion
 
     #region int
@@ -967,10 +967,10 @@ public readonly record struct SimpleIntervalNumber
     public static implicit operator SimpleIntervalNumber(PerfectableSimpleIntervalNumber number) => new(number);
 
     /// <summary>
-    /// Implicitly converts a <see cref="NonPerfectableSimpleIntervalNumber"/> to an instance of this struct.
+    /// Implicitly converts a <see cref="ImperfectableSimpleIntervalNumber"/> to an instance of this struct.
     /// </summary>
     /// <param name="number"></param>
-    public static implicit operator SimpleIntervalNumber(NonPerfectableSimpleIntervalNumber number) => new(number);
+    public static implicit operator SimpleIntervalNumber(ImperfectableSimpleIntervalNumber number) => new(number);
 
     /// <summary>
     /// Explicitly converts an instance of this struct to a <see cref="PerfectableSimpleIntervalNumber"/>.
@@ -985,16 +985,16 @@ public readonly record struct SimpleIntervalNumber
             : throw new InvalidCastException("Value did not represent a perfectable simple interval number.");
 
     /// <summary>
-    /// Explicitly converts an instance of this struct to a <see cref="NonPerfectableSimpleIntervalNumber"/>.
+    /// Explicitly converts an instance of this struct to a <see cref="ImperfectableSimpleIntervalNumber"/>.
     /// </summary>
     /// <param name="number"></param>
     /// <exception cref="InvalidCastException">
-    /// <paramref name="number"/> did not represent a non-perfectable simple interval number.
+    /// <paramref name="number"/> did not represent an imperfectable simple interval number.
     /// </exception>
-    public static explicit operator NonPerfectableSimpleIntervalNumber(SimpleIntervalNumber number)
-        => number.IsNonPerfectable()
-            ? number.InternalNumber.NonPerfectable
-            : throw new InvalidCastException("Value did not represent a non-perfectable simple interval number.");
+    public static explicit operator ImperfectableSimpleIntervalNumber(SimpleIntervalNumber number)
+        => number.IsImperfectable()
+            ? number.InternalNumber.Imperfectable
+            : throw new InvalidCastException("Value did not represent an imperfectable simple interval number.");
     #endregion
 
     #region ToString
@@ -1003,7 +1003,7 @@ public readonly record struct SimpleIntervalNumber
     /// </summary>
     /// <returns></returns>
     public override string ToString()
-        => IsPerfectable() ? NonDefaultPerfectable.ToString() : InternalNumber.NonPerfectable.ToString();
+        => IsPerfectable() ? NonDefaultPerfectable.ToString() : InternalNumber.Imperfectable.ToString();
     #endregion
     #endregion
 
@@ -1015,7 +1015,7 @@ public readonly record struct SimpleIntervalNumber
     private struct InternalNumberStruct
     {
         [FieldOffset(0)]
-        public NonPerfectableSimpleIntervalNumber NonPerfectable;
+        public ImperfectableSimpleIntervalNumber Imperfectable;
 
         [FieldOffset(0)]
         public PerfectableSimpleIntervalNumber Perfectable;
@@ -1124,9 +1124,9 @@ public enum PerfectableSimpleIntervalNumber : byte
 }
 
 /// <summary>
-/// Static functionality for the <see cref="PerfectableSimpleIntervalNumber"/> enum.
+/// Static functionality for the <see cref="ImperfectableSimpleIntervalNumber"/> enum.
 /// </summary>
-public static class NonPerfectableSimpleIntervalNumbers
+public static class ImperfectableSimpleIntervalNumbers
 {
     /// <summary>
     /// Gets the circle of fifths index of a major interval numbered with the current instance relative to a
@@ -1136,7 +1136,7 @@ public static class NonPerfectableSimpleIntervalNumbers
     /// <returns></returns>
     /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
     [return: GreaterThanOrEqualToInteger(2), LessThanOrEqualToInteger(5)]
-    internal static int CircleOfFifthsIndex([NamedEnum] this NonPerfectableSimpleIntervalNumber npn)
+    internal static int CircleOfFifthsIndex([NamedEnum] this ImperfectableSimpleIntervalNumber npn)
         => npn switch
         {
             Second => 2,
@@ -1147,12 +1147,12 @@ public static class NonPerfectableSimpleIntervalNumbers
         };
 
     /// <summary>
-    /// Gets the <see cref="NonPerfectableSimpleIntervalNumber"/> that is the inversion of the current instance.
+    /// Gets the <see cref="ImperfectableSimpleIntervalNumber"/> that is the inversion of the current instance.
     /// </summary>
     /// <param name="npn"></param>
     /// <returns></returns>
     /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
-    public static NonPerfectableSimpleIntervalNumber Inversion([NamedEnum] this NonPerfectableSimpleIntervalNumber npn)
+    public static ImperfectableSimpleIntervalNumber Inversion([NamedEnum] this ImperfectableSimpleIntervalNumber npn)
         => npn switch
         {
             Second => Seventh,
@@ -1164,12 +1164,12 @@ public static class NonPerfectableSimpleIntervalNumbers
 
     /// <summary>
     /// Gets the number of half steps spanning the major version of the current
-    /// <see cref="NonPerfectableSimpleIntervalNumber"/> passed in.
+    /// <see cref="ImperfectableSimpleIntervalNumber"/> passed in.
     /// </summary>
     /// <param name="npn"></param>
     /// <returns></returns>
     [return: Positive]
-    internal static int MajorHalfSteps(this NonPerfectableSimpleIntervalNumber npn) => npn switch
+    internal static int MajorHalfSteps(this ImperfectableSimpleIntervalNumber npn) => npn switch
     {
         Second => 2,
         Third => 4,
@@ -1179,7 +1179,7 @@ public static class NonPerfectableSimpleIntervalNumbers
     };
 
     /// <summary>
-    /// Gets the <see cref="NonPerfectableSimpleIntervalNumber"/> of a major interval with the circle-of-fifths perfect
+    /// Gets the <see cref="ImperfectableSimpleIntervalNumber"/> of a major interval with the circle-of-fifths perfect
     /// unison-based index passed in.
     /// </summary>
     /// <param name="Index"></param>
@@ -1187,8 +1187,8 @@ public static class NonPerfectableSimpleIntervalNumbers
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="Index"/> did not indicate any major interval.
     /// </exception>
-    /// <seealso cref="SimpleIntervalNumbers.CircleOfFifthsIndex(NonPerfectableSimpleIntervalNumber)"/>
-    internal static NonPerfectableSimpleIntervalNumber FromCircleOfFifthsIndex(
+    /// <seealso cref="SimpleIntervalNumbers.CircleOfFifthsIndex(ImperfectableSimpleIntervalNumber)"/>
+    internal static ImperfectableSimpleIntervalNumber FromCircleOfFifthsIndex(
         [GreaterThanOrEqualToInteger(2), LessThanOrEqualToInteger(5)] int Index)
         => Index switch
         {
@@ -1201,13 +1201,13 @@ public static class NonPerfectableSimpleIntervalNumbers
         };
 
     private static InvalidEnumArgumentException Undefined
-        => new($"Undefined {nameof(NonPerfectableSimpleIntervalNumber)} value.");
+        => new($"Undefined {nameof(ImperfectableSimpleIntervalNumber)} value.");
 }
 
 /// <summary>
-/// Represents the number of a non-perfectable simple interval.
+/// Represents the number of an imperfectable simple interval.
 /// </summary>
-public enum NonPerfectableSimpleIntervalNumber : byte
+public enum ImperfectableSimpleIntervalNumber : byte
 {
     /// <summary>
     /// Represents a second.
@@ -1228,22 +1228,6 @@ public enum NonPerfectableSimpleIntervalNumber : byte
     /// Represents a seventh.
     /// </summary>
     Seventh = 7,
-}
-
-/// <summary>
-/// Represents the perfectability of an interval.
-/// </summary>
-public enum IntervalPerfectability : byte
-{
-    /// <summary>
-    /// Represents perfectable intervals (i.e. a perfect fourth).
-    /// </summary>
-    Perfectable,
-
-    /// <summary>
-    /// Represents non-perfectable intervals (i.e. a major second).
-    /// </summary>
-    NonPerfectable,
 }
 #endregion
 

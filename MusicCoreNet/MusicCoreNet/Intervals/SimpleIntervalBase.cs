@@ -160,7 +160,7 @@ public readonly record struct SimpleIntervalBase
         var number = SimpleIntervalNumber.FromCircleOfFifthsIndex(numberCircleOfFifthsIndex);
         IntervalQuality quality = number.IsPerfectable()
                                     ? PerfectableIntervalQuality.FromPerfectBasedIndex(qualityCircleOfFifthsIndex)
-                                    : NonPerfectableIntervalQuality.FromMajorBasedIndex(qualityCircleOfFifthsIndex);
+                                    : ImperfectableIntervalQuality.FromMajorBasedIndex(qualityCircleOfFifthsIndex);
         return new(quality, number);
     }
 
@@ -176,14 +176,14 @@ public readonly record struct SimpleIntervalBase
         => new(Quality, Throw.IfEnumArgUnnamed(Number, nameof(Number)));
 
     /// <summary>
-    /// Creates a new non-perfectable instance of this struct with the supplied quality and number.
+    /// Creates a new imperfectable instance of this struct with the supplied quality and number.
     /// </summary>
     /// <param name="Quality"></param>
     /// <param name="Number"></param>
     /// <returns></returns>
     /// <exception cref="InvalidEnumArgumentException"><paramref name="Number"/> was an unnamed enum value.</exception>
-    public static SimpleIntervalBase CreateNonPerfectable(
-        NonPerfectableIntervalQuality Quality, [NamedEnum] NonPerfectableSimpleIntervalNumber Number)
+    public static SimpleIntervalBase CreateImperfectable(
+        ImperfectableIntervalQuality Quality, [NamedEnum] ImperfectableSimpleIntervalNumber Number)
         => new(Quality, Throw.IfEnumArgUnnamed(Number, nameof(Number)));
     #endregion
 
@@ -191,32 +191,32 @@ public readonly record struct SimpleIntervalBase
     #region Perfectability
     /// <summary>
     /// Gets whether or not this instance represents a perfectable interval, returning the perfectable quality and
-    /// number in <see langword="out"/> parameters if so and returning the non-perfectable quality and number in
+    /// number in <see langword="out"/> parameters if so and returning the imperfectable quality and number in
     /// <see langword="out"/> parameters if not.
     /// </summary>
     /// <param name="PerfectableQuality"></param>
     /// <param name="PerfectableNumber"></param>
-    /// <param name="NonPerfectableQuality"></param>
-    /// <param name="NonPerfectableNumber"></param>
+    /// <param name="ImperfectableQuality"></param>
+    /// <param name="ImperfectableNumber"></param>
     /// <returns></returns>
     public bool IsPerfectable(
         out PerfectableIntervalQuality PerfectableQuality,
         out PerfectableSimpleIntervalNumber PerfectableNumber,
-        out NonPerfectableIntervalQuality NonPerfectableQuality,
-        out NonPerfectableSimpleIntervalNumber NonPerfectableNumber)
+        out ImperfectableIntervalQuality ImperfectableQuality,
+        out ImperfectableSimpleIntervalNumber ImperfectableNumber)
     {
         if (
             Quality.IsPerfectable(out var pQuality, out var npQuality)
                 & Number.IsPerfectable(out var pNumber, out var npNumber))
         {
             (PerfectableQuality, PerfectableNumber) = (pQuality, pNumber);
-            (NonPerfectableQuality, NonPerfectableNumber) = (default, default);
+            (ImperfectableQuality, ImperfectableNumber) = (default, default);
             return true;
         }
         else
         {
             (PerfectableQuality, PerfectableNumber) = (default, default);
-            (NonPerfectableQuality, NonPerfectableNumber) = (npQuality, npNumber);
+            (ImperfectableQuality, ImperfectableNumber) = (npQuality, npNumber);
             return false;
         }
     }
@@ -252,16 +252,16 @@ public readonly record struct SimpleIntervalBase
     public bool IsPerfectable() => Perfectability == IntervalPerfectability.Perfectable;
 
     /// <summary>
-    /// Gets whether or not this instance represents a non-perfectable interval, returning the non-perfectable quality
+    /// Gets whether or not this instance represents an imperfectable interval, returning the imperfectable quality
     /// and number in <see langword="out"/> parameters if so.
     /// </summary>
     /// <param name="Quality"></param>
     /// <param name="Number"></param>
     /// <returns></returns>
-    public bool IsNonPerfectable(
-        out NonPerfectableIntervalQuality Quality, out NonPerfectableSimpleIntervalNumber Number)
+    public bool IsImperfectable(
+        out ImperfectableIntervalQuality Quality, out ImperfectableSimpleIntervalNumber Number)
     {
-        if (this.Quality.IsNonPerfectable(out var npQuality) && this.Number.IsNonPerfectable(out var npNumber))
+        if (this.Quality.IsImperfectable(out var npQuality) && this.Number.IsImperfectable(out var npNumber))
         {
             Quality = npQuality;
             Number = npNumber;
@@ -276,10 +276,10 @@ public readonly record struct SimpleIntervalBase
     }
 
     /// <summary>
-    /// Gets whether or not this instance represents a non-perfectable interval.
+    /// Gets whether or not this instance represents an imperfectable interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsNonPerfectable() => Perfectability == IntervalPerfectability.NonPerfectable;
+    public bool IsImperfectable() => Perfectability == IntervalPerfectability.Imperfectable;
     #endregion
 
     #region Specific Qualities
@@ -387,7 +387,7 @@ public readonly record struct SimpleIntervalBase
 
         IntervalQuality newQuality = newNumber.IsPerfectable()
                                         ? PerfectableIntervalQuality.FromPerfectBasedIndex(newQualityIndex)
-                                        : NonPerfectableIntervalQuality.FromMajorBasedIndex(newQualityIndex);
+                                        : ImperfectableIntervalQuality.FromMajorBasedIndex(newQualityIndex);
         #endregion
 
         return new(newQuality, newNumber);

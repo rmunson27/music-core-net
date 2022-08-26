@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace RemTest.Music;
 
 /// <summary>
-/// Tests of the <see cref="PerfectableIntervalQuality"/> and <see cref="NonPerfectableIntervalQuality"/> structs.
+/// Tests of the <see cref="PerfectableIntervalQuality"/> and <see cref="ImperfectableIntervalQuality"/> structs.
 /// </summary>
 [TestClass]
 public class IntervalQualityTest
@@ -40,17 +40,17 @@ public class IntervalQualityTest
     private static readonly ImmutableArray<(IntervalQuality Quality, int Index)> GeneralPerfectBasedIndexPairs
         = ImmutableArray.CreateRange(new (IntervalQuality, int)[]
         {
-            (NonPerfectableIntervalQuality.Diminished(2), -5),
+            (ImperfectableIntervalQuality.Diminished(2), -5),
             (PerfectableIntervalQuality.Diminished(2), -4),
-            (NonPerfectableIntervalQuality.Diminished(), -3),
+            (ImperfectableIntervalQuality.Diminished(), -3),
             (PerfectableIntervalQuality.Diminished(), -2),
-            (NonPerfectableIntervalQuality.Minor, -1),
+            (ImperfectableIntervalQuality.Minor, -1),
             (PerfectableIntervalQuality.Perfect, 0),
-            (NonPerfectableIntervalQuality.Major, 1),
+            (ImperfectableIntervalQuality.Major, 1),
             (PerfectableIntervalQuality.Augmented(), 2),
-            (NonPerfectableIntervalQuality.Augmented(), 3),
+            (ImperfectableIntervalQuality.Augmented(), 3),
             (PerfectableIntervalQuality.Augmented(2), 4),
-            (NonPerfectableIntervalQuality.Augmented(2), 5),
+            (ImperfectableIntervalQuality.Augmented(2), 5),
         });
 
     /// <summary>
@@ -64,8 +64,7 @@ public class IntervalQualityTest
             Assert.AreEqual(
                 Index, Quality.CircleOfFifthsIndex,
                 $"Invalid {nameof(Quality.CircleOfFifthsIndex)} result from"
-                    + $" ({(Quality.IsPerfectable() ? "Perfectable" : "Non-Perfectable")})"
-                    + $" interval quality '{Quality}'.");
+                    + $" ({Quality.Perfectability}) interval quality '{Quality}'.");
         }
     }
 
@@ -124,20 +123,20 @@ public class IntervalQualityTest
     }
     #endregion
 
-    #region Non-Perfectable
+    #region Imperfectable
     /// <summary>
     /// Tests the factory method construction and characterization of
-    /// <see cref="NonPerfectableIntervalQuality"/> instances.
+    /// <see cref="ImperfectableIntervalQuality"/> instances.
     /// </summary>
-    [TestMethod, TestCategory(nameof(NonPerfectableIntervalQuality))]
-    public void TestNonPerfectableCharacterization()
+    [TestMethod, TestCategory(nameof(ImperfectableIntervalQuality))]
+    public void TestImperfectableCharacterization()
     {
         var randomDegree = Random.Next(10) + 2;
 
-        var randomDiminished = NonPerfectableIntervalQuality.Diminished(randomDegree);
-        var singleDiminished = NonPerfectableIntervalQuality.Diminished();
-        var singleAugmented = NonPerfectableIntervalQuality.Augmented();
-        var randomAugmented = NonPerfectableIntervalQuality.Augmented(randomDegree);
+        var randomDiminished = ImperfectableIntervalQuality.Diminished(randomDegree);
+        var singleDiminished = ImperfectableIntervalQuality.Diminished();
+        var singleAugmented = ImperfectableIntervalQuality.Augmented();
+        var randomAugmented = ImperfectableIntervalQuality.Augmented(randomDegree);
 
         int diminishedDegree, augmentedDegree;
 
@@ -167,18 +166,18 @@ public class IntervalQualityTest
     }
 
     /// <summary>
-    /// Tests inversion of a non-perfectable interval quality.
+    /// Tests inversion of an imperfectable interval quality.
     /// </summary>
-    [TestMethod, TestCategory(nameof(NonPerfectableIntervalQuality))]
-    public void TestNonPerfectableInversion()
+    [TestMethod, TestCategory(nameof(ImperfectableIntervalQuality))]
+    public void TestImperfectableInversion()
     {
         Assert.AreEqual(IntervalQuality.Major, IntervalQuality.Minor.Inversion());
         Assert.AreEqual(IntervalQuality.Perfect, IntervalQuality.Perfect.Inversion());
         Assert.AreEqual(IntervalQuality.Minor, IntervalQuality.Major.Inversion());
 
         var randomDegree = Random.Next(1, 10);
-        var randomDiminished = NonPerfectableIntervalQuality.Diminished(randomDegree);
-        var randomAugmented = NonPerfectableIntervalQuality.Augmented(randomDegree);
+        var randomDiminished = ImperfectableIntervalQuality.Diminished(randomDegree);
+        var randomAugmented = ImperfectableIntervalQuality.Augmented(randomDegree);
         Assert.AreEqual(randomDiminished, randomAugmented.Inversion());
         Assert.AreEqual(randomAugmented, randomDiminished.Inversion());
     }
