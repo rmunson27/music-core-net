@@ -205,7 +205,18 @@ public readonly record struct Accidental
 /// </summary>
 public enum AccidentalType : sbyte
 {
+    /// <summary>
+    /// Represents flat accidentals.
+    /// </summary>
     Flat = -1,
+
+    /// <summary>
+    /// Represents the natural accidental.
+    /// </summary>
     Natural = 0,
+
+    /// <summary>
+    /// Represents sharp accidentals.
+    /// </summary>
     Sharp = 1,
 }
