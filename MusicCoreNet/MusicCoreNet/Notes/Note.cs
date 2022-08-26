@@ -10,20 +10,20 @@ namespace Rem.Music;
 /// <summary>
 /// Represents a musical note.
 /// </summary>
-/// <param name="Class">The class of the note (letter and accidental).</param>
+/// <param name="Spelling">The spelling of the note (letter and accidental).</param>
 /// <param name="Octave">The octave of the note.</param>
-public readonly record struct Note(NoteClass Class, int Octave)
+public readonly record struct Note(NoteSpelling Spelling, int Octave)
 {
     #region Properties
     /// <summary>
     /// Gets the letter of this note.
     /// </summary>
-    public NoteLetter Letter => Class.Letter;
+    public NoteLetter Letter => Spelling.Letter;
 
     /// <summary>
     /// Gets the accidental of this note.
     /// </summary>
-    public Accidental Accidental => Class.Accidental;
+    public Accidental Accidental => Spelling.Accidental;
 
     /// <summary>
     /// Gets info for the pitch this note represents.
@@ -33,9 +33,9 @@ public readonly record struct Note(NoteClass Class, int Octave)
         get
         {
             var octaveFixup = Maths.FloorDivRem(
-                                Class.Letter.HalfStepsDownToC() + Class.Accidental.IntValue, 12,
-                                out var cRelativeClassValue);
-            return new(NotePitchClasses.FromSemitonesDownToC(cRelativeClassValue), Octave + octaveFixup);
+                                Spelling.Letter.HalfStepsDownToC() + Spelling.Accidental.IntValue, 12,
+                                out var cRelativeSpellingValue);
+            return new(NotePitchClasses.FromSemitonesDownToC(cRelativeSpellingValue), Octave + octaveFixup);
         }
     }
     #endregion
@@ -47,13 +47,13 @@ public readonly record struct Note(NoteClass Class, int Octave)
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
-    public bool Equals(Note other) => Octave == other.Octave && Class == other.Class;
+    public bool Equals(Note other) => Octave == other.Octave && Spelling == other.Spelling;
 
     /// <summary>
     /// Gets a hash code for the current instance.
     /// </summary>
     /// <returns></returns>
-    public override int GetHashCode() => HashCode.Combine(Class, Octave);
+    public override int GetHashCode() => HashCode.Combine(Spelling, Octave);
 
     /// <summary>
     /// Determines if this <see cref="Note"/> is enharmonically equivalent to another.
@@ -92,17 +92,17 @@ public readonly record struct Note(NoteClass Class, int Octave)
     /// <returns></returns>
     public static Note operator -(Note lhs, in Interval rhs)
     {
-        var newClass = lhs.Class - rhs.Base;
+        var newSpelling = lhs.Spelling - rhs.Base;
 
-        // Class addition underflows if we have hit the next octave down
+        // Spelling addition underflows if we have hit the next octave down
         // This would be less than 0, but subtract 1 since the number contributes 1 less than its value to the letter
         // when subtracting
-        var classAdditionUnderflows = lhs.Letter.CBasedIndex() - rhs.Base.Number < -1;
+        var spellingAdditionUnderflows = lhs.Letter.CBasedIndex() - rhs.Base.Number < -1;
 
         var newOctave = lhs.Octave - rhs.AdditionalOctaves;
-        if (classAdditionUnderflows) newOctave--;
+        if (spellingAdditionUnderflows) newOctave--;
 
-        return new(newClass, newOctave);
+        return new(newSpelling, newOctave);
     }
 
     /// <summary>
@@ -113,17 +113,17 @@ public readonly record struct Note(NoteClass Class, int Octave)
     /// <returns></returns>
     public static Note operator +(Note lhs, in Interval rhs)
     {
-        var newClass = lhs.Class + rhs.Base;
+        var newSpelling = lhs.Spelling + rhs.Base;
 
-        // Class addition overflows if we have hit the next octave up
+        // Spelling addition overflows if we have hit the next octave up
         // This would be greater than 6, but add 1 since the number contributes 1 less than its value to the letter
         // when adding
-        var classAdditionOverflows = lhs.Letter.CBasedIndex() + rhs.Base.Number > 7;
+        var spellingAdditionOverflows = lhs.Letter.CBasedIndex() + rhs.Base.Number > 7;
 
         var newOctave = lhs.Octave + rhs.AdditionalOctaves;
-        if (classAdditionOverflows) newOctave++;
+        if (spellingAdditionOverflows) newOctave++;
 
-        return new(newClass, newOctave);
+        return new(newSpelling, newOctave);
     }
 
     /// <summary>
@@ -134,7 +134,7 @@ public readonly record struct Note(NoteClass Class, int Octave)
     /// <returns></returns>
     public static SignedInterval operator -(Note lhs, Note rhs)
     {
-        var baseDiff = lhs.Class - rhs.Class;
+        var baseDiff = lhs.Spelling - rhs.Spelling;
         var diffAdditionalOctaves = lhs.Octave - rhs.Octave;
 
         // Will need to store whether or not the result is negative (as the additional octave difference could be 0
@@ -148,7 +148,7 @@ public readonly record struct Note(NoteClass Class, int Octave)
 
         // If the octaves are the same but the right letter is higher in the octave than the left, then the right
         // note is higher than the left
-        // Since NoteClass subtraction treats the left side as higher, the initially computed base must be inverted,
+        // Since NoteSpelling subtraction treats the left side as higher, the initially computed base must be inverted,
         // and the result will be negative
         else if (diffAdditionalOctaves == 0 && lhs.Letter.CBasedIndex() < rhs.Letter.CBasedIndex())
         {
@@ -158,7 +158,7 @@ public readonly record struct Note(NoteClass Class, int Octave)
 
         else if (diffAdditionalOctaves < 0)
         {
-            // Since NoteClass subtraction treats the left side as higher, the initially computed base must be inverted 
+            // Since NoteSpelling subtraction treats the left side as higher, the initially computed base must be inverted 
             baseDiff = -baseDiff;
 
             // Since the inversion above allows the left side to be treated as lower, if the letter of the left side
@@ -190,8 +190,8 @@ public readonly record struct Note(NoteClass Class, int Octave)
     /// <returns></returns>
     public Note SimplifyAccidental()
     {
-        var simplifiedClass = Class.SimplifyAccidental();
-        var accidentalDiff = simplifiedClass.Accidental.IntValue - Accidental.IntValue;
+        var simplifiedSpelling = Spelling.SimplifyAccidental();
+        var accidentalDiff = simplifiedSpelling.Accidental.IntValue - Accidental.IntValue;
         var octave = Octave;
 
         if (accidentalDiff < 0) // Accidental is lower, so letter is higher
@@ -209,7 +209,7 @@ public readonly record struct Note(NoteClass Class, int Octave)
             octave += Maths.FloorDiv(octaveRelativeHalfSteps, 12);
         }
 
-        return new(simplifiedClass, octave);
+        return new(simplifiedSpelling, octave);
     }
     #endregion
 
@@ -226,7 +226,7 @@ public readonly record struct Note(NoteClass Class, int Octave)
     /// </summary>
     /// <returns></returns>
     public string ToMusicalNotationString()
-        => $"{Class.ToMusicalNotationString()}{(Octave < 0 ? $"({Octave})" : Octave)}";
+        => $"{Spelling.ToMusicalNotationString()}{(Octave < 0 ? $"({Octave})" : Octave)}";
     #endregion
     #endregion
 }

@@ -13,15 +13,15 @@ namespace Rem.Music;
 public static class CircleOfFifths
 {
     /// <summary>
-    /// A comparer that can be used to compare <see cref="NoteClass"/> instances based on their position in
+    /// A comparer that can be used to compare <see cref="NoteSpelling"/> instances based on their position in
     /// the circle of fifths.
     /// </summary>
-    public static readonly IComparer<NoteClass> NoteClassComparer = new NoteClassComparerType();
+    public static readonly IComparer<NoteSpelling> NoteSpellingComparer = new NoteSpellingComparerType();
 
-    private sealed class NoteClassComparerType : IComparer<NoteClass>
+    private sealed class NoteSpellingComparerType : IComparer<NoteSpelling>
     {
         /// <inheritdoc/>
-        public int Compare(NoteClass x, NoteClass y)
+        public int Compare(NoteSpelling x, NoteSpelling y)
         {
             return x.CircleOfFifthsIndexRelativeToC.CompareTo(y.CircleOfFifthsIndexRelativeToC);
         }

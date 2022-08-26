@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 namespace RemTest.Music;
 
 /// <summary>
-/// Tests of the <see cref="NoteClass"/> struct.
+/// Tests of the <see cref="NoteSpelling"/> struct.
 /// </summary>
 [TestClass]
-public class NoteClassTest
+public class NoteSpellingTest
 {
     /// <summary>
-    /// A list of tuples containing two <see cref="NoteClass"/> instances and a <see cref="SimpleIntervalBase"/>
+    /// A list of tuples containing two <see cref="NoteSpelling"/> instances and a <see cref="SimpleIntervalBase"/>
     /// representing the difference between the first and the second.
     /// </summary>
-    private static readonly ImmutableArray<(NoteClass First, NoteClass Second, SimpleIntervalBase Difference)> Differences
+    private static readonly ImmutableArray<(NoteSpelling First, NoteSpelling Second, SimpleIntervalBase Difference)> Differences
         = ImmutableArray.CreateRange(new[]
         {
             (Notes.A().Natural(), Notes.C().Natural(), Intervals.Major().Sixth()),
@@ -28,7 +28,7 @@ public class NoteClassTest
         });
 
     /// <summary>
-    /// Tests the <see cref="NoteClass.operator +(NoteClass, SimpleIntervalBase)"/> method.
+    /// Tests the <see cref="NoteSpelling.operator +(NoteSpelling, SimpleIntervalBase)"/> method.
     /// </summary>
     [TestMethod]
     public void TestAddition()
@@ -45,7 +45,7 @@ public class NoteClassTest
     }
 
     /// <summary>
-    /// Tests the <see cref="NoteClass.operator -(NoteClass, SimpleIntervalBase)"/> method.
+    /// Tests the <see cref="NoteSpelling.operator -(NoteSpelling, SimpleIntervalBase)"/> method.
     /// </summary>
     [TestMethod]
     public void TestSubtraction()
@@ -61,7 +61,7 @@ public class NoteClassTest
         }
     }
 
-    private static readonly ImmutableArray<(NoteClass First, NoteClass Second)> EnharmonicEquivalentPairs
+    private static readonly ImmutableArray<(NoteSpelling First, NoteSpelling Second)> EnharmonicEquivalentPairs
         = ImmutableArray.CreateRange(new[]
         {
             (Notes.A().Natural(), Notes.B().Flat(2)),
@@ -71,7 +71,7 @@ public class NoteClassTest
         });
 
     /// <summary>
-    /// Tests the <see cref="NoteClass.IsEnharmonicallyEquivalentTo(NoteClass)"/> method.
+    /// Tests the <see cref="NoteSpelling.IsEnharmonicallyEquivalentTo(NoteSpelling)"/> method.
     /// </summary>
     [TestMethod]
     public void TestEnharmonicEquivalence()
@@ -99,7 +99,7 @@ public class NoteClassTest
     }
 
     /// <summary>
-    /// Tests the <see cref="NoteClass.PitchClass"/> property.
+    /// Tests the <see cref="NoteSpelling.PitchClass"/> property.
     /// </summary>
     [TestMethod]
     public void TestPitchClass()
@@ -110,7 +110,7 @@ public class NoteClassTest
     }
 
     /// <summary>
-    /// Tests the <see cref="NoteClass.SimplifyAccidental"/> method.
+    /// Tests the <see cref="NoteSpelling.SimplifyAccidental"/> method.
     /// </summary>
     [TestMethod]
     public void TestSimplifyAccidental()
@@ -122,7 +122,7 @@ public class NoteClassTest
     }
 
     /// <summary>
-    /// Tests the <see cref="NoteClass.SimplestWithPitchClass(NotePitchClass, NonNaturalAccidentalType)"/>
+    /// Tests the <see cref="NoteSpelling.SimplestWithPitchClass(NotePitchClass, NonNaturalAccidentalType)"/>
     /// factory method.
     /// </summary>
     [TestMethod]
@@ -155,13 +155,13 @@ public class NoteClassTest
     }
 
     private static void TestSimplestWithPitchClassPair(
-        NotePitchClass pitchClass, NoteClass expectedNote,
+        NotePitchClass pitchClass, NoteSpelling expectedNote,
         NonNaturalAccidentalType? nonNaturalAccidentalType = null)
     {
         Assert.AreEqual(
             expectedNote,
-            NoteClass.SimplestWithPitchClass(pitchClass, nonNaturalAccidentalType ?? NonNaturalAccidentalType.Flat),
-            $"Invalid {nameof(NoteClass.SimplestWithPitchClass)}"
+            NoteSpelling.SimplestWithPitchClass(pitchClass, nonNaturalAccidentalType ?? NonNaturalAccidentalType.Flat),
+            $"Invalid {nameof(NoteSpelling.SimplestWithPitchClass)}"
                 + $"({pitchClass}, {(nonNaturalAccidentalType?.ToString() ?? "_")}) result.");
         Assert.AreEqual(
             pitchClass, expectedNote.PitchClass,
@@ -169,7 +169,7 @@ public class NoteClassTest
     }
 
     /// <summary>
-    /// Tests of the <see cref="NoteClass.operator -(NoteClass, NoteClass)"/> method.
+    /// Tests of the <see cref="NoteSpelling.operator -(NoteSpelling, NoteSpelling)"/> method.
     /// </summary>
     [TestMethod]
     public void TestDifference()

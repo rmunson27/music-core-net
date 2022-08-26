@@ -11,19 +11,19 @@ using System.Threading.Tasks;
 namespace Rem.Music;
 
 /// <summary>
-/// Represents the class of a written note, independent of octave.
+/// Represents the spelling of a note.
 /// </summary>
 /// <remarks>
-/// The default value of this struct represents A natural.
+/// The default value of this struct represents an A natural spelling.
 /// </remarks>
-/// <param name="Letter">The letter of the note class to create.</param>
-/// <param name="Accidental">The accidental of the note class to create.</param>
+/// <param name="Letter">The letter of the note spelling to create.</param>
+/// <param name="Accidental">The accidental of the note spelling to create.</param>
 /// <exception cref="InvalidEnumArgumentException"><paramref name="Letter"/> was an unnamed enum value.</exception>
-public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental = default)
+public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Accidental = default)
 {
     #region Properties And Fields
     /// <summary>
-    /// Gets or initializes the letter of this note class.
+    /// Gets or initializes the letter of this note spelling.
     /// </summary>
     /// <exception cref="InvalidEnumPropertySetException">
     /// This property was initialized to an unnamed enum value.
@@ -59,7 +59,7 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
     #region Methods
     #region Factory
     /// <summary>
-    /// Gets the <see cref="NoteClass"/> with the pitch class passed in that has the simplest possible accidental
+    /// Gets the <see cref="NoteSpelling"/> with the pitch class passed in that has the simplest possible accidental
     /// (i.e. closest to natural), using the specified <see cref="NonNaturalAccidentalType"/> to assign accidentals
     /// if necessary.
     /// </summary>
@@ -75,7 +75,7 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
     /// <exception cref="InvalidEnumArgumentException">
     /// Either <paramref name="pitchClass"/> or <paramref name="nonNaturalAccidentalType"/> was an unnamed enum value.
     /// </exception>
-    public static NoteClass SimplestWithPitchClass(
+    public static NoteSpelling SimplestWithPitchClass(
         [NamedEnum] NotePitchClass pitchClass, [NamedEnum] NonNaturalAccidentalType nonNaturalAccidentalType)
     {
         Throw.IfEnumArgUnnamed(pitchClass, nameof(pitchClass));
@@ -103,7 +103,7 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
 
     #region Computation
     /// <summary>
-    /// Gets a <see cref="NoteClass"/> enharmonically equivalent to the current instance with the accidental simplified
+    /// Gets a <see cref="NoteSpelling"/> enharmonically equivalent to the current instance with the accidental simplified
     /// as much as possible (i.e. calling the method on Cb will yield B).
     /// </summary>
     /// <remarks>
@@ -111,7 +111,7 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
     /// For example, calling this method on G#x will yield A#, whereas calling it on Cbb will yield Bb.
     /// </remarks>
     /// <returns></returns>
-    public NoteClass SimplifyAccidental()
+    public NoteSpelling SimplifyAccidental()
         => SimplestWithPitchClass(
             PitchClass,
 
@@ -121,22 +121,22 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
 
     #region Arithmetic
     /// <summary>
-    /// Gets a <see cref="NoteClass"/> equivalent to the current instance with the supplied
+    /// Gets a <see cref="NoteSpelling"/> equivalent to the current instance with the supplied
     /// <see cref="SimpleIntervalBase"/> subtracted.
     /// </summary>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static NoteClass operator -(NoteClass lhs, SimpleIntervalBase rhs) => lhs + rhs.Inversion();
+    public static NoteSpelling operator -(NoteSpelling lhs, SimpleIntervalBase rhs) => lhs + rhs.Inversion();
 
     /// <summary>
-    /// Gets a <see cref="NoteClass"/> equivalent to the current instance with the supplied
+    /// Gets a <see cref="NoteSpelling"/> equivalent to the current instance with the supplied
     /// <see cref="SimpleIntervalBase"/> added.
     /// </summary>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static NoteClass operator +(NoteClass lhs, SimpleIntervalBase rhs)
+    public static NoteSpelling operator +(NoteSpelling lhs, SimpleIntervalBase rhs)
     {
         var newLetter = lhs._letter.Plus(rhs.Number, out var differenceQuality);
         return new(
@@ -145,13 +145,13 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
     }
 
     /// <summary>
-    /// Gets the difference between the two <see cref="NoteClass"/> instances passed in as an instance
+    /// Gets the difference between the two <see cref="NoteSpelling"/> instances passed in as an instance
     /// of <see cref="SimpleIntervalBase"/>.
     /// </summary>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static SimpleIntervalBase operator -(NoteClass lhs, NoteClass rhs)
+    public static SimpleIntervalBase operator -(NoteSpelling lhs, NoteSpelling rhs)
     {
         var letterDifference = lhs.Letter.Minus(rhs.Letter);
         return new(
@@ -166,7 +166,7 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
-    public bool Equals(NoteClass other) => Letter == other.Letter && Accidental == other.Accidental;
+    public bool Equals(NoteSpelling other) => Letter == other.Letter && Accidental == other.Accidental;
 
     /// <summary>
     /// Gets a hash code for the current instance.
@@ -175,16 +175,16 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
     public override int GetHashCode() => HashCode.Combine(Letter, Accidental);
 
     /// <summary>
-    /// Determines if this <see cref="NoteClass"/> is enharmonically equivalent to another.
+    /// Determines if this <see cref="NoteSpelling"/> is enharmonically equivalent to another.
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
-    public bool IsEnharmonicallyEquivalentTo(NoteClass other) => PitchClass == other.PitchClass;
+    public bool IsEnharmonicallyEquivalentTo(NoteSpelling other) => PitchClass == other.PitchClass;
     #endregion
 
     #region Conversion
     /// <summary>
-    /// Gets the <see cref="Note"/> with the current <see cref="NoteClass"/> in the specified numbered octave.
+    /// Gets the <see cref="Note"/> with the current <see cref="NoteSpelling"/> in the specified numbered octave.
     /// </summary>
     /// <param name="Octave"></param>
     /// <returns></returns>
@@ -194,7 +194,7 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
     /// Implicitly converts a <see cref="NoteLetter"/> to an instance of this type.
     /// </summary>
     /// <param name="letter"></param>
-    public static implicit operator NoteClass(NoteLetter letter) => new(letter);
+    public static implicit operator NoteSpelling(NoteLetter letter) => new(letter);
     #endregion
 
     #region ToString
@@ -202,7 +202,7 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
     /// Gets a string that represents the current instance.
     /// </summary>
     /// <returns></returns>
-    public override string ToString() => $"{nameof(NoteClass)} {{ Letter = {Letter}, Accidental = {Accidental} }}";
+    public override string ToString() => $"{nameof(NoteSpelling)} {{ Letter = {Letter}, Accidental = {Accidental} }}";
 
     /// <summary>
     /// Gets a musical notation string that represents the current instance.

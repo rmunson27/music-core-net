@@ -13,8 +13,8 @@ namespace RemTest.Music;
 [TestClass]
 public class CircleOfFifthsTest
 {
-    private static readonly ImmutableArray<(NoteClass Lesser, NoteClass Greater)> NoteClassComparisons
-        = ImmutableArray.CreateRange(new (NoteClass, NoteClass)[]
+    private static readonly ImmutableArray<(NoteSpelling Lesser, NoteSpelling Greater)> NoteSpellingComparisons
+        = ImmutableArray.CreateRange(new (NoteSpelling, NoteSpelling)[]
         {
             (Notes.A().Natural(), Notes.B().Natural()),
             (Notes.E().Natural(), Notes.C().Sharp()),
@@ -24,27 +24,27 @@ public class CircleOfFifthsTest
         });
 
     /// <summary>
-    /// Tests the <see cref="CircleOfFifths.NoteClassComparer"/> object functionality.
+    /// Tests the <see cref="CircleOfFifths.NoteSpellingComparer"/> object functionality.
     /// </summary>
     [TestMethod]
-    public void TestNoteClassComparer()
+    public void TestNoteSpellingComparer()
     {
-        foreach (var (Lesser, Greater) in NoteClassComparisons)
+        foreach (var (Lesser, Greater) in NoteSpellingComparisons)
         {
             Assert.IsTrue(
-                CircleOfFifths.NoteClassComparer.Compare(Lesser, Greater) < 0,
+                CircleOfFifths.NoteSpellingComparer.Compare(Lesser, Greater) < 0,
                 $"Comparer did not uphold {Lesser} < {Greater}.");
 
             Assert.IsTrue(
-                CircleOfFifths.NoteClassComparer.Compare(Greater, Lesser) > 0,
+                CircleOfFifths.NoteSpellingComparer.Compare(Greater, Lesser) > 0,
                 $"Comparer did not uphold {Greater} > {Lesser}.");
 
             Assert.IsTrue(
-                CircleOfFifths.NoteClassComparer.Compare(Lesser, Lesser) == 0,
+                CircleOfFifths.NoteSpellingComparer.Compare(Lesser, Lesser) == 0,
                 $"Comparer did not uphold {Lesser} == {Lesser}.");
 
             Assert.IsTrue(
-                CircleOfFifths.NoteClassComparer.Compare(Greater, Greater) == 0,
+                CircleOfFifths.NoteSpellingComparer.Compare(Greater, Greater) == 0,
                 $"Comparer did not uphold {Greater} == {Greater}.");
         }
     }
