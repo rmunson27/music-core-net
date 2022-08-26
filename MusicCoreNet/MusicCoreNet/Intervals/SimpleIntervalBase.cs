@@ -418,5 +418,13 @@ public readonly record struct SimpleIntervalBase
     public Interval WithAdditionalOctaves([NonNegative] int AdditionalOctaves)
         => new(this, Throw.IfArgNegative(AdditionalOctaves, nameof(AdditionalOctaves)));
     #endregion
+
+    #region ToString
+    /// <summary>
+    /// Gets a string that represents the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString() => $"{nameof(SimpleIntervalBase)} {{ Quality = {Quality}, Number = {Number} }}";
+    #endregion
     #endregion
 }
