@@ -19,7 +19,7 @@ public static class Notes
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteSpellingBuilder A() => new(NoteLetter.A);
+    public static NoteBuilder A() => new(NoteLetter.A);
 
     /// <summary>
     /// Gets a builder object that can be used to quickly create a 'B' <see cref="NoteSpelling"/> with a
@@ -27,7 +27,7 @@ public static class Notes
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteSpellingBuilder B() => new(NoteLetter.B);
+    public static NoteBuilder B() => new(NoteLetter.B);
 
     /// <summary>
     /// Gets a builder object that can be used to quickly create a 'C' <see cref="NoteSpelling"/> with a
@@ -35,7 +35,7 @@ public static class Notes
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteSpellingBuilder C() => new(NoteLetter.C);
+    public static NoteBuilder C() => new(NoteLetter.C);
 
     /// <summary>
     /// Gets a builder object that can be used to quickly create a 'D' <see cref="NoteSpelling"/> with a
@@ -43,7 +43,7 @@ public static class Notes
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteSpellingBuilder D() => new(NoteLetter.D);
+    public static NoteBuilder D() => new(NoteLetter.D);
 
     /// <summary>
     /// Gets a builder object that can be used to quickly create an 'E' <see cref="NoteSpelling"/> with a
@@ -51,7 +51,7 @@ public static class Notes
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteSpellingBuilder E() => new(NoteLetter.E);
+    public static NoteBuilder E() => new(NoteLetter.E);
 
     /// <summary>
     /// Gets a builder object that can be used to quickly create an 'F' <see cref="NoteSpelling"/> with a
@@ -59,7 +59,7 @@ public static class Notes
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteSpellingBuilder F() => new(NoteLetter.F);
+    public static NoteBuilder F() => new(NoteLetter.F);
 
     /// <summary>
     /// Gets a builder object that can be used to quickly create a 'G' <see cref="NoteSpelling"/> with a
@@ -67,6 +67,6 @@ public static class Notes
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteSpellingBuilder G() => new(NoteLetter.G);
+    public static NoteBuilder G() => new(NoteLetter.G);
     #endregion
 }

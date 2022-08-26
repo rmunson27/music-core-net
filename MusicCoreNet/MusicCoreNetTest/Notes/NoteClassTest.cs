@@ -20,11 +20,11 @@ public class NoteSpellingTest
     private static readonly ImmutableArray<(NoteSpelling First, NoteSpelling Second, SimpleIntervalBase Difference)> Differences
         = ImmutableArray.CreateRange(new[]
         {
-            (Notes.A().Natural(), Notes.C().Natural(), Intervals.Major().Sixth()),
-            (Notes.F().Sharp(), Notes.C().Natural(), Intervals.Augmented().Fourth()),
+            (Notes.A(), Notes.C(), Intervals.Major().Sixth()),
+            (Notes.F().Sharp(), Notes.C(), Intervals.Augmented().Fourth()),
             (Notes.G().Sharp(), Notes.B().Flat(), Intervals.Augmented().Sixth()),
             (Notes.B().Sharp(), Notes.D().Flat(), Intervals.Augmented(2).Sixth()),
-            (Notes.E().Natural(), Notes.G().Sharp(), Intervals.Minor().Sixth()),
+            (Notes.E(), Notes.G().Sharp(), Intervals.Minor().Sixth()),
         });
 
     /// <summary>
@@ -64,10 +64,10 @@ public class NoteSpellingTest
     private static readonly ImmutableArray<(NoteSpelling First, NoteSpelling Second)> EnharmonicEquivalentPairs
         = ImmutableArray.CreateRange(new[]
         {
-            (Notes.A().Natural(), Notes.B().Flat(2)),
-            (Notes.A().Natural(), Notes.G().Sharp(2)),
+            (Notes.A(), Notes.B().Flat(2)),
+            (Notes.A(), Notes.G().Sharp(2)),
             (Notes.C().Sharp(), Notes.D().Flat()),
-            (Notes.G().Natural(), Notes.A().Flat(2)),
+            (Notes.G(), Notes.A().Flat(2)),
         });
 
     /// <summary>

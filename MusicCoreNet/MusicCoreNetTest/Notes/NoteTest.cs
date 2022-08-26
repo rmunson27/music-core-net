@@ -21,12 +21,12 @@ public class NoteTest
     {
         // Normal cases (described by behavior of NoteClass method)
         Assert.AreEqual(Notes.A().Flat().WithOctave(4), Notes.B().Flat(3).WithOctave(4).SimplifyAccidental());
-        Assert.AreEqual(Notes.F().Natural().WithOctave(4), Notes.B().Flat(6).WithOctave(4).SimplifyAccidental());
+        Assert.AreEqual(Notes.F().WithOctave(4), Notes.B().Flat(6).WithOctave(4).SimplifyAccidental());
 
         // Octave change cases
         Assert.AreEqual(Notes.C().Sharp().WithOctave(4), Notes.A().Sharp(4).WithOctave(3).SimplifyAccidental());
         Assert.AreEqual(Notes.B().Flat().WithOctave(3), Notes.E().Flat(6).WithOctave(4).SimplifyAccidental());
-        Assert.AreEqual(Notes.C().Natural().WithOctave(3), Notes.C().Sharp(24).WithOctave(1).SimplifyAccidental());
+        Assert.AreEqual(Notes.C().WithOctave(3), Notes.C().Sharp(24).WithOctave(1).SimplifyAccidental());
     }
 
     /// <summary>
@@ -38,20 +38,16 @@ public class NoteTest
             (Notes.F().Sharp().WithOctave(4), Notes.C().Sharp().WithOctave(3),
              Intervals.Perfect().Fourth().WithAdditionalOctaves(1)),
 
-            (Notes.B().Natural().WithOctave(2), Notes.F().Natural().WithOctave(2),
-             Intervals.Augmented().Fourth()),
+            (Notes.B().WithOctave(2), Notes.F().WithOctave(2), Intervals.Augmented().Fourth()),
 
-            (Notes.C().Natural().WithOctave(4), Notes.E().Flat().WithOctave(2),
+            (Notes.C().WithOctave(4), Notes.E().Flat().WithOctave(2),
              Intervals.Major().Sixth().WithAdditionalOctaves(1)),
 
-            (Notes.B().Flat().WithOctave(5), Notes.F().Natural().WithOctave(5),
-             Intervals.Perfect().Fourth()),
+            (Notes.B().Flat().WithOctave(5), Notes.F().WithOctave(5), Intervals.Perfect().Fourth()),
 
-            (Notes.C().Natural().WithOctave(3), Notes.C().Natural().WithOctave(2),
-             Interval.PerfectOctave),
+            (Notes.C().WithOctave(3), Notes.C().WithOctave(2), Interval.PerfectOctave),
 
-            (Notes.C().Natural().WithOctave(3), Notes.C().Natural().WithOctave(3),
-             SimpleIntervalBase.PerfectUnison),
+            (Notes.C().WithOctave(3), Notes.C().WithOctave(3), SimpleIntervalBase.PerfectUnison),
         });
 
     /// <summary>
@@ -118,13 +114,13 @@ public class NoteTest
     private static readonly ImmutableArray<(Note First, Note Second)> EnharmonicEquivalentPairs
         = ImmutableArray.CreateRange(new[]
         {
-            (Notes.A().Natural().WithOctave(2), Notes.B().Flat(2).WithOctave(2)),
-            (Notes.A().Natural().WithOctave(3), Notes.G().Sharp(2).WithOctave(3)),
+            (Notes.A().WithOctave(2), Notes.B().Flat(2).WithOctave(2)),
+            (Notes.A().WithOctave(3), Notes.G().Sharp(2).WithOctave(3)),
             (Notes.C().Sharp().WithOctave(4), Notes.D().Flat().WithOctave(4)),
-            (Notes.G().Natural().WithOctave(1), Notes.A().Flat(2).WithOctave(1)),
+            (Notes.G().WithOctave(1), Notes.A().Flat(2).WithOctave(1)),
 
-            (Notes.C().Natural().WithOctave(3), Notes.B().Sharp().WithOctave(2)),
-            (Notes.B().Natural().WithOctave(2), Notes.C().Flat().WithOctave(3)),
+            (Notes.C().WithOctave(3), Notes.B().Sharp().WithOctave(2)),
+            (Notes.B().WithOctave(2), Notes.C().Flat().WithOctave(3)),
         });
 
     /// <summary>
@@ -161,7 +157,7 @@ public class NoteTest
     [TestMethod]
     public void TestPitch()
     {
-        Assert.AreEqual(new(NotePitchClass.A, 4), Notes.A().Natural().WithOctave(4).Pitch);
+        Assert.AreEqual(new(NotePitchClass.A, 4), Notes.A().WithOctave(4).Pitch);
         Assert.AreEqual(new(NotePitchClass.DE, 2), Notes.C().Sharp(3).WithOctave(2).Pitch);
         Assert.AreEqual(new(NotePitchClass.B, 3), Notes.C().Flat().WithOctave(4).Pitch);
         Assert.AreEqual(new(NotePitchClass.C, 4), Notes.B().Sharp().WithOctave(3).Pitch);
