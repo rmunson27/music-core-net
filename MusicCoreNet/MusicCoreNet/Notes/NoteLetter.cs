@@ -34,6 +34,32 @@ public static class NoteLetters
     };
 
     /// <summary>
+    /// Gets a <see cref="NoteLetter"/> equivalent to the current instance with the supplied
+    /// <see cref="SimpleIntervalNumber"/> subtracted.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
+    public static NoteLetter Minus([NamedEnum] this NoteLetter lhs, SimpleIntervalNumber rhs)
+        => lhs.Plus(rhs.Inversion());
+
+    /// <summary>
+    /// Gets a <see cref="NoteLetter"/> equivalent to the current instance with the supplied
+    /// <see cref="SimpleIntervalNumber"/> added.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidEnumArgumentException">The current instance was an unnamed enum value.</exception>
+    public static NoteLetter Plus([NamedEnum] this NoteLetter lhs, SimpleIntervalNumber rhs)
+    {
+        Throw.IfEnumArgUnnamed(lhs, nameof(lhs));
+
+        return (NoteLetter)(((int)lhs + rhs.Value - 1) % 7);
+    }
+
+    /// <summary>
     /// Finds the difference between the current <see cref="NoteLetter"/> instance and
     /// another <see cref="NoteLetter"/>.
     /// </summary>

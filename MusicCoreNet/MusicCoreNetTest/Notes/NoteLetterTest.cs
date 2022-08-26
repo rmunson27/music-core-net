@@ -15,10 +15,32 @@ using static NoteLetter;
 public class NoteLetterTest
 {
     /// <summary>
-    /// Tests the <see cref="NoteLetters.Minus(NoteLetter, NoteLetter)"/> extension method.
+    /// Tests the <see cref="NoteLetters.Plus(NoteLetter, SimpleIntervalNumber)"/> extension method.
+    /// </summary>
+    [TestMethod]
+    public void TestPlus()
+    {
+        Assert.AreEqual(A, A.Plus(SimpleIntervalNumber.Unison));
+        Assert.AreEqual(B, A.Plus(SimpleIntervalNumber.Second));
+        Assert.AreEqual(B, G.Plus(SimpleIntervalNumber.Third));
+    }
+
+    /// <summary>
+    /// Tests the <see cref="NoteLetters.Minus(NoteLetter, SimpleIntervalNumber)"/> extension method.
     /// </summary>
     [TestMethod]
     public void TestMinus()
+    {
+        Assert.AreEqual(A, A.Minus(SimpleIntervalNumber.Unison));
+        Assert.AreEqual(A, B.Minus(SimpleIntervalNumber.Second));
+        Assert.AreEqual(G, B.Minus(SimpleIntervalNumber.Third));
+    }
+
+    /// <summary>
+    /// Tests the <see cref="NoteLetters.Minus(NoteLetter, NoteLetter)"/> extension method.
+    /// </summary>
+    [TestMethod]
+    public void TestDifference()
     {
         Assert.AreEqual(Intervals.Minor().Seventh(), A.Minus(B));
         Assert.AreEqual(Intervals.Major().Third(), E.Minus(C));
