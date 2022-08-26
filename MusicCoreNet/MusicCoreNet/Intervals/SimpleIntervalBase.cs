@@ -100,7 +100,7 @@ public readonly record struct SimpleIntervalBase
 
     /// <summary>
     /// Creates a new <see cref="SimpleIntervalBase"/> spanning the number of half steps passed in with the simplest
-    /// possible interval quality.
+    /// possible interval quality (i.e. closest to perfect).
     /// </summary>
     /// <param name="halfSteps"></param>
     /// <returns>
