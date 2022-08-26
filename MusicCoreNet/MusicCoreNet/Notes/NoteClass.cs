@@ -101,6 +101,24 @@ public readonly record struct NoteClass(NoteLetter Letter, Accidental Accidental
     }
     #endregion
 
+    #region Computation
+    /// <summary>
+    /// Gets a <see cref="NoteClass"/> enharmonically equivalent to the current instance with the accidental simplified
+    /// as much as possible (i.e. calling the method on Cb will yield B).
+    /// </summary>
+    /// <remarks>
+    /// The accidental type of the current instance will be used to resolve ambiguity if necessary.
+    /// For example, calling this method on G#x will yield A#, whereas calling it on Cbb will yield Bb.
+    /// </remarks>
+    /// <returns></returns>
+    public NoteClass SimplifyAccidental()
+        => SimplestWithPitchClass(
+            PitchClass,
+
+            // Default this parameter if the accidental is natural - it will not be used
+            Accidental.IsNatural() ? NonNaturalAccidentalType.Flat : (NonNaturalAccidentalType)Accidental.Type);
+    #endregion
+
     #region Arithmetic
     /// <summary>
     /// Gets a <see cref="NoteClass"/> equivalent to the current instance with the supplied

@@ -24,6 +24,16 @@ public readonly record struct Accidental
 
     #region Properties
     /// <summary>
+    /// Gets the type of this accidental.
+    /// </summary>
+    public AccidentalType Type => _intValue switch
+    {
+        < 0 => AccidentalType.Flat,
+        0 => AccidentalType.Natural,
+        > 0 => AccidentalType.Sharp,
+    };
+
+    /// <summary>
     /// Gets an <see cref="int"/> value describing the current instance.
     /// </summary>
     /// <remarks>
@@ -78,12 +88,6 @@ public readonly record struct Accidental
 
     #region Classification
     /// <summary>
-    /// Gets whether or not the current <see cref="Accidental"/> is sharp.
-    /// </summary>
-    /// <returns></returns>
-    public bool IsSharp() => _intValue > 0;
-
-    /// <summary>
     /// Gets whether or not the current <see cref="Accidental"/> is sharp, returning the degree to which it is in an
     /// <see langword="out"/> parameter if so.
     /// </summary>
@@ -91,7 +95,7 @@ public readonly record struct Accidental
     /// <returns></returns>
     public bool IsSharp([NonNegative] out int Degree)
     {
-        if (_intValue > 0)
+        if (IsSharp())
         {
             Degree = _intValue;
             return true;
@@ -104,16 +108,16 @@ public readonly record struct Accidental
     }
 
     /// <summary>
+    /// Gets whether or not the current <see cref="Accidental"/> is sharp.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsSharp() => Type == AccidentalType.Sharp;
+
+    /// <summary>
     /// Gets whether or not the current <see cref="Accidental"/> is natural.
     /// </summary>
     /// <returns></returns>
-    public bool IsNatural() => _intValue == 0;
-
-    /// <summary>
-    /// Gets whether or not the current <see cref="Accidental"/> is flat.
-    /// </summary>
-    /// <returns></returns>
-    public bool IsFlat() => _intValue < 0;
+    public bool IsNatural() => Type == AccidentalType.Natural;
 
     /// <summary>
     /// Gets whether or not the current <see cref="Accidental"/> is flat, returning the degree to which it is in an
@@ -123,7 +127,7 @@ public readonly record struct Accidental
     /// <returns></returns>
     public bool IsFlat([NonNegative] out int Degree)
     {
-        if (_intValue < 0)
+        if (IsFlat())
         {
             Degree = -_intValue;
             return true;
@@ -134,6 +138,12 @@ public readonly record struct Accidental
             return false;
         }
     }
+
+    /// <summary>
+    /// Gets whether or not the current <see cref="Accidental"/> is flat.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsFlat() => Type == AccidentalType.Flat;
     #endregion
 
     #region Modifiers
@@ -164,6 +174,21 @@ public readonly record struct Accidental
     /// <param name="Amount"></param>
     /// <returns></returns>
     public Accidental Shift(int Amount) => new(_intValue + Amount);
+    #endregion
+
+    #region Equality
+    /// <summary>
+    /// Determines whether the current instance is equal to another object of the same type.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool Equals(Accidental other) => IntValue == other.IntValue;
+
+    /// <summary>
+    /// Gets a hash code for the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode() => IntValue;
     #endregion
 
     #region ToString

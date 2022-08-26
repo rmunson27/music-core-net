@@ -110,6 +110,18 @@ public class NoteClassTest
     }
 
     /// <summary>
+    /// Tests the <see cref="NoteClass.SimplifyAccidental"/> method.
+    /// </summary>
+    [TestMethod]
+    public void TestSimplifyAccidental()
+    {
+        Assert.AreEqual(NoteLetter.A, Notes.B().Flat(2).SimplifyAccidental());
+        Assert.AreEqual(NoteLetter.B, Notes.C().Flat().SimplifyAccidental());
+        Assert.AreEqual(Notes.A().Sharp(), Notes.G().Sharp(3).SimplifyAccidental());
+        Assert.AreEqual(Notes.B().Flat(), Notes.C().Flat(2).SimplifyAccidental());
+    }
+
+    /// <summary>
     /// Tests the <see cref="NoteClass.SimplestWithPitchClass(NotePitchClass, NonNaturalAccidentalType)"/>
     /// factory method.
     /// </summary>
