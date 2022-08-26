@@ -18,14 +18,14 @@ public class IntervalTest
     [TestMethod]
     public void TestAddition()
     {
-        TestAdditionPair(Intervals.Perfect().Fourth(), Intervals.Major().Third(), Intervals.Major().Sixth());
+        TestAdditionPair(Interval.Perfect().Fourth(), Interval.Major().Third(), Interval.Major().Sixth());
         TestAdditionPair(
-            Intervals.Perfect().Fourth(), Intervals.Perfect().Fifth(),
-            new(Intervals.Perfect().Unison(), AdditionalOctaves: 1));
+            Interval.Perfect().Fourth(), Interval.Perfect().Fifth(),
+            new(Interval.Perfect().Unison(), AdditionalOctaves: 1));
         TestAdditionPair(
-            new(Intervals.Perfect().Fourth(), AdditionalOctaves: 1),
-            new(Intervals.Major().Sixth(), AdditionalOctaves: 2),
-            new(Intervals.Major().Second(), AdditionalOctaves: 4));
+            new(Interval.Perfect().Fourth(), AdditionalOctaves: 1),
+            new(Interval.Major().Sixth(), AdditionalOctaves: 2),
+            new(Interval.Major().Second(), AdditionalOctaves: 4));
     }
     
     private static void TestAdditionPair(Interval first, Interval second, Interval expectedResult)
@@ -40,20 +40,20 @@ public class IntervalTest
     [TestMethod]
     public void TestSubtraction()
     {
-        TestDifferencePair(Intervals.Major().Sixth(), Intervals.Perfect().Fourth(), Intervals.Major().Third());
+        TestDifferencePair(Interval.Major().Sixth(), Interval.Perfect().Fourth(), Interval.Major().Third());
         TestDifferencePair(
-            new(Intervals.Perfect().Unison(), AdditionalOctaves: 1),
-            Intervals.Perfect().Fourth(), Intervals.Perfect().Fifth());
+            new(Interval.Perfect().Unison(), AdditionalOctaves: 1),
+            Interval.Perfect().Fourth(), Interval.Perfect().Fifth());
         TestDifferencePair(
-            new(Intervals.Major().Second(), AdditionalOctaves: 4),
-            new(Intervals.Perfect().Fourth(), AdditionalOctaves: 1),
-            new(Intervals.Major().Sixth(), AdditionalOctaves: 2));
+            new(Interval.Major().Second(), AdditionalOctaves: 4),
+            new(Interval.Perfect().Fourth(), AdditionalOctaves: 1),
+            new(Interval.Major().Sixth(), AdditionalOctaves: 2));
 
         // Ensure underflows are exceptional
         Assert.ThrowsException<OverflowException>(
-            () => (Interval)Intervals.Perfect().Fourth() - Intervals.Perfect().Fifth());
+            () => (Interval)Interval.Perfect().Fourth() - Interval.Perfect().Fifth());
         Assert.ThrowsException<OverflowException>(
-            () => Intervals.Perfect().Fourth() - new Interval(Intervals.Perfect().Unison(), 1));
+            () => Interval.Perfect().Fourth() - new Interval(Interval.Perfect().Unison(), 1));
     }
 
     private static void TestDifferencePair(Interval lhs, Interval rhs1, Interval rhs2)

@@ -86,17 +86,17 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
         return pitchClass switch
         {
             NotePitchClass.A => NoteLetter.A,
-            NotePitchClass.AB => sharpResult ? Notes.A().Sharp() : Notes.B().Flat(),
+            NotePitchClass.AB => sharpResult ? Note.A().Sharp() : Note.B().Flat(),
             NotePitchClass.B => NoteLetter.B,
             NotePitchClass.C => NoteLetter.C,
-            NotePitchClass.CD => sharpResult ? Notes.C().Sharp() : Notes.D().Flat(),
+            NotePitchClass.CD => sharpResult ? Note.C().Sharp() : Note.D().Flat(),
             NotePitchClass.D => NoteLetter.D,
-            NotePitchClass.DE => sharpResult ? Notes.D().Sharp() : Notes.E().Flat(),
+            NotePitchClass.DE => sharpResult ? Note.D().Sharp() : Note.E().Flat(),
             NotePitchClass.E => NoteLetter.E,
             NotePitchClass.F => NoteLetter.F,
-            NotePitchClass.FG => sharpResult ? Notes.F().Sharp() : Notes.G().Flat(),
+            NotePitchClass.FG => sharpResult ? Note.F().Sharp() : Note.G().Flat(),
             NotePitchClass.G => NoteLetter.G,
-            _ => sharpResult ? Notes.G().Sharp() : Notes.A().Flat(),
+            _ => sharpResult ? Note.G().Sharp() : Note.A().Flat(),
         };
     }
     #endregion

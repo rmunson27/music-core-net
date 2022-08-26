@@ -14,44 +14,6 @@ namespace Rem.Music;
 /// </summary>
 public static class Intervals
 {
-    /// <summary>
-    /// Gets an object that can be used to build an augmented interval of the given augmented degree.
-    /// </summary>
-    /// <param name="Degree"></param>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static AugmentedIntervalBuilder Augmented([Positive] int Degree = 1)
-        => new(Throw.IfArgNotPositive(Degree, nameof(Degree)));
-
-    /// <summary>
-    /// Gets an object that can be used to build a minor interval.
-    /// </summary>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MinorIntervalBuilder Minor() => new();
-
-    /// <summary>
-    /// Gets an object that can be used to build a perfect interval.
-    /// </summary>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static PerfectIntervalBuilder Perfect() => new();
-
-    /// <summary>
-    /// Gets an object that can be used to build a major interval.
-    /// </summary>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MajorIntervalBuilder Major() => new();
-
-    /// <summary>
-    /// Gets an object that can be used to build a diminished interval of the given diminished degree.
-    /// </summary>
-    /// <param name="Degree"></param>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static DiminishedIntervalBuilder Diminished([Positive] int Degree = 1)
-        => new(Throw.IfArgNotPositive(Degree, nameof(Degree)));
 }
 
 /// <summary>
@@ -207,6 +169,47 @@ public readonly record struct Interval(SimpleIntervalBase Base, [NonNegative] in
     /// </summary>
     /// <returns></returns>
     public override string ToString() => $"{nameof(Interval)} {{ Quality = {Quality}, Number = {Number} }}";
+    #endregion
+
+    #region Builder
+    /// <summary>
+    /// Gets an object that can be used to build an augmented interval of the given augmented degree.
+    /// </summary>
+    /// <param name="Degree"></param>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static AugmentedIntervalBuilder Augmented([Positive] int Degree = 1)
+        => new(Throw.IfArgNotPositive(Degree, nameof(Degree)));
+
+    /// <summary>
+    /// Gets an object that can be used to build a minor interval.
+    /// </summary>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static MinorIntervalBuilder Minor() => new();
+
+    /// <summary>
+    /// Gets an object that can be used to build a perfect interval.
+    /// </summary>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static PerfectIntervalBuilder Perfect() => new();
+
+    /// <summary>
+    /// Gets an object that can be used to build a major interval.
+    /// </summary>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static MajorIntervalBuilder Major() => new();
+
+    /// <summary>
+    /// Gets an object that can be used to build a diminished interval of the given diminished degree.
+    /// </summary>
+    /// <param name="Degree"></param>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static DiminishedIntervalBuilder Diminished([Positive] int Degree = 1)
+        => new(Throw.IfArgNotPositive(Degree, nameof(Degree)));
     #endregion
     #endregion
 }

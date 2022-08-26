@@ -19,17 +19,17 @@ public readonly record struct SimpleIntervalBase
     /// <summary>
     /// A <see cref="SimpleIntervalBase"/> representing a perfect fourth.
     /// </summary>
-    public static readonly SimpleIntervalBase PerfectFourth = Intervals.Perfect().Fourth();
+    public static readonly SimpleIntervalBase PerfectFourth = Interval.Perfect().Fourth();
 
     /// <summary>
     /// A <see cref="SimpleIntervalBase"/> representing a perfect unison.
     /// </summary>
-    public static readonly SimpleIntervalBase PerfectUnison = Intervals.Perfect().Unison();
+    public static readonly SimpleIntervalBase PerfectUnison = Interval.Perfect().Unison();
 
     /// <summary>
     /// A <see cref="SimpleIntervalBase"/> representing a perfect fifth.
     /// </summary>
-    public static readonly SimpleIntervalBase PerfectFifth = Intervals.Perfect().Fifth();
+    public static readonly SimpleIntervalBase PerfectFifth = Interval.Perfect().Fifth();
     #endregion
 
     #region Properties

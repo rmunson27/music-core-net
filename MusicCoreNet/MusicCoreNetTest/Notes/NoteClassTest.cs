@@ -20,11 +20,11 @@ public class NoteSpellingTest
     private static readonly ImmutableArray<(NoteSpelling First, NoteSpelling Second, SimpleIntervalBase Difference)> Differences
         = ImmutableArray.CreateRange(new[]
         {
-            (Notes.A(), Notes.C(), Intervals.Major().Sixth()),
-            (Notes.F().Sharp(), Notes.C(), Intervals.Augmented().Fourth()),
-            (Notes.G().Sharp(), Notes.B().Flat(), Intervals.Augmented().Sixth()),
-            (Notes.B().Sharp(), Notes.D().Flat(), Intervals.Augmented(2).Sixth()),
-            (Notes.E(), Notes.G().Sharp(), Intervals.Minor().Sixth()),
+            (Note.A(), Note.C(), Interval.Major().Sixth()),
+            (Note.F().Sharp(), Note.C(), Interval.Augmented().Fourth()),
+            (Note.G().Sharp(), Note.B().Flat(), Interval.Augmented().Sixth()),
+            (Note.B().Sharp(), Note.D().Flat(), Interval.Augmented(2).Sixth()),
+            (Note.E(), Note.G().Sharp(), Interval.Minor().Sixth()),
         });
 
     /// <summary>
@@ -64,10 +64,10 @@ public class NoteSpellingTest
     private static readonly ImmutableArray<(NoteSpelling First, NoteSpelling Second)> EnharmonicEquivalentPairs
         = ImmutableArray.CreateRange(new[]
         {
-            (Notes.A(), Notes.B().Flat(2)),
-            (Notes.A(), Notes.G().Sharp(2)),
-            (Notes.C().Sharp(), Notes.D().Flat()),
-            (Notes.G(), Notes.A().Flat(2)),
+            (Note.A(), Note.B().Flat(2)),
+            (Note.A(), Note.G().Sharp(2)),
+            (Note.C().Sharp(), Note.D().Flat()),
+            (Note.G(), Note.A().Flat(2)),
         });
 
     /// <summary>
@@ -104,9 +104,9 @@ public class NoteSpellingTest
     [TestMethod]
     public void TestPitchClass()
     {
-        Assert.AreEqual(NotePitchClass.A, Notes.A().Natural().PitchClass);
-        Assert.AreEqual(NotePitchClass.A, Notes.B().Flat(2).PitchClass);
-        Assert.AreEqual(NotePitchClass.G, Notes.A().Flat(2).PitchClass);
+        Assert.AreEqual(NotePitchClass.A, Note.A().Natural().PitchClass);
+        Assert.AreEqual(NotePitchClass.A, Note.B().Flat(2).PitchClass);
+        Assert.AreEqual(NotePitchClass.G, Note.A().Flat(2).PitchClass);
     }
 
     /// <summary>
@@ -115,10 +115,10 @@ public class NoteSpellingTest
     [TestMethod]
     public void TestSimplifyAccidental()
     {
-        Assert.AreEqual(NoteLetter.A, Notes.B().Flat(2).SimplifyAccidental());
-        Assert.AreEqual(NoteLetter.B, Notes.C().Flat().SimplifyAccidental());
-        Assert.AreEqual(Notes.A().Sharp(), Notes.G().Sharp(3).SimplifyAccidental());
-        Assert.AreEqual(Notes.B().Flat(), Notes.C().Flat(2).SimplifyAccidental());
+        Assert.AreEqual(NoteLetter.A, Note.B().Flat(2).SimplifyAccidental());
+        Assert.AreEqual(NoteLetter.B, Note.C().Flat().SimplifyAccidental());
+        Assert.AreEqual(Note.A().Sharp(), Note.G().Sharp(3).SimplifyAccidental());
+        Assert.AreEqual(Note.B().Flat(), Note.C().Flat(2).SimplifyAccidental());
     }
 
     /// <summary>

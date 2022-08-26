@@ -120,8 +120,8 @@ public static class NoteLetters
         {
             null => letter switch
             {
-                B => Intervals.Augmented().Fourth(),
-                F => Intervals.Diminished().Fifth(),
+                B => Interval.Augmented().Fourth(),
+                F => Interval.Diminished().Fifth(),
                 _ => throw new Exception("Bug - should never happen."),
             },
             SimpleIntervalBase sib => sib,

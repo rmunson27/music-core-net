@@ -21,10 +21,10 @@ public class SimpleIntervalBaseTest
         = ImmutableArray.CreateRange(new (SimpleIntervalBase, int)[]
         {
             (SimpleIntervalBase.PerfectUnison, 0),
-            (Intervals.Minor().Second(), -5),
-            (Intervals.Major().Second(), 2),
-            (Intervals.Augmented(2).Sixth(), 17),
-            (Intervals.Diminished().Third(), -10),
+            (Interval.Minor().Second(), -5),
+            (Interval.Major().Second(), 2),
+            (Interval.Augmented(2).Sixth(), 17),
+            (Interval.Diminished().Third(), -10),
         });
 
     /// <summary>
@@ -61,10 +61,10 @@ public class SimpleIntervalBaseTest
     [TestMethod]
     public void TestNegation()
     {
-        TestInversionPair(Intervals.Perfect().Fourth(), Intervals.Perfect().Fifth());
-        TestInversionPair(Intervals.Augmented(3).Second(), Intervals.Diminished(3).Seventh());
-        TestInversionPair(Intervals.Minor().Sixth(), Intervals.Major().Third());
-        TestInversionPair(Intervals.Augmented().Fourth(), Intervals.Diminished().Fifth());
+        TestInversionPair(Interval.Perfect().Fourth(), Interval.Perfect().Fifth());
+        TestInversionPair(Interval.Augmented(3).Second(), Interval.Diminished(3).Seventh());
+        TestInversionPair(Interval.Minor().Sixth(), Interval.Major().Third());
+        TestInversionPair(Interval.Augmented().Fourth(), Interval.Diminished().Fifth());
     }
 
     private static void TestInversionPair(SimpleIntervalBase first, SimpleIntervalBase second)
@@ -79,11 +79,11 @@ public class SimpleIntervalBaseTest
     [TestMethod]
     public void TestAddition()
     {
-        TestAdditionPair(Intervals.Major().Second(), Intervals.Major().Second(), Intervals.Major().Third());
-        TestAdditionPair(Intervals.Perfect().Fourth(), Intervals.Perfect().Fourth(), Intervals.Minor().Seventh());
-        TestAdditionPair(Intervals.Augmented(2).Third(), Intervals.Diminished(2).Sixth(), Intervals.Perfect().Unison());
-        TestAdditionPair(Intervals.Major().Sixth(), Intervals.Minor().Second(), Intervals.Minor().Seventh());
-        TestAdditionPair(Intervals.Major().Seventh(), Intervals.Major().Sixth(), Intervals.Augmented().Fifth());
+        TestAdditionPair(Interval.Major().Second(), Interval.Major().Second(), Interval.Major().Third());
+        TestAdditionPair(Interval.Perfect().Fourth(), Interval.Perfect().Fourth(), Interval.Minor().Seventh());
+        TestAdditionPair(Interval.Augmented(2).Third(), Interval.Diminished(2).Sixth(), Interval.Perfect().Unison());
+        TestAdditionPair(Interval.Major().Sixth(), Interval.Minor().Second(), Interval.Minor().Seventh());
+        TestAdditionPair(Interval.Major().Seventh(), Interval.Major().Sixth(), Interval.Augmented().Fifth());
     }
 
     private static void TestAdditionPair(

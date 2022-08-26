@@ -16,11 +16,11 @@ public class CircleOfFourthsTest
     private static readonly ImmutableArray<(NoteSpelling Greater, NoteSpelling Lesser)> NoteSpellingComparisons
         = ImmutableArray.CreateRange(new (NoteSpelling, NoteSpelling)[]
         {
-            (Notes.A().Natural(), Notes.B().Natural()),
-            (Notes.E().Natural(), Notes.C().Sharp()),
-            (Notes.D().Natural(), Notes.D().Sharp()),
-            (Notes.B().Flat(), Notes.F().Natural()),
-            (Notes.G().Natural(), Notes.F().Sharp()),
+            (Note.A().Natural(), Note.B().Natural()),
+            (Note.E().Natural(), Note.C().Sharp()),
+            (Note.D().Natural(), Note.D().Sharp()),
+            (Note.B().Flat(), Note.F().Natural()),
+            (Note.G().Natural(), Note.F().Sharp()),
         });
 
     /// <summary>

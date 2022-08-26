@@ -42,11 +42,11 @@ public class NoteLetterTest
     [TestMethod]
     public void TestDifference()
     {
-        Assert.AreEqual(Intervals.Minor().Seventh(), A.Minus(B));
-        Assert.AreEqual(Intervals.Major().Third(), E.Minus(C));
+        Assert.AreEqual(Interval.Minor().Seventh(), A.Minus(B));
+        Assert.AreEqual(Interval.Major().Third(), E.Minus(C));
 
         // Edge cases where null is returned from internal method since the tritone is ambiguous
-        Assert.AreEqual(Intervals.Augmented().Fourth(), B.Minus(F));
-        Assert.AreEqual(Intervals.Diminished().Fifth(), F.Minus(B));
+        Assert.AreEqual(Interval.Augmented().Fourth(), B.Minus(F));
+        Assert.AreEqual(Interval.Diminished().Fifth(), F.Minus(B));
     }
 }
