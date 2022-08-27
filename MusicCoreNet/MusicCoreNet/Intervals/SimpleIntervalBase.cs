@@ -46,7 +46,7 @@ public readonly record struct SimpleIntervalBase
     /// <summary>
     /// Gets the circle of fifths index of this instance relative to a perfect unison.
     /// </summary>
-    public int CircleOfFifthsIndex => Number.CircleOfFifthsIndex()
+    public int CircleOfFifthsIndex => Number.CircleOfFifthsIndex
                                         + Quality.PerfectOrMajorBasedIndex(Perfectability) * 7;
 
     /// <summary>
@@ -387,7 +387,7 @@ public readonly record struct SimpleIntervalBase
     public static SimpleIntervalBase operator +(SimpleIntervalBase lhs, SimpleIntervalBase rhs)
     {
         #region Number
-        var newUnisonBasedNumberIndex = lhs.Number.CircleOfFifthsIndex() + rhs.Number.CircleOfFifthsIndex();
+        var newUnisonBasedNumberIndex = lhs.Number.CircleOfFifthsIndex + rhs.Number.CircleOfFifthsIndex;
         var ubni_determinant = newUnisonBasedNumberIndex + 1; // Get rid of the -1 label for fourths
         var qualityShift = Maths.FloorDivRem(ubni_determinant, 7, out ubni_determinant);
         newUnisonBasedNumberIndex = ubni_determinant - 1; // Add back the -1 label for fourths

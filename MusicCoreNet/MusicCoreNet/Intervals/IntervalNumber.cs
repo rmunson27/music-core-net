@@ -410,6 +410,18 @@ public readonly record struct SimpleIntervalNumber
                                                             : InternalNumber.Imperfectable.MajorHalfSteps();
 
     /// <summary>
+    /// Gets the circle of fifths index of a perfect or major interval numbered with the current instance relative to
+    /// a perfect unison.
+    /// </summary>
+    /// <remarks>
+    /// The interval used in the comparison will be perfect if the current instance is perfectable and major otherwise.
+    /// </remarks>
+    /// <returns></returns>
+    internal int CircleOfFifthsIndex => IsPerfectable()
+                                            ? NonDefaultPerfectable.CircleOfFifthsIndex()
+                                            : InternalNumber.Imperfectable.CircleOfFifthsIndex();
+
+    /// <summary>
     /// Gets the integer value of this number.
     /// </summary>
     [Positive] public int Value => IsPerfectable() ? (int)NonDefaultPerfectable : (int)InternalNumber.Imperfectable;
@@ -633,18 +645,6 @@ public readonly record struct SimpleIntervalNumber
     #endregion
 
     #region Computation
-    /// <summary>
-    /// Gets the circle of fifths index of a perfect or major interval numbered with the current instance relative to
-    /// a perfect unison.
-    /// </summary>
-    /// <remarks>
-    /// The interval used in the comparison will be perfect if the current instance is perfectable and major otherwise.
-    /// </remarks>
-    /// <returns></returns>
-    internal int CircleOfFifthsIndex() => IsPerfectable()
-                                            ? NonDefaultPerfectable.CircleOfFifthsIndex()
-                                            : InternalNumber.Imperfectable.CircleOfFifthsIndex();
-
     /// <summary>
     /// Gets the inversion of the current instance.
     /// </summary>
