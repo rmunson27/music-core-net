@@ -726,7 +726,7 @@ public readonly record struct PerfectableIntervalQuality
     /// </remarks>
     /// <param name="degree"></param>
     /// <returns></returns>
-    internal PerfectableIntervalQuality ShiftedBy(int degree) => new(degree + PerfectBasedIndex);
+    public PerfectableIntervalQuality ShiftedBy(int degree) => new(degree + PerfectBasedIndex);
 
     /// <summary>
     /// Returns an interval quality equivalent to the inversion of the current instance.
@@ -867,7 +867,7 @@ public readonly record struct ImperfectableIntervalQuality
     /// </remarks>
     /// <param name="degree"></param>
     /// <returns></returns>
-    internal ImperfectableIntervalQuality ShiftedBy(int degree) => new(degree + MajorBasedIndex);
+    public ImperfectableIntervalQuality ShiftedBy(int degree) => new(degree + MajorBasedIndex);
 
     /// <summary>
     /// Returns an interval quality equivalent to the inversion of the current instance.
