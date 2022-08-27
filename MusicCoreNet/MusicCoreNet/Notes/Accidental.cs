@@ -152,7 +152,8 @@ public readonly record struct Accidental
     /// </summary>
     /// <param name="Degree"></param>
     /// <returns></returns>
-    public Accidental Sharpen([NonNegative] int Degree = 1)
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="Degree"/> was negative.</exception>
+    public Accidental SharpenedBy([NonNegative] int Degree = 1)
         => new(_intValue + Throw.IfArgNegative(Degree, nameof(Degree)));
 
     /// <summary>
@@ -160,7 +161,8 @@ public readonly record struct Accidental
     /// </summary>
     /// <param name="Degree"></param>
     /// <returns></returns>
-    public Accidental Flatten([NonNegative] int Degree = 1)
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="Degree"/> was negative.</exception>
+    public Accidental FlattenedBy([NonNegative] int Degree = 1)
         => new(_intValue - Throw.IfArgNegative(Degree, nameof(Degree)));
 
     /// <summary>
@@ -173,7 +175,7 @@ public readonly record struct Accidental
     /// </remarks>
     /// <param name="Amount"></param>
     /// <returns></returns>
-    public Accidental Shift(int Amount) => new(_intValue + Amount);
+    public Accidental ShiftedBy(int Amount) => new(_intValue + Amount);
     #endregion
 
     #region Equality

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,45 +21,67 @@ public readonly record struct IntervalQuality
 {
     #region Constants
     /// <summary>
-    /// Gets a minor interval quality.
+    /// A minor interval quality.
     /// </summary>
-    public static ImperfectableIntervalQuality Minor => ImperfectableIntervalQuality.Minor;
+    public static readonly IntervalQuality Minor = ImperfectableIntervalQuality.Minor;
 
     /// <summary>
-    /// Gets a perfect interval quality.
+    /// A perfect interval quality.
     /// </summary>
-    public static PerfectableIntervalQuality Perfect => PerfectableIntervalQuality.Perfect;
+    public static readonly IntervalQuality Perfect = PerfectableIntervalQuality.Perfect;
 
     /// <summary>
-    /// Gets a major interval quality.
+    /// A major interval quality.
     /// </summary>
-    public static ImperfectableIntervalQuality Major => ImperfectableIntervalQuality.Major;
+    public static readonly IntervalQuality Major = ImperfectableIntervalQuality.Major;
     #endregion
 
     #region Properties And Fields
     /// <summary>
-    /// Gets the value of the <see cref="PerfectableIntervalQuality.PerfectBasedIndex"/> or
-    /// <see cref="ImperfectableIntervalQuality.MajorBasedIndex"/> property depending on which type is
-    /// represented internally.
-    /// </summary>
-    internal int PerfectOrMajorBasedIndex => IsPerfectable()
-                                                ? InternalQuality.Perfectable.PerfectBasedIndex
-                                                : InternalQuality.Imperfectable.MajorBasedIndex;
-
-    /// <summary>
     /// Gets an index that can be used to order <see cref="IntervalQuality"/> instances based on their positions in
     /// the circle of fifths relative to <see cref="PerfectableIntervalQuality.Perfect"/>.
     /// </summary>
-    public int CircleOfFifthsIndex => IsPerfectable()
-                                        ? InternalQuality.Perfectable.CircleOfFifthsIndex
-                                        : InternalQuality.Imperfectable.CircleOfFifthsIndex;
+    public int CircleOfFifthsIndex => _storage switch
+    {
+        StorageType.Perfectable => _quality.Perfectable.CircleOfFifthsIndex,
+        StorageType.Imperfectable => _quality.Imperfectable.CircleOfFifthsIndex,
+        _ => _quality.NonBasicDegree + Math.Sign(_quality.NonBasicDegree), // Add 1 to make room for major and minor
+    };
 
     /// <summary>
-    /// Gets the perfectability of this interval quality.
+    /// Gets the specific perfectability of this interval quality, or <see langword="null"/> if the quality applies
+    /// to both perfectable and imperfectable intervals.
     /// </summary>
-    public IntervalPerfectability Perfectability { get; }
+    public IntervalPerfectability? Perfectability => PerfectabilityFromStorageType(_storage);
+    private readonly StorageType _storage;
 
-    private readonly InternalQualityStruct InternalQuality;
+    /// <summary>
+    /// Gets this instance as a <see cref="PerfectableIntervalQuality"/> without fully performing internal storage
+    /// type checking.
+    /// </summary>
+    /// <remarks>
+    /// This operation is unsafe and should only be used internally.
+    /// </remarks>
+    internal PerfectableIntervalQuality UnsafeAsPerfectable
+        => _storage == StorageType.Perfectable
+            ? _quality.Perfectable
+            : new(_quality.NonBasicDegree);
+
+    /// <summary>
+    /// Gets this instance as a <see cref="ImperfectableIntervalQuality"/> without fully performing internal storage
+    /// type checking.
+    /// </summary>
+    /// <remarks>
+    /// This operation is unsafe and should only be used internally.
+    /// </remarks>
+    internal ImperfectableIntervalQuality UnsafeAsImperfectable
+        => _storage == StorageType.Imperfectable
+            ? _quality.Imperfectable
+
+            // Remove 1 from negative degree to make room for minor
+            : new(_quality.NonBasicDegree < 0 ? _quality.NonBasicDegree - 1 : _quality.NonBasicDegree);
+
+    private readonly Storage _quality;
     #endregion
 
     #region Constructors
@@ -69,9 +92,18 @@ public readonly record struct IntervalQuality
     /// <param name="Quality"></param>
     public IntervalQuality(PerfectableIntervalQuality Quality)
     {
-        InternalQuality = new();
-        InternalQuality.Perfectable = Quality;
-        Perfectability = Perfectable;
+        _quality = new();
+
+        if (Quality.PerfectBasedIndex == 0)
+        {
+            _quality.Perfectable = Quality;
+            _storage = StorageType.Perfectable;
+        }
+        else // Augmented or diminished
+        {
+            _quality.NonBasicDegree = Quality.PerfectBasedIndex;
+            _storage = StorageType.NonBasic;
+        }
     }
 
     /// <summary>
@@ -81,14 +113,60 @@ public readonly record struct IntervalQuality
     /// <param name="Quality"></param>
     public IntervalQuality(ImperfectableIntervalQuality Quality)
     {
-        InternalQuality = new();
-        InternalQuality.Imperfectable = Quality;
-        Perfectability = Imperfectable;
+        _quality = new();
+
+        switch (Quality.MajorBasedIndex)
+        {
+            case < -1: // Diminished
+                _quality.NonBasicDegree = Quality.MajorBasedIndex + 1; // Add 1 to ignore minor
+                _storage = StorageType.NonBasic;
+                break;
+
+            case 0 or -1: // Major or minor
+                _quality.Imperfectable = Quality;
+                _storage = StorageType.Imperfectable;
+                break;
+
+            default: // Augmented
+                _quality.NonBasicDegree = Quality.MajorBasedIndex;
+                _storage = StorageType.NonBasic;
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Constructs a new <see cref="IntervalQuality"/> representing the non-basic quality (augmented or diminished)
+    /// described by the integer passed in.
+    /// </summary>
+    /// <param name="NonBasicDegree"></param>
+    private IntervalQuality([NonZero] int NonBasicDegree)
+    {
+        _quality = new();
+        _quality.NonBasicDegree = NonBasicDegree;
+        _storage = StorageType.NonBasic;
     }
     #endregion
 
     #region Methods
     #region Factory
+    /// <summary>
+    /// Creates a new augmented <see cref="IntervalQuality"/> with the degree passed in.
+    /// </summary>
+    /// <param name="Degree"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="Degree"/> was not positive.</exception>
+    public static IntervalQuality Augmented([Positive] int Degree = 1)
+        => new(Throw.IfArgNotPositive(Degree, nameof(Degree)));
+
+    /// <summary>
+    /// Creates a new diminished <see cref="IntervalQuality"/> with the degree passed in.
+    /// </summary>
+    /// <param name="Degree"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="Degree"/> was not positive.</exception>
+    public static IntervalQuality Diminished([Positive] int Degree = 1)
+        => new(-Throw.IfArgNotPositive(Degree, nameof(Degree)));
+
     /// <summary>
     /// Gets the quality of the simplest (i.e. closest to perfect) interval spanning the given number of half steps,
     /// or a quality of the supplied tritone quality type if the number of half steps indicates a tritone (6 half
@@ -132,101 +210,65 @@ public readonly record struct IntervalQuality
     /// </summary>
     /// <returns></returns>
     /// <seealso cref="CircleOfFifthsIndex"/>
-    public static IntervalQuality FromCircleOfFifthsIndex(int Index)
+    public static IntervalQuality FromCircleOfFifthsIndex(int Index) => Index switch
     {
-        // Handle the simple hard-codeable cases
-        switch (Index)
-        {
-            case -1: return ImperfectableIntervalQuality.Minor;
-            case 0: return PerfectableIntervalQuality.Perfect;
-            case 1: return ImperfectableIntervalQuality.Major;
-        }
+        -1 => Minor,
+        0 => Perfect,
+        1 => Major,
 
-        if (Index < 0) // Diminished
-        {
-            if (Index % 2 == 0) return PerfectableIntervalQuality.Diminished(-Index / 2);
-            else return ImperfectableIntervalQuality.Diminished((-Index - 1) / 2);
-        }
-        else // Augmented
-        {
-            if (Index % 2 == 0) return PerfectableIntervalQuality.Augmented(Index / 2);
-            else return ImperfectableIntervalQuality.Augmented((Index - 1) / 2);
-        }
-    }
+        // Augmented or diminished - add another space to make room for major and minor
+        _ => new(Index - Math.Sign(Index)),
+    };
     #endregion
 
     #region Classification
     #region Perfectability
     #region Perfectable
     /// <summary>
-    /// Gets whether or not this instance is perfectable, setting <paramref name="Perfectable"/> to the perfectable
-    /// quality if so and setting <paramref name="Imperfectable"/> to the imperfectable quality otherwise.
-    /// </summary>
-    /// <param name="Perfectable"></param>
-    /// <param name="Imperfectable"></param>
-    /// <returns></returns>
-    public bool IsPerfectable(
-        out PerfectableIntervalQuality Perfectable, out ImperfectableIntervalQuality Imperfectable)
-    {
-        if (IsPerfectable())
-        {
-            Perfectable = InternalQuality.Perfectable;
-            Imperfectable = default;
-            return true;
-        }
-        else
-        {
-            Perfectable = default;
-            Imperfectable = InternalQuality.Imperfectable;
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Gets whether or not this instance is perfectable, setting the perfectable quality in an
+    /// Gets whether or not this instance can describe perfectable intervals, setting the perfectable quality in an
     /// <see langword="out"/> parameter if so.
     /// </summary>
     /// <param name="Quality"></param>
     /// <returns></returns>
     public bool IsPerfectable(out PerfectableIntervalQuality Quality)
     {
-        if (IsPerfectable())
+        switch (_storage)
         {
-            Quality = InternalQuality.Perfectable;
-            return true;
-        }
-        else
-        {
-            Quality = default;
-            return false;
+            case StorageType.Imperfectable:
+                Quality = default;
+                return false;
+
+            default:
+                Quality = UnsafeAsPerfectable;
+                return true;
         }
     }
 
     /// <summary>
-    /// Gets whether or not this instance is perfectable.
+    /// Gets whether or not this instance can describe perfectable intervals.
     /// </summary>
     /// <returns></returns>
-    public bool IsPerfectable() => Perfectability == Perfectable;
+    public bool IsPerfectable() => Perfectability is Perfectable or null;
     #endregion
 
     #region Imperfectable
     /// <summary>
-    /// Gets whether or not this instance is imperfectable, setting the imperfectable quality in an
+    /// Gets whether or not this instance can describe imperfectable intervals, setting the imperfectable quality in an
     /// <see langword="out"/> parameter if so.
     /// </summary>
     /// <param name="Quality"></param>
     /// <returns></returns>
     public bool IsImperfectable(out ImperfectableIntervalQuality Quality)
     {
-        if (IsImperfectable())
+        switch (_storage)
         {
-            Quality = InternalQuality.Imperfectable;
-            return true;
-        }
-        else
-        {
-            Quality = default;
-            return false;
+            case StorageType.Perfectable:
+                Quality = default;
+                return false;
+
+            default:
+                Quality = UnsafeAsImperfectable;
+                return true;
         }
     }
 
@@ -234,7 +276,7 @@ public readonly record struct IntervalQuality
     /// Gets whether or not this instance is imperfectable.
     /// </summary>
     /// <returns></returns>
-    public bool IsImperfectable() => Perfectability == Imperfectable;
+    public bool IsImperfectable() => Perfectability is Imperfectable or null;
     #endregion
     #endregion
 
@@ -246,35 +288,42 @@ public readonly record struct IntervalQuality
     /// <param name="Degree"></param>
     /// <returns></returns>
     public bool IsAugmented([NonNegative] out int Degree)
-        => IsPerfectable()
-            ? InternalQuality.Perfectable.IsAugmented(out Degree)
-            : InternalQuality.Imperfectable.IsAugmented(out Degree);
+    {
+        if (IsAugmented())
+        {
+            Degree = _quality.NonBasicDegree;
+            return true;
+        }
+        else
+        {
+            Degree = default;
+            return false;
+        }
+    }
 
     /// <summary>
     /// Gets whether or not this interval quality represents an augmented interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsAugmented() => IsPerfectable()
-                                    ? InternalQuality.Perfectable.IsAugmented()
-                                    : InternalQuality.Imperfectable.IsAugmented();
+    public bool IsAugmented() => _storage == StorageType.NonBasic && _quality.NonBasicDegree > 0;
 
     /// <summary>
     /// Gets whether or not this interval quality represents a major interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsMajor() => IsImperfectable() && InternalQuality.Imperfectable.IsMajor();
+    public bool IsMajor() => _storage == StorageType.Imperfectable && _quality.Imperfectable.IsMajor();
 
     /// <summary>
     /// Gets whether or not this interval quality represents a perfect interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsPerfect() => IsPerfectable() && InternalQuality.Perfectable.IsPerfect();
+    public bool IsPerfect() => _storage == StorageType.Perfectable && _quality.Perfectable.IsPerfect();
 
     /// <summary>
     /// Gets whether or not this interval quality represents a minor interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsMinor() => IsImperfectable() && InternalQuality.Imperfectable.IsMinor();
+    public bool IsMinor() => _storage == StorageType.Imperfectable && _quality.Imperfectable.IsMinor();
 
     /// <summary>
     /// Gets whether or not this interval quality represents a diminished interval, setting the
@@ -283,17 +332,24 @@ public readonly record struct IntervalQuality
     /// <param name="Degree"></param>
     /// <returns></returns>
     public bool IsDiminished([NonNegative] out int Degree)
-        => IsPerfectable()
-             ? InternalQuality.Perfectable.IsDiminished(out Degree)
-             : InternalQuality.Imperfectable.IsDiminished(out Degree);
+    {
+        if (IsDiminished())
+        {
+            Degree = -_quality.NonBasicDegree;
+            return true;
+        }
+        else
+        {
+            Degree = default;
+            return false;
+        }
+    }
 
     /// <summary>
     /// Gets whether or not this interval quality represents a diminished interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsDiminished() => IsPerfectable()
-                                    ? InternalQuality.Perfectable.IsDiminished()
-                                    : InternalQuality.Imperfectable.IsDiminished();
+    public bool IsDiminished() => _storage == StorageType.NonBasic && _quality.NonBasicDegree < 0;
     #endregion
     #endregion
 
@@ -304,25 +360,24 @@ public readonly record struct IntervalQuality
     /// <param name="other"></param>
     /// <returns></returns>
     public bool Equals(IntervalQuality other)
-    {
-        if (Perfectability == other.Perfectability)
-        {
-            return Perfectability switch
+        => _storage == other._storage
+            && _storage switch
             {
-                Perfectable => InternalQuality.Perfectable == other.InternalQuality.Perfectable,
-                _ => InternalQuality.Imperfectable == other.InternalQuality.Imperfectable,
+                StorageType.Perfectable => _quality.Perfectable == other._quality.Perfectable,
+                StorageType.Imperfectable => _quality.Imperfectable == other._quality.Imperfectable,
+                _ => _quality.NonBasicDegree == other._quality.NonBasicDegree,
             };
-        }
-        else return false;
-    }
 
     /// <summary>
     /// Gets a hash code for the current instance.
     /// </summary>
     /// <returns></returns>
-    public override int GetHashCode() => Perfectability == Perfectable
-                                            ? InternalQuality.Perfectable.GetHashCode()
-                                            : InternalQuality.Imperfectable.GetHashCode();
+    public override int GetHashCode() => _storage switch
+    {
+        StorageType.Perfectable => _quality.Perfectable.GetHashCode(),
+        StorageType.Imperfectable => _quality.Imperfectable.GetHashCode(),
+        _ => _quality.NonBasicDegree.GetHashCode(),
+    };
 
     #region Operators And Explicit `IEquatable` Implementations
     #region Perfectable
@@ -413,30 +468,57 @@ public readonly record struct IntervalQuality
     /// </summary>
     /// <param name="Quality"></param>
     public static implicit operator IntervalQuality(ImperfectableIntervalQuality Quality) => new(Quality);
+
+    /// <summary>
+    /// Explicitly converts an instance of this type to a <see cref="PerfectableIntervalQuality"/>.
+    /// </summary>
+    /// <param name="Quality"></param>
+    /// <exception cref="InvalidCastException">The instance passed in was not perfectable.</exception>
+    public static explicit operator PerfectableIntervalQuality(IntervalQuality Quality)
+        => Quality.IsPerfectable(out var pQuality)
+            ? pQuality
+            : throw new InvalidCastException("Interval quality was not perfectable.");
+
+    /// <summary>
+    /// Explicitly converts an instance of this type to a <see cref="ImperfectableIntervalQuality"/>.
+    /// </summary>
+    /// <param name="Quality"></param>
+    /// <exception cref="InvalidCastException">The instance passed in was not perfectable.</exception>
+    public static explicit operator ImperfectableIntervalQuality(IntervalQuality Quality)
+        => Quality.IsImperfectable(out var iQuality)
+            ? iQuality
+            : throw new InvalidCastException("Interval quality was not imperfectable.");
     #endregion
 
     #region Computation
     /// <summary>
-    /// Returns an interval quality equivalent to this one shifted by a given integer degree.
+    /// Gets the perfect-based or major-based index of this <see cref="IntervalQuality"/> depending on the
+    /// perfectability, using the <paramref name="nonAmbiguousPerfectability"/> parameter to handle ambiguous
+    /// augmented or diminished cases.
     /// </summary>
-    /// <remarks>
-    /// Positive <paramref name="degree"/> values will cause the result to be more augmented, whereas negative
-    /// <paramref name="degree"/> values will cause the result to be more diminished.
-    /// </remarks>
-    /// <param name="degree"></param>
+    /// <param name="nonAmbiguousPerfectability"></param>
     /// <returns></returns>
-    internal IntervalQuality Shift(int degree)
-        => IsPerfectable()
-            ? new(new PerfectableIntervalQuality(degree + InternalQuality.Perfectable.PerfectBasedIndex))
-            : new(new ImperfectableIntervalQuality(degree + InternalQuality.Imperfectable.MajorBasedIndex));
+    internal int PerfectOrMajorBasedIndex(IntervalPerfectability nonAmbiguousPerfectability) => _storage switch
+    {
+        StorageType.Perfectable => _quality.Perfectable.PerfectBasedIndex,
+        StorageType.Imperfectable => _quality.Imperfectable.MajorBasedIndex,
+        _ => nonAmbiguousPerfectability == Perfectable
+                ? _quality.NonBasicDegree
+
+                // Remove 1 to make room for minor
+                : (_quality.NonBasicDegree < 0 ? _quality.NonBasicDegree - 1 : _quality.NonBasicDegree),
+    };
 
     /// <summary>
     /// Returns an interval quality equivalent to the inversion of the current instance.
     /// </summary>
     /// <returns></returns>
-    public IntervalQuality Inversion() => IsPerfectable()
-                                            ? new(InternalQuality.Perfectable.Inversion())
-                                            : new(InternalQuality.Imperfectable.Inversion());
+    public IntervalQuality Inversion() => _storage switch
+    {
+        StorageType.Perfectable => new(_quality.Perfectable.Inversion()),
+        StorageType.Imperfectable => new(_quality.Imperfectable.Inversion()),
+        _ => new(-_quality.NonBasicDegree),
+    };
     #endregion
 
     #region ToString
@@ -445,28 +527,46 @@ public readonly record struct IntervalQuality
     /// </summary>
     /// <returns></returns>
     public override string ToString() => IsPerfectable()
-                                            ? InternalQuality.Perfectable.ToString()
-                                            : InternalQuality.Imperfectable.ToString();
+                                            ? _quality.Perfectable.ToString()
+                                            : _quality.Imperfectable.ToString();
     #endregion
     #endregion
 
     #region Types
     /// <summary>
-    /// Internally represents the two possible interval quality types as a discriminated union.
+    /// Internally represents the two possible distinct perfectable interval quality types and an integer representing
+    /// an augmented or diminished degree as a discriminated union for storage in instances of this type.
     /// </summary>
     /// <remarks>
     /// It is the responsibility of the <see cref="IntervalQuality"/> struct to maintain information about which of
-    /// the two options is selected, or undefined behavior could occur.
+    /// the three options is selected, or undefined behavior could occur.
     /// </remarks>
     [StructLayout(LayoutKind.Explicit)]
-    private struct InternalQualityStruct
+    private struct Storage
     {
         [FieldOffset(0)]
         public PerfectableIntervalQuality Perfectable;
 
         [FieldOffset(0)]
         public ImperfectableIntervalQuality Imperfectable;
+
+        [FieldOffset(0)]
+        public int NonBasicDegree;
     }
+
+    /// <summary>
+    /// Describes the method of internal data storage for this type.
+    /// </summary>
+    private enum StorageType : byte
+    {
+        Perfectable = IntervalPerfectability.Perfectable,
+        Imperfectable = IntervalPerfectability.Imperfectable,
+        NonBasic = Perfectable + Imperfectable + 1,
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static IntervalPerfectability? PerfectabilityFromStorageType(StorageType ip)
+        => ip is StorageType.NonBasic ? null : (IntervalPerfectability)ip;
     #endregion
 }
 
@@ -506,11 +606,8 @@ public readonly record struct PerfectableIntervalQuality
     {
         get
         {
-            // Expand the degrees of augmented or diminished to allow for the imperfectable qualities to fit
-            // into the ordering
-            if (IsAugmented(out var augDegree)) return augDegree * 2;
-            else if (IsDiminished(out var dimDegree)) return -dimDegree * 2;
-
+            if (IsAugmented(out var augDegree)) return augDegree + 1; // +1 to make way for major
+            else if (IsDiminished(out var dimDegree)) return -dimDegree - 1; // -1 to make way for minor
             else return 0; // Must be perfect
         }
     }
@@ -629,7 +726,7 @@ public readonly record struct PerfectableIntervalQuality
     /// </remarks>
     /// <param name="degree"></param>
     /// <returns></returns>
-    public PerfectableIntervalQuality Shift(int degree) => new(degree + PerfectBasedIndex);
+    internal PerfectableIntervalQuality ShiftedBy(int degree) => new(degree + PerfectBasedIndex);
 
     /// <summary>
     /// Returns an interval quality equivalent to the inversion of the current instance.
@@ -710,11 +807,8 @@ public readonly record struct ImperfectableIntervalQuality
     {
         get
         {
-            // Expand the degrees of augmented or diminished to allow for the perfectable qualities to fit into
-            // the ordering
-            if (IsAugmented(out var augDegree)) return augDegree * 2 + 1;
-            else if (IsDiminished(out var dimDegree)) return -dimDegree * 2 - 1;
-
+            if (IsAugmented(out var augDegree)) return augDegree + 1; // + 1 to make way for major
+            else if (IsDiminished(out var dimDegree)) return -dimDegree - 1; // -1 to make way for minor
             else return IsMajor() ? 1 : -1;
         }
     }
@@ -773,7 +867,7 @@ public readonly record struct ImperfectableIntervalQuality
     /// </remarks>
     /// <param name="degree"></param>
     /// <returns></returns>
-    public ImperfectableIntervalQuality Shift(int degree) => new(degree + MajorBasedIndex);
+    internal ImperfectableIntervalQuality ShiftedBy(int degree) => new(degree + MajorBasedIndex);
 
     /// <summary>
     /// Returns an interval quality equivalent to the inversion of the current instance.

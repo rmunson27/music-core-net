@@ -40,17 +40,13 @@ public class IntervalQualityTest
     private static readonly ImmutableArray<(IntervalQuality Quality, int Index)> GeneralPerfectBasedIndexPairs
         = ImmutableArray.CreateRange(new (IntervalQuality, int)[]
         {
-            (ImperfectableIntervalQuality.Diminished(2), -5),
-            (PerfectableIntervalQuality.Diminished(2), -4),
-            (ImperfectableIntervalQuality.Diminished(), -3),
-            (PerfectableIntervalQuality.Diminished(), -2),
-            (ImperfectableIntervalQuality.Minor, -1),
-            (PerfectableIntervalQuality.Perfect, 0),
-            (ImperfectableIntervalQuality.Major, 1),
-            (PerfectableIntervalQuality.Augmented(), 2),
-            (ImperfectableIntervalQuality.Augmented(), 3),
-            (PerfectableIntervalQuality.Augmented(2), 4),
-            (ImperfectableIntervalQuality.Augmented(2), 5),
+            (IntervalQuality.Diminished(2), -3),
+            (IntervalQuality.Diminished(), -2),
+            (IntervalQuality.Minor, -1),
+            (IntervalQuality.Perfect, 0),
+            (IntervalQuality.Major, 1),
+            (IntervalQuality.Augmented(), 2),
+            (IntervalQuality.Augmented(2), 3),
         });
 
     /// <summary>

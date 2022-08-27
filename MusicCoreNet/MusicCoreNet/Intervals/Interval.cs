@@ -89,6 +89,15 @@ public readonly record struct Interval(SimpleIntervalBase Base, [NonNegative] in
     public override int GetHashCode() => HashCode.Combine(Base, AdditionalOctaves);
     #endregion
 
+    #region Computation
+    /// <summary>
+    /// Gets an <see cref="Interval"/> equivalent to this instance with the quality shifted by the degree passed in.
+    /// </summary>
+    /// <param name="Degree"></param>
+    /// <returns></returns>
+    public Interval WithQualityShift(int Degree) => this with { Base = Base.WithQualityShiftedBy(Degree) };
+    #endregion
+
     #region Arithmetic
     /// <summary>
     /// Computes the sum of the two <see cref="Interval"/> instances passed in.

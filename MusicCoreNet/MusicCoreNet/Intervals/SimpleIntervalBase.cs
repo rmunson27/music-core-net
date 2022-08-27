@@ -46,17 +46,18 @@ public readonly record struct SimpleIntervalBase
     /// <summary>
     /// Gets the circle of fifths index of this instance relative to a perfect unison.
     /// </summary>
-    public int CircleOfFifthsIndex => Number.CircleOfFifthsIndex() + Quality.PerfectOrMajorBasedIndex * 7;
+    public int CircleOfFifthsIndex => Number.CircleOfFifthsIndex()
+                                        + Quality.PerfectOrMajorBasedIndex(Perfectability) * 7;
 
     /// <summary>
     /// Gets the number of half steps spanning the simple interval represented by this object.
     /// </summary>
-    public int HalfSteps => Number.PerfectOrMajorHalfSteps + Quality.PerfectOrMajorBasedIndex;
+    public int HalfSteps => Number.PerfectOrMajorHalfSteps + Quality.PerfectOrMajorBasedIndex(Perfectability);
 
     /// <summary>
     /// Gets the perfectability of the current instance.
     /// </summary>
-    public IntervalPerfectability Perfectability => Number.Perfectability; // Should be the same for quality and number
+    public IntervalPerfectability Perfectability => Number.Perfectability; // Quality perfectability could be ambiguous
     #endregion
 
     #region Constructor
@@ -205,18 +206,18 @@ public readonly record struct SimpleIntervalBase
         out ImperfectableIntervalQuality ImperfectableQuality,
         out ImperfectableSimpleIntervalNumber ImperfectableNumber)
     {
-        if (
-            Quality.IsPerfectable(out var pQuality, out var npQuality)
-                & Number.IsPerfectable(out var pNumber, out var npNumber))
+        if (IsPerfectable())
         {
-            (PerfectableQuality, PerfectableNumber) = (pQuality, pNumber);
+            PerfectableQuality = (PerfectableIntervalQuality)Quality;
+            PerfectableNumber = (PerfectableSimpleIntervalNumber)Number;
             (ImperfectableQuality, ImperfectableNumber) = (default, default);
             return true;
         }
         else
         {
             (PerfectableQuality, PerfectableNumber) = (default, default);
-            (ImperfectableQuality, ImperfectableNumber) = (npQuality, npNumber);
+            ImperfectableQuality = (ImperfectableIntervalQuality)Quality;
+            ImperfectableNumber = (ImperfectableSimpleIntervalNumber)Number;
             return false;
         }
     }
@@ -313,6 +314,19 @@ public readonly record struct SimpleIntervalBase
     #endregion
     #endregion
 
+    #region Computation
+    /// <summary>
+    /// Gets a <see cref="SimpleIntervalBase"/> equivalent to this instance with the quality shifted by the degree
+    /// passed in.
+    /// </summary>
+    /// <param name="Degree"></param>
+    /// <returns></returns>
+    public SimpleIntervalBase WithQualityShiftedBy(int Degree)
+        => IsPerfectable()
+            ? new(Quality.UnsafeAsPerfectable.ShiftedBy(Degree), Number)
+            : new(Quality.UnsafeAsImperfectable.ShiftedBy(Degree), Number);
+    #endregion
+
     #region Arithmetic
     /// <summary>
     /// Computes the difference between this <see cref="SimpleIntervalBase"/> and another, collapsing the result into a
@@ -381,8 +395,8 @@ public readonly record struct SimpleIntervalBase
         #endregion
 
         #region Quality
-        var newQualityIndex = lhs.Quality.PerfectOrMajorBasedIndex
-                                + rhs.Quality.PerfectOrMajorBasedIndex
+        var newQualityIndex = lhs.Quality.PerfectOrMajorBasedIndex(lhs.Perfectability)
+                                + rhs.Quality.PerfectOrMajorBasedIndex(rhs.Perfectability)
                                 + qualityShift;
 
         IntervalQuality newQuality = newNumber.IsPerfectable()

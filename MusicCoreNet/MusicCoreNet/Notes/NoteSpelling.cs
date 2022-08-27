@@ -141,7 +141,9 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
         var newLetter = lhs._letter.Plus(rhs.Number, out var differenceQuality);
         return new(
             newLetter,
-            lhs.Accidental.Shift(rhs.Quality.PerfectOrMajorBasedIndex - differenceQuality.PerfectOrMajorBasedIndex));
+            lhs.Accidental.ShiftedBy(
+                rhs.Quality.PerfectOrMajorBasedIndex(rhs.Perfectability)
+                    - differenceQuality.PerfectOrMajorBasedIndex(rhs.Perfectability)));
     }
 
     /// <summary>
@@ -154,9 +156,7 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     public static SimpleIntervalBase operator -(NoteSpelling lhs, NoteSpelling rhs)
     {
         var letterDifference = lhs.Letter.Minus(rhs.Letter);
-        return new(
-                letterDifference.Quality.Shift(lhs.Accidental.IntValue - rhs.Accidental.IntValue),
-                letterDifference.Number);
+        return letterDifference.WithQualityShiftedBy(lhs.Accidental.IntValue - rhs.Accidental.IntValue);
     }
     #endregion
 

@@ -1,5 +1,4 @@
-﻿using Rem.Core.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -170,6 +169,16 @@ public sealed record class SignedInterval
         Throw.IfArgNull(interval, nameof(interval));
         return new(in interval._interval, (sbyte)-interval._sign);
     }
+    #endregion
+
+    #region Computation
+    /// <summary>
+    /// Gets a <see cref="SignedInterval"/> equivalent to the current instance with the quality shifted by the degree
+    /// passed in.
+    /// </summary>
+    /// <param name="Degree"></param>
+    /// <returns></returns>
+    public SignedInterval WithQualityShift(int Degree) => new(_interval.WithQualityShift(Degree), _sign);
     #endregion
 
     #region Conversion
