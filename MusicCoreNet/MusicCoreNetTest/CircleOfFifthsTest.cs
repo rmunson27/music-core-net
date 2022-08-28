@@ -48,4 +48,40 @@ public class CircleOfFifthsTest
                 $"Comparer did not uphold {Greater} == {Greater}.");
         }
     }
+
+    private static readonly ImmutableArray<(NoteLetter Lesser, NoteLetter Greater)> NoteLetterComparisons
+        = ImmutableArray.CreateRange(new[]
+        {
+            (NoteLetter.A, NoteLetter.B),
+            (NoteLetter.C, NoteLetter.B),
+            (NoteLetter.F, NoteLetter.G),
+            (NoteLetter.F, NoteLetter.C),
+            (NoteLetter.D, NoteLetter.E),
+        });
+
+    /// <summary>
+    /// Tests the <see cref="CircleOfFifths.NoteLetterComparer"/> object functionality.
+    /// </summary>
+    [TestMethod]
+    public void TestNoteLetterComparer()
+    {
+        foreach (var (Lesser, Greater) in NoteLetterComparisons)
+        {
+            Assert.IsTrue(
+                CircleOfFifths.NoteLetterComparer.Compare(Lesser, Greater) < 0,
+                $"Comparer did not uphold {Lesser} < {Greater}.");
+
+            Assert.IsTrue(
+                CircleOfFifths.NoteLetterComparer.Compare(Greater, Lesser) > 0,
+                $"Comparer did not uphold {Greater} > {Lesser}.");
+
+            Assert.IsTrue(
+                CircleOfFifths.NoteLetterComparer.Compare(Lesser, Lesser) == 0,
+                $"Comparer did not uphold {Lesser} == {Lesser}.");
+
+            Assert.IsTrue(
+                CircleOfFifths.NoteLetterComparer.Compare(Greater, Greater) == 0,
+                $"Comparer did not uphold {Greater} == {Greater}.");
+        }
+    }
 }

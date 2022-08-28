@@ -26,4 +26,19 @@ public static class CircleOfFourths
             return y.CircleOfFifthsIndexRelativeToC.CompareTo(x.CircleOfFifthsIndexRelativeToC);
         }
     }
+
+    /// <summary>
+    /// A comparer that can be used to compare <see cref="NoteLetter"/> instances based on the position of natural
+    /// note spellings they describe in the circle of fourths.
+    /// </summary>
+    public static readonly IComparer<NoteLetter> NoteLetterComparer = new NoteLetterComparerType();
+
+    private sealed class NoteLetterComparerType : IComparer<NoteLetter>
+    {
+        /// <inheritdoc/>
+        public int Compare(NoteLetter x, NoteLetter y)
+        {
+            return y.CircleOfFifthsIndexRelativeToC.CompareTo(x.CircleOfFifthsIndexRelativeToC);
+        }
+    }
 }
