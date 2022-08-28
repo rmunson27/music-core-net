@@ -255,6 +255,14 @@ public readonly record struct NoteLetter
         return newLetter;
     }
     #endregion
+
+    #region ToString
+    /// <summary>
+    /// Gets a string that represents the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString() => Value.ToString();
+    #endregion
     #endregion
 
     #region Types
