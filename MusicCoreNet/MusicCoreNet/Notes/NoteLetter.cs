@@ -78,6 +78,21 @@ public readonly record struct NoteLetter
     };
 
     /// <summary>
+    /// Gets an index representing the position of a natural note spelling described by the current instance relative
+    /// to the C natural note spelling.
+    /// </summary>
+    internal int CircleOfFifthsIndexRelativeToC => Value switch
+    {
+        Values.C => 0,
+        Values.D => 2,
+        Values.E => 4,
+        Values.F => -1,
+        Values.G => 1,
+        Values.A => 3,
+        _ => 5,
+    };
+
+    /// <summary>
     /// Gets the number of half steps from a natural note spelling described by this letter down to the nearest C note
     /// below or equal to it.
     /// </summary>

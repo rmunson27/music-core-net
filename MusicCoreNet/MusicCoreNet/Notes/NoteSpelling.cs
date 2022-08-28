@@ -25,16 +25,7 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     /// <summary>
     /// Gets the circle of fifths index of this instance relative to C natural.
     /// </summary>
-    internal int CircleOfFifthsIndexRelativeToC => Letter.Value switch
-    {
-        NoteLetter.Values.A => 3,
-        NoteLetter.Values.B => 5,
-        NoteLetter.Values.C => 0,
-        NoteLetter.Values.D => 2,
-        NoteLetter.Values.E => 4,
-        NoteLetter.Values.F => -1,
-        _ => 1,
-    } + Accidental.IntValue * 7;
+    internal int CircleOfFifthsIndexRelativeToC => Letter.CircleOfFifthsIndexRelativeToC + Accidental.IntValue * 7;
 
     /// <summary>
     /// Gets the pitch class of this instance.
