@@ -34,7 +34,7 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
         get
         {
             var octaveFixup = Maths.FloorDivRem(
-                                Spelling.Letter.HalfStepsDownToC() + Spelling.Accidental.IntValue, 12,
+                                Spelling.Letter.HalfStepsDownToC + Spelling.Accidental.IntValue, 12,
                                 out var cRelativeSpellingValue);
             return new(NotePitchClasses.FromSemitonesDownToC(cRelativeSpellingValue), Octave + octaveFixup);
         }
@@ -98,7 +98,7 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
         // Spelling addition underflows if we have hit the next octave down
         // This would be less than 0, but subtract 1 since the number contributes 1 less than its value to the letter
         // when subtracting
-        var spellingAdditionUnderflows = lhs.Letter.CBasedIndex() - rhs.Base.Number < -1;
+        var spellingAdditionUnderflows = lhs.Letter.CBasedIndex - rhs.Base.Number < -1;
 
         var newOctave = lhs.Octave - rhs.AdditionalOctaves;
         if (spellingAdditionUnderflows) newOctave--;
@@ -119,7 +119,7 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
         // Spelling addition overflows if we have hit the next octave up
         // This would be greater than 6, but add 1 since the number contributes 1 less than its value to the letter
         // when adding
-        var spellingAdditionOverflows = lhs.Letter.CBasedIndex() + rhs.Base.Number > 7;
+        var spellingAdditionOverflows = lhs.Letter.CBasedIndex + rhs.Base.Number > 7;
 
         var newOctave = lhs.Octave + rhs.AdditionalOctaves;
         if (spellingAdditionOverflows) newOctave++;
@@ -145,13 +145,13 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
         // If the left octave is greater than the right but the right letter is higher in its octave than the left
         // is in its octave, then the difference between them spans 1 less octave than indicated by the initially
         // computed difference
-        if (diffAdditionalOctaves > 0 && lhs.Letter.CBasedIndex() < rhs.Letter.CBasedIndex()) diffAdditionalOctaves--;
+        if (diffAdditionalOctaves > 0 && lhs.Letter.CBasedIndex < rhs.Letter.CBasedIndex) diffAdditionalOctaves--;
 
         // If the octaves are the same but the right letter is higher in the octave than the left, then the right
         // note is higher than the left
         // Since NoteSpelling subtraction treats the left side as higher, the initially computed base must be inverted,
         // and the result will be negative
-        else if (diffAdditionalOctaves == 0 && lhs.Letter.CBasedIndex() < rhs.Letter.CBasedIndex())
+        else if (diffAdditionalOctaves == 0 && lhs.Letter.CBasedIndex < rhs.Letter.CBasedIndex)
         {
             baseDiff = -baseDiff;
             isNegative = true;
@@ -165,7 +165,7 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
             // Since the inversion above allows the left side to be treated as lower, if the letter of the left side
             // is higher, the difference between the notes spans 1 less octave than indicated by the initially
             // computed difference
-            if (lhs.Letter.CBasedIndex() > rhs.Letter.CBasedIndex()) diffAdditionalOctaves++;
+            if (lhs.Letter.CBasedIndex > rhs.Letter.CBasedIndex) diffAdditionalOctaves++;
 
             // Make the octave difference positive, and indicate a negative result (for construction of the result)
             diffAdditionalOctaves = -diffAdditionalOctaves;
@@ -197,7 +197,7 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
 
         if (accidentalDiff < 0) // Accidental is lower, so letter is higher
         {
-            var octaveRelativeHalfSteps = Letter.HalfStepsUpToC() + accidentalDiff;
+            var octaveRelativeHalfSteps = Letter.HalfStepsUpToC + accidentalDiff;
             octave -= Maths.FloorDiv(octaveRelativeHalfSteps, 12);
 
             // If we went up to C (rather than already being at C) add an octave since we have moved up to the
@@ -206,7 +206,7 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
         }
         else if (accidentalDiff > 0) // Accidental is higher, so letter is lower
         {
-            var octaveRelativeHalfSteps = Letter.HalfStepsDownToC() - accidentalDiff;
+            var octaveRelativeHalfSteps = Letter.HalfStepsDownToC - accidentalDiff;
             octave += Maths.FloorDiv(octaveRelativeHalfSteps, 12);
         }
 

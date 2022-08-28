@@ -9,44 +9,44 @@ namespace RemTest.Music;
 using static NoteLetter;
 
 /// <summary>
-/// Tests of the <see cref="NoteLetter"/> enum static and extension functionality.
+/// Tests of the <see cref="NoteLetter"/> struct.
 /// </summary>
 [TestClass]
 public class NoteLetterTest
 {
     /// <summary>
-    /// Tests the <see cref="NoteLetters.Plus(NoteLetter, SimpleIntervalNumber)"/> extension method.
+    /// Tests addition of a <see cref="SimpleIntervalBase"/> to a <see cref="NoteLetter"/>.
     /// </summary>
     [TestMethod]
     public void TestPlus()
     {
-        Assert.AreEqual(A, A.Plus(SimpleIntervalNumber.Unison));
-        Assert.AreEqual(B, A.Plus(SimpleIntervalNumber.Second));
-        Assert.AreEqual(B, G.Plus(SimpleIntervalNumber.Third));
+        Assert.AreEqual(A, A + SimpleIntervalNumber.Unison);
+        Assert.AreEqual(B, A + SimpleIntervalNumber.Second);
+        Assert.AreEqual(B, G + SimpleIntervalNumber.Third);
     }
 
     /// <summary>
-    /// Tests the <see cref="NoteLetters.Minus(NoteLetter, SimpleIntervalNumber)"/> extension method.
+    /// Tests subtraction of a <see cref="SimpleIntervalBase"/> from a <see cref="NoteLetter"/>.
     /// </summary>
     [TestMethod]
     public void TestMinus()
     {
-        Assert.AreEqual(A, A.Minus(SimpleIntervalNumber.Unison));
-        Assert.AreEqual(A, B.Minus(SimpleIntervalNumber.Second));
-        Assert.AreEqual(G, B.Minus(SimpleIntervalNumber.Third));
+        Assert.AreEqual(A, A - SimpleIntervalNumber.Unison);
+        Assert.AreEqual(A, B - SimpleIntervalNumber.Second);
+        Assert.AreEqual(G, B - SimpleIntervalNumber.Third);
     }
 
     /// <summary>
-    /// Tests the <see cref="NoteLetters.Minus(NoteLetter, NoteLetter)"/> extension method.
+    /// Tests the difference between <see cref="NoteLetter"/> instances.
     /// </summary>
     [TestMethod]
     public void TestDifference()
     {
-        Assert.AreEqual(Interval.Minor().Seventh(), A.Minus(B));
-        Assert.AreEqual(Interval.Major().Third(), E.Minus(C));
+        Assert.AreEqual(Interval.Minor().Seventh(), A - B);
+        Assert.AreEqual(Interval.Major().Third(), E - C);
 
         // Edge cases where null is returned from internal method since the tritone is ambiguous
-        Assert.AreEqual(Interval.Augmented().Fourth(), B.Minus(F));
-        Assert.AreEqual(Interval.Diminished().Fifth(), F.Minus(B));
+        Assert.AreEqual(Interval.Augmented().Fourth(), B - F);
+        Assert.AreEqual(Interval.Diminished().Fifth(), F - B);
     }
 }

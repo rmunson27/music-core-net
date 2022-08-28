@@ -23,29 +23,16 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
 {
     #region Properties And Fields
     /// <summary>
-    /// Gets or initializes the letter of this note spelling.
-    /// </summary>
-    /// <exception cref="InvalidEnumPropertySetException">
-    /// This property was initialized to an unnamed enum value.
-    /// </exception>
-    public NoteLetter Letter
-    {
-        get => _letter;
-        init => _letter = Throw.IfEnumPropSetUnnamed(value);
-    }
-    private readonly NoteLetter _letter = Throw.IfEnumArgUnnamed(Letter, nameof(Letter));
-
-    /// <summary>
     /// Gets the circle of fifths index of this instance relative to C natural.
     /// </summary>
-    internal int CircleOfFifthsIndexRelativeToC => Letter switch
+    internal int CircleOfFifthsIndexRelativeToC => Letter.Value switch
     {
-        NoteLetter.A => 3,
-        NoteLetter.B => 5,
-        NoteLetter.C => 0,
-        NoteLetter.D => 2,
-        NoteLetter.E => 4,
-        NoteLetter.F => -1,
+        NoteLetter.Values.A => 3,
+        NoteLetter.Values.B => 5,
+        NoteLetter.Values.C => 0,
+        NoteLetter.Values.D => 2,
+        NoteLetter.Values.E => 4,
+        NoteLetter.Values.F => -1,
         _ => 1,
     } + Accidental.IntValue * 7;
 
@@ -53,7 +40,7 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     /// Gets the pitch class of this instance.
     /// </summary>
     public NotePitchClass PitchClass
-        => (NotePitchClass)Maths.FloorRem(Letter.HalfStepsDownToA() + Accidental.IntValue, 12);
+        => (NotePitchClass)Maths.FloorRem(Letter.HalfStepsDownToA + Accidental.IntValue, 12);
     #endregion
 
     #region Methods
@@ -138,7 +125,7 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     /// <returns></returns>
     public static NoteSpelling operator +(NoteSpelling lhs, SimpleIntervalBase rhs)
     {
-        var newLetter = lhs._letter.Plus(rhs.Number, out var differenceQuality);
+        var newLetter = lhs.Letter.Plus(rhs.Number, out var differenceQuality);
         return new(
             newLetter,
             lhs.Accidental.ShiftedBy(
@@ -155,7 +142,7 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     /// <returns></returns>
     public static SimpleIntervalBase operator -(NoteSpelling lhs, NoteSpelling rhs)
     {
-        var letterDifference = lhs.Letter.Minus(rhs.Letter);
+        var letterDifference = lhs.Letter - rhs.Letter;
         return letterDifference.WithQualityShiftedBy(lhs.Accidental.IntValue - rhs.Accidental.IntValue);
     }
     #endregion
