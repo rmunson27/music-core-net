@@ -323,11 +323,9 @@ public readonly record struct SimpleIntervalNumber
     {
         if (Perfectability == other.Perfectability)
         {
-            return Perfectability switch
-            {
-                Perfectable => InternalNumber.Perfectable == other.InternalNumber.Perfectable,
-                _ => InternalNumber.Imperfectable == other.InternalNumber.Imperfectable,
-            };
+            return Perfectability == Perfectable
+                    ? InternalNumber.Perfectable == other.InternalNumber.Perfectable
+                    : InternalNumber.Imperfectable == other.InternalNumber.Imperfectable;
         }
         else return false;
     }

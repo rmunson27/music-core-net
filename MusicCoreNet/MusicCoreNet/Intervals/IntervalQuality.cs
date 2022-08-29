@@ -248,7 +248,7 @@ public readonly record struct IntervalQuality
     /// Gets whether or not this instance can describe perfectable intervals.
     /// </summary>
     /// <returns></returns>
-    public bool IsPerfectable() => Perfectability is Perfectable or null;
+    public bool IsPerfectable() => Perfectability is null || Perfectability == Perfectable;
     #endregion
 
     #region Imperfectable
@@ -276,7 +276,7 @@ public readonly record struct IntervalQuality
     /// Gets whether or not this instance is imperfectable.
     /// </summary>
     /// <returns></returns>
-    public bool IsImperfectable() => Perfectability is Imperfectable or null;
+    public bool IsImperfectable() => Perfectability is null || Perfectability == Imperfectable;
     #endregion
     #endregion
 
@@ -559,14 +559,18 @@ public readonly record struct IntervalQuality
     /// </summary>
     private enum StorageType : byte
     {
-        Perfectable = IntervalPerfectability.Perfectable,
-        Imperfectable = IntervalPerfectability.Imperfectable,
+        Perfectable = IntervalPerfectability.Values.Perfectable,
+        Imperfectable = IntervalPerfectability.Values.Imperfectable,
         NonBasic = Perfectable + Imperfectable + 1,
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static IntervalPerfectability? PerfectabilityFromStorageType(StorageType ip)
-        => ip is StorageType.NonBasic ? null : (IntervalPerfectability)ip;
+    private static IntervalPerfectability? PerfectabilityFromStorageType(StorageType ip) => ip switch
+    {
+        StorageType.Perfectable => Perfectable,
+        StorageType.Imperfectable => Imperfectable,
+        _ => null,
+    };
     #endregion
 }
 

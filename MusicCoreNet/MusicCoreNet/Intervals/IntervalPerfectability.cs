@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Rem.Core.Attributes;
+using Rem.Core.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,16 +11,56 @@ namespace Rem.Music;
 /// <summary>
 /// Represents the perfectability of an interval (either perfectable or imperfectable).
 /// </summary>
-public enum IntervalPerfectability : byte
+/// <remarks>
+/// The default value of this struct represents perfectable intervals.
+/// </remarks>
+public readonly record struct IntervalPerfectability
 {
     /// <summary>
     /// Represents perfectable intervals (i.e. a perfect fourth).
     /// </summary>
-    Perfectable,
+    public static readonly IntervalPerfectability Perfectable = new(Values.Perfectable);
 
     /// <summary>
     /// Represents imperfectable intervals (i.e. a major second).
     /// </summary>
-    Imperfectable,
+    public static readonly IntervalPerfectability Imperfectable = new(Values.Imperfectable);
+
+    /// <summary>
+    /// Gets a unique identifier for this value.
+    /// </summary>
+    [NamedEnum] public Values Value { get; }
+
+    /// <summary>
+    /// Constructs a new instance of this struct.
+    /// </summary>
+    /// <param name="Value"></param>
+    private IntervalPerfectability([NamedEnum] Values Value) { this.Value = Value; }
+
+    /// <summary>
+    /// Implicitly converts a <see cref="Values"/> instance to the value it represents.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <exception cref="InvalidCastException">The value was undefined.</exception>
+    public static implicit operator IntervalPerfectability([NamedEnum] Values value)
+        => Enums.IsDefined(value)
+            ? new(value)
+            : throw new InvalidCastException("Invalid unnamed interval perfectability value.");
+
+    /// <summary>
+    /// Represents the possible values of this struct.
+    /// </summary>
+    public enum Values : byte
+    {
+        /// <summary>
+        /// Represents perfectable intervals (i.e. a perfect fourth).
+        /// </summary>
+        Perfectable,
+
+        /// <summary>
+        /// Represents imperfectable intervals (i.e. a major second).
+        /// </summary>
+        Imperfectable,
+    }
 }
 
