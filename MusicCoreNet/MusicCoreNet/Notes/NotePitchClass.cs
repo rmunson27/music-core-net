@@ -85,13 +85,13 @@ public readonly record struct NotePitchClass
     [NamedEnum] public Values Value { get; }
 
     /// <summary>
-    /// Gets the number of semitones pitches described by this instance are above the nearest lesser or equal
+    /// Gets the number of semitones that pitches described by this instance are above the nearest lesser or equal
     /// C pitch.
     /// </summary>
     public int SemitonesAboveC => (int)Value;
 
     /// <summary>
-    /// Gets the number of semitones pitches described by this instance are below the nearest greater or equal
+    /// Gets the number of semitones that pitches described by this instance are below the nearest greater or equal
     /// C pitch.
     /// </summary>
     public int SemitonesBelowC =>

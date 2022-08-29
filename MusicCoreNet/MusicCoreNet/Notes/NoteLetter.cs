@@ -84,14 +84,14 @@ public readonly record struct NoteLetter
     };
 
     /// <summary>
-    /// Gets the number of half steps the natural note spelling described by this letter is above the nearest lesser
-    /// or equal C note spelling.
+    /// Gets the number of half steps that the natural note spelling described by this letter is above the nearest
+    /// lesser or equal 'C' note spelling.
     /// </summary>
     public int HalfStepsAboveC => PitchClass.SemitonesAboveC;
 
     /// <summary>
-    /// Gets the number of half steps the natural note spelling described by this letter is below the nearest greater
-    /// or equal C note spelling.
+    /// Gets the number of half steps that the natural note spelling described by this letter is below the nearest
+    /// greater or equal 'C' note spelling.
     /// </summary>
     public int HalfStepsBelowC => PitchClass.SemitonesBelowC;
 
