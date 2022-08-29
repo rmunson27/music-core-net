@@ -28,7 +28,7 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     /// Gets the pitch class of this instance.
     /// </summary>
     public NotePitchClass PitchClass
-        => (NotePitchClass)Maths.FloorRem(Letter.HalfStepsDownToA + Accidental.IntValue, 12);
+        => NotePitchClass.FromSemitonesAboveC(Maths.FloorRem(Letter.HalfStepsAboveC + Accidental.IntValue, 12));
     #endregion
 
     #region Methods

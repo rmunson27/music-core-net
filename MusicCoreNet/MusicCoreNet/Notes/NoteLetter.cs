@@ -105,12 +105,6 @@ public readonly record struct NoteLetter
     public int HalfStepsBelowC => PitchClass.SemitonesBelowC;
 
     /// <summary>
-    /// Gets the number of half steps from a natural note spelling described by this letter down to the nearest lesser
-    /// or equal A note spelling.
-    /// </summary>
-    internal int HalfStepsDownToA => (int)PitchClass;
-
-    /// <summary>
     /// Gets the pitch class associated with the natural note spelling described by this letter.
     /// </summary>
     public NotePitchClass PitchClass => Value switch
@@ -209,7 +203,7 @@ public readonly record struct NoteLetter
     /// <returns></returns>
     public static SimpleIntervalBase operator -(NoteLetter lhs, NoteLetter rhs)
     {
-        var halfSteps = (lhs.HalfStepsDownToA - rhs.HalfStepsDownToA + 12) % 12;
+        var halfSteps = (lhs.HalfStepsAboveC - rhs.HalfStepsAboveC + 12) % 12;
         return SimpleIntervalBase.SimplestWithHalfSteps(halfSteps) switch
         {
             null => lhs == B ? Interval.Augmented().Fourth() : Interval.Diminished().Fifth(),
@@ -246,7 +240,7 @@ public readonly record struct NoteLetter
     {
         var newLetter = this + number;
 
-        var halfSteps = newLetter.HalfStepsDownToA - HalfStepsDownToA + 12;
+        var halfSteps = newLetter.HalfStepsAboveC - HalfStepsAboveC + 12;
         differenceQuality = IntervalQuality.OfSimplestIntervalWithHalfSteps(halfSteps)
                                 ?? (this == F
                                         ? PerfectableIntervalQuality.Augmented()
