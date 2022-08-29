@@ -342,7 +342,7 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
     /// </summary>
     /// <param name="i"></param>
     /// <exception cref="InvalidCastException">The <see cref="int"/> value was not positive.</exception>
-    public static explicit operator IntervalNumber(int i)
+    public static explicit operator IntervalNumber([Positive] int i)
         => i <= 0 ? throw new InvalidCastException("Cannot cast non-positive value to interval number.") : new(i);
     #endregion
     #endregion
