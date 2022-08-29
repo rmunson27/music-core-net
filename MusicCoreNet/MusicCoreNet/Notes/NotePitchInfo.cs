@@ -1,8 +1,6 @@
-﻿using Rem.Core.ComponentModel;
-using Rem.Music.Internal;
+﻿using Rem.Music.Internal;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +12,6 @@ namespace Rem.Music;
 /// </summary>
 /// <param name="Class">The class of the represented pitch.</param>
 /// <param name="Octave">The octave of the represented pitch.</param>
-/// <exception cref="InvalidEnumArgumentException"><paramref name="Class"/> was an unnamed enum value.</exception>
 public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : IComparable<NotePitchInfo>
 {
     #region Constants
@@ -39,19 +36,6 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
 
     #region Properties
     /// <summary>
-    /// Gets or initializes the class of the represented pitch.
-    /// </summary>
-    /// <exception cref="InvalidEnumPropertySetException">
-    /// This property was initialized to an unnamed enum value.
-    /// </exception>
-    public NotePitchClass Class
-    {
-        get => _class;
-        init => _class = Throw.IfEnumPropSetUnnamed(value);
-    }
-    private readonly NotePitchClass _class = Throw.IfEnumArgUnnamed(Class, nameof(Class));
-
-    /// <summary>
     /// Gets the frequency of the represented pitch.
     /// </summary>
     public double Frequency => ConcertPitchFrequency * Math.Pow(2, (this - ConcertPitch) / 12.0);
@@ -60,7 +44,7 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
     /// Gets an integer index for this instance relative to the pitch <see cref="C0"/>, the lowest pitch in the
     /// zero octave.
     /// </summary>
-    public int C0Index => Class.SemitonesDownToC() + Octave * 12;
+    public int C0Index => Class.SemitonesDownToC + Octave * 12;
     #endregion
 
     #region Methods
@@ -75,7 +59,7 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
     public static NotePitchInfo FromC0Index(int Index)
     {
         var octave = Maths.FloorDivRem(Index, 12, out var classCRelativeIndex);
-        return new(NotePitchClasses.FromSemitonesDownToC(classCRelativeIndex), octave);
+        return new(NotePitchClass.FromSemitonesDownToC(classCRelativeIndex), octave);
     }
     #endregion
 
@@ -151,7 +135,7 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
     public int CompareTo(NotePitchInfo other) => Octave - other.Octave switch
     {
         < 0 => -1,
-        0 => Math.Sign(Class.SemitonesDownToC() - other.Class.SemitonesDownToC()),
+        0 => Math.Sign(Class.SemitonesDownToC - other.Class.SemitonesDownToC),
         > 0 => 1,
     };
     #endregion

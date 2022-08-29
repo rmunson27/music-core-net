@@ -1,9 +1,7 @@
 ﻿using Rem.Core.Attributes;
-using Rem.Core.ComponentModel;
 using Rem.Music.Internal;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,30 +47,25 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     /// it is set to <see cref="NonNaturalAccidentalType.Flat"/>.
     /// </param>
     /// <returns></returns>
-    /// <exception cref="InvalidEnumArgumentException">
-    /// Either <paramref name="pitchClass"/> or <paramref name="nonNaturalAccidentalType"/> was an unnamed enum value.
-    /// </exception>
     public static NoteSpelling SimplestWithPitchClass(
-        [NamedEnum] NotePitchClass pitchClass, [NamedEnum] NonNaturalAccidentalType nonNaturalAccidentalType)
+        NotePitchClass pitchClass, [NamedEnum] NonNaturalAccidentalType nonNaturalAccidentalType)
     {
-        Throw.IfEnumArgUnnamed(pitchClass, nameof(pitchClass));
-
         var sharpResult = Throw.IfEnumArgUnnamed(nonNaturalAccidentalType, nameof(nonNaturalAccidentalType))
                             == NonNaturalAccidentalType.Sharp;
 
-        return pitchClass switch
+        return pitchClass.Value switch
         {
-            NotePitchClass.A => NoteLetter.A,
-            NotePitchClass.AB => sharpResult ? Note.A().Sharp() : Note.B().Flat(),
-            NotePitchClass.B => NoteLetter.B,
-            NotePitchClass.C => NoteLetter.C,
-            NotePitchClass.CD => sharpResult ? Note.C().Sharp() : Note.D().Flat(),
-            NotePitchClass.D => NoteLetter.D,
-            NotePitchClass.DE => sharpResult ? Note.D().Sharp() : Note.E().Flat(),
-            NotePitchClass.E => NoteLetter.E,
-            NotePitchClass.F => NoteLetter.F,
-            NotePitchClass.FG => sharpResult ? Note.F().Sharp() : Note.G().Flat(),
-            NotePitchClass.G => NoteLetter.G,
+            NotePitchClass.Values.A => NoteLetter.A,
+            NotePitchClass.Values.AB => sharpResult ? Note.A().Sharp() : Note.B().Flat(),
+            NotePitchClass.Values.B => NoteLetter.B,
+            NotePitchClass.Values.C => NoteLetter.C,
+            NotePitchClass.Values.CD => sharpResult ? Note.C().Sharp() : Note.D().Flat(),
+            NotePitchClass.Values.D => NoteLetter.D,
+            NotePitchClass.Values.DE => sharpResult ? Note.D().Sharp() : Note.E().Flat(),
+            NotePitchClass.Values.E => NoteLetter.E,
+            NotePitchClass.Values.F => NoteLetter.F,
+            NotePitchClass.Values.FG => sharpResult ? Note.F().Sharp() : Note.G().Flat(),
+            NotePitchClass.Values.G => NoteLetter.G,
             _ => sharpResult ? Note.G().Sharp() : Note.A().Flat(),
         };
     }

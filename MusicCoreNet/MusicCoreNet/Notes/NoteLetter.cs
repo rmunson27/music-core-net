@@ -23,37 +23,37 @@ public readonly record struct NoteLetter
     /// <summary>
     /// Represents an 'A' note.
     /// </summary>
-    public static readonly NoteLetter A = Values.A;
+    public static readonly NoteLetter A = new(Values.A);
 
     /// <summary>
     /// Represents a 'B' note.
     /// </summary>
-    public static readonly NoteLetter B = Values.B;
+    public static readonly NoteLetter B = new(Values.B);
 
     /// <summary>
     /// Represents a 'C' note.
     /// </summary>
-    public static readonly NoteLetter C = Values.C;
+    public static readonly NoteLetter C = new(Values.C);
 
     /// <summary>
     /// Represents a 'D' note.
     /// </summary>
-    public static readonly NoteLetter D = Values.D;
+    public static readonly NoteLetter D = new(Values.D);
 
     /// <summary>
     /// Represents an 'E' note.
     /// </summary>
-    public static readonly NoteLetter E = Values.E;
+    public static readonly NoteLetter E = new(Values.E);
 
     /// <summary>
     /// Represents an 'F' note.
     /// </summary>
-    public static readonly NoteLetter F = Values.F;
+    public static readonly NoteLetter F = new(Values.F);
 
     /// <summary>
     /// Represents a 'G' note.
     /// </summary>
-    public static readonly NoteLetter G = Values.G;
+    public static readonly NoteLetter G = new(Values.G);
     #endregion
 
     #region Properties
@@ -93,20 +93,20 @@ public readonly record struct NoteLetter
     };
 
     /// <summary>
-    /// Gets the number of half steps from a natural note spelling described by this letter down to the nearest C note
-    /// below or equal to it.
+    /// Gets the number of half steps from a natural note spelling described by this letter down to the nearest lesser
+    /// or equal C note spelling.
     /// </summary>
-    public int HalfStepsDownToC => PitchClass.SemitonesDownToC();
+    public int HalfStepsDownToC => PitchClass.SemitonesDownToC;
 
     /// <summary>
-    /// Gets the number of half steps from a natural note spelling described by this letter up to the nearest C note
-    /// above or equal to it.
+    /// Gets the number of half steps from a natural note spelling described by this letter up to the nearest greater
+    /// or equal C note spelling.
     /// </summary>
-    public int HalfStepsUpToC => PitchClass.SemitonesUpToC();
+    public int HalfStepsUpToC => PitchClass.SemitonesUpToC;
 
     /// <summary>
-    /// Gets the number of half steps from a natural note spelling described by this letter down to the nearest A note
-    /// below or equal to it.
+    /// Gets the number of half steps from a natural note spelling described by this letter down to the nearest lesser
+    /// or equal A note spelling.
     /// </summary>
     internal int HalfStepsDownToA => (int)PitchClass;
 
@@ -130,7 +130,7 @@ public readonly record struct NoteLetter
     /// Constructs a new <see cref="NoteLetter"/>.
     /// </summary>
     /// <param name="Value"></param>
-    private NoteLetter(Values Value) { this.Value = Value; }
+    private NoteLetter([NamedEnum] Values Value) { this.Value = Value; }
     #endregion
 
     #region Methods
@@ -165,11 +165,11 @@ public readonly record struct NoteLetter
     /// </exception>
     public static explicit operator NoteLetter(byte b)
         => Enums.IsDefined((Values)b)
-            ? (Values)b
+            ? new((Values)b)
             : throw new InvalidCastException($"Argument did not represent a {nameof(NoteLetter)}.");
 
     /// <summary>
-    /// Implicitly converts a named <see cref="NoteLetter.Values"/> instance to a <see cref="NoteLetter"/>.
+    /// Implicitly converts a named <see cref="Values"/> instance to a <see cref="NoteLetter"/>.
     /// </summary>
     /// <param name="Value"></param>
     /// <exception cref="InvalidCastException"><paramref name="Value"/> was an unnamed enum value.</exception>
