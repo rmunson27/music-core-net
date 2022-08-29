@@ -25,7 +25,7 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
     /// <summary>
     /// Gets the perfectability of this instance.
     /// </summary>
-    [NamedEnum] public IntervalPerfectability Perfectability => Base.Perfectability;
+    public IntervalPerfectability Perfectability => Base.Perfectability;
 
     /// <summary>
     /// Gets whether or not this instance is perfectable.
