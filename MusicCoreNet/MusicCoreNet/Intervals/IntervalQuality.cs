@@ -49,6 +49,16 @@ public readonly record struct IntervalQuality
     };
 
     /// <summary>
+    /// Gets the type of this interval quality.
+    /// </summary>
+    public IntervalQualityType Type => _storageType switch
+    {
+        StorageType.Perfectable => _quality.Perfectable.Type.ToIntervalQualityType(),
+        StorageType.Imperfectable => _quality.Imperfectable.Type.ToIntervalQualityType(),
+        _ => _quality.NonBasicDegree > 0 ? IntervalQualityType.Augmented : IntervalQualityType.Diminished,
+    };
+
+    /// <summary>
     /// Gets the specific perfectability of this interval quality, or <see langword="null"/> if the quality applies
     /// to both perfectable and imperfectable intervals.
     /// </summary>
