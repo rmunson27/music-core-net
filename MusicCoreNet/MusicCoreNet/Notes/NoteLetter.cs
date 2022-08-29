@@ -15,21 +15,11 @@ namespace Rem.Music;
 /// All possible values of this struct are present as <see langword="static"/> <see langword="readonly"/> fields
 /// on the struct.
 /// <para/>
-/// The default value of the struct represents an 'A' note letter.
+/// The default value of the struct represents a 'C' note letter.
 /// </remarks>
 public readonly record struct NoteLetter
 {
     #region Constants
-    /// <summary>
-    /// Represents an 'A' note.
-    /// </summary>
-    public static readonly NoteLetter A = new(Values.A);
-
-    /// <summary>
-    /// Represents a 'B' note.
-    /// </summary>
-    public static readonly NoteLetter B = new(Values.B);
-
     /// <summary>
     /// Represents a 'C' note.
     /// </summary>
@@ -54,6 +44,16 @@ public readonly record struct NoteLetter
     /// Represents a 'G' note.
     /// </summary>
     public static readonly NoteLetter G = new(Values.G);
+
+    /// <summary>
+    /// Represents an 'A' note.
+    /// </summary>
+    public static readonly NoteLetter A = new(Values.A);
+
+    /// <summary>
+    /// Represents a 'B' note.
+    /// </summary>
+    public static readonly NoteLetter B = new(Values.B);
     #endregion
 
     #region Properties
@@ -66,16 +66,7 @@ public readonly record struct NoteLetter
     /// Gets an index representing the position of the current instance in a C-based octave relative to the C-note
     /// in the octave.
     /// </summary>
-    [NonNegative] public int CBasedIndex => Value switch
-    {
-        Values.C => 0,
-        Values.D => 1,
-        Values.E => 2,
-        Values.F => 3,
-        Values.G => 4,
-        Values.A => 5,
-        _ => 6, // Values.B
-    };
+    [NonNegative] public int CBasedIndex => (int)Value;
 
     /// <summary>
     /// Gets an index representing the position of a natural note spelling described by the current instance relative
@@ -109,13 +100,13 @@ public readonly record struct NoteLetter
     /// </summary>
     public NotePitchClass PitchClass => Value switch
     {
-        Values.A => NotePitchClass.A,
-        Values.B => NotePitchClass.B,
         Values.C => NotePitchClass.C,
         Values.D => NotePitchClass.D,
         Values.E => NotePitchClass.E,
         Values.F => NotePitchClass.F,
-        _ => NotePitchClass.G, // Values.G
+        Values.G => NotePitchClass.G,
+        Values.A => NotePitchClass.A,
+        _ => NotePitchClass.B, // Values.B
     };
     #endregion
 
@@ -193,7 +184,7 @@ public readonly record struct NoteLetter
     /// <param name="rhs"></param>
     /// <returns></returns>
     public static NoteLetter operator +(NoteLetter lhs, SimpleIntervalNumber rhs)
-        => (NoteLetter)(((int)lhs + rhs.Value - 1) % 7);
+        => new((Values)((lhs.CBasedIndex + rhs.Value - 1) % 7));
 
     /// <summary>
     /// Finds the difference between the two <see cref="NoteLetter"/> instances passed in.
@@ -266,16 +257,6 @@ public readonly record struct NoteLetter
     public enum Values
     {
         /// <summary>
-        /// Represents an 'A' note.
-        /// </summary>
-        A,
-
-        /// <summary>
-        /// Represents a 'B' note.
-        /// </summary>
-        B,
-
-        /// <summary>
         /// Represents a 'C' note.
         /// </summary>
         C,
@@ -299,6 +280,16 @@ public readonly record struct NoteLetter
         /// Represents a 'G' note.
         /// </summary>
         G,
+
+        /// <summary>
+        /// Represents an 'A' note.
+        /// </summary>
+        A,
+
+        /// <summary>
+        /// Represents a 'B' note.
+        /// </summary>
+        B,
     }
     #endregion
 }

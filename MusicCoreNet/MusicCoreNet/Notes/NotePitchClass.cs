@@ -11,6 +11,9 @@ namespace Rem.Music;
 /// <summary>
 /// Represents the pitch class of a note, up to octave difference.
 /// </summary>
+/// <remarks>
+/// The default value of this struct represents a 'C' pitch class.
+/// </remarks>
 public readonly record struct NotePitchClass
 {
     #region Constants
@@ -85,25 +88,15 @@ public readonly record struct NotePitchClass
     /// Gets the number of semitones pitches described by this instance are above the nearest lesser or equal
     /// C pitch.
     /// </summary>
-    public int SemitonesAboveC
-        // Convert from A relative: +9 (-3 so C is at 0, +12 so is positive), %12 (so is in range)
-        => ((int)Value + 9) % 12;
+    public int SemitonesAboveC => (int)Value;
 
     /// <summary>
     /// Gets the number of semitones pitches described by this instance are below the nearest greater or equal
     /// C pitch.
     /// </summary>
-    public int SemitonesBelowC
-        // Convert from A relative: Subtract from 15 (12 so are going down instead of up, then subtract -3 so C is
-        // at 0)
-        // Then mod by 12 (so is in range)
-        => (15 - (int)Value) % 12;
-
-    /// <summary>
-    /// Gets the number of half steps from a natural note spelling described by this letter down to the nearest A note
-    /// below or equal to it.
-    /// </summary>
-    internal int HalfStepsDownToA => (int)Value;
+    public int SemitonesBelowC =>
+        // Subtract from 12 (so are going down instead of up) then mod by 12 (to put the C case in range at 0)
+        (12 - (int)Value) % 12;
     #endregion
 
     #region Constructor
@@ -126,9 +119,7 @@ public readonly record struct NotePitchClass
     {
         Throw.IfArgNegative(index, nameof(index));
         Throw.IfArgGreaterThanOrEqualTo(12, index, nameof(index));
-
-        // Convert to A relative: +15 (+3 so A is at 0, +12 so is positive), %12 (so is in range)
-        return (NotePitchClass)((index + 15) % 12);
+        return new((Values)index);
     }
 
     /// <summary>
@@ -142,9 +133,8 @@ public readonly record struct NotePitchClass
         Throw.IfArgNegative(index, nameof(index));
         Throw.IfArgGreaterThanOrEqualTo(12, index, nameof(index));
 
-        // Convert to A relative: Subtract from 15 (12 so are going up instead of down, then add 3 so A is at 0)
-        // Then mod by 12 (so is in range)
-        return (NotePitchClass)((15 - index) % 12);
+        // Subtract from 12 (so are going up instead of down) then mod by 12 (to put the C case in range at 0)
+        return new((Values)((12 - index) % 12));
     }
     #endregion
 
@@ -216,21 +206,6 @@ public readonly record struct NotePitchClass
     public enum Values : byte
     {
         /// <summary>
-        /// Represents notes that are enharmonically equivalent to an 'A' note.
-        /// </summary>
-        A,
-
-        /// <summary>
-        /// Represents notes that are enharmonically equivalent to an 'A#' or 'Bb' note.
-        /// </summary>
-        AB,
-
-        /// <summary>
-        /// Represents notes that are enharmonically equivalent to a 'B' note.
-        /// </summary>
-        B,
-
-        /// <summary>
         /// Represents notes that are enharmonically equivalent to a 'C' note.
         /// </summary>
         C,
@@ -273,7 +248,22 @@ public readonly record struct NotePitchClass
         /// <summary>
         /// Represents notes that are enharmonically equivalent to a 'G#' or 'Ab' note.
         /// </summary>
+
         GA,
+        /// <summary>
+        /// Represents notes that are enharmonically equivalent to an 'A' note.
+        /// </summary>
+        A,
+
+        /// <summary>
+        /// Represents notes that are enharmonically equivalent to an 'A#' or 'Bb' note.
+        /// </summary>
+        AB,
+
+        /// <summary>
+        /// Represents notes that are enharmonically equivalent to a 'B' note.
+        /// </summary>
+        B,
     }
     #endregion
 }
