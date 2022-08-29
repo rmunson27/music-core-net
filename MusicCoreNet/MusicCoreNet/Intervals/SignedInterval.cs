@@ -10,7 +10,13 @@ namespace Rem.Music;
 /// <summary>
 /// Represents an interval equipped with a sign.
 /// </summary>
-public sealed record class SignedInterval
+/// <remarks>
+/// The default instance of this struct represents a perfect unison.
+/// <para/>
+/// All unisons are represented as positive in order to resolve the ambiguity between unison values.
+/// Given this fact, all signed intervals are represented exactly once by this struct (without distinct equivalents).
+/// </remarks>
+public readonly record struct SignedInterval
 {
     #region Constants
     /// <summary>
@@ -39,12 +45,12 @@ public sealed record class SignedInterval
     /// <summary>
     /// Gets the sign of this instance.
     /// </summary>
-    public int Sign => _sign;
-    private readonly sbyte _sign;
+    public int Sign => _sign == 0 ? 1 : _sign;
+    private readonly int _sign;
     #endregion
 
     #region Constructor
-    private SignedInterval(in Interval Interval, sbyte Sign)
+    private SignedInterval(in Interval Interval, int Sign)
     {
         _interval = Interval;
         _sign = Sign;
@@ -56,7 +62,7 @@ public sealed record class SignedInterval
             // If the sign is negative, invert the base of the underlying interval and represent as a unison
             // with positive sign
             if (_sign < 0) _interval = _interval with { Base = -_interval.Base };
-            _sign = 1;
+            _sign = 0;
         }
     }
     #endregion
@@ -84,15 +90,13 @@ public sealed record class SignedInterval
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
-    public bool Equals(SignedInterval? other) => other is not null
-                                                    && _sign == other._sign
-                                                    && Interval == other.Interval;
+    public bool Equals(SignedInterval other) => _sign == other._sign && Interval == other.Interval;
 
     /// <summary>
     /// Gets a hash code for the current instance.
     /// </summary>
     /// <returns></returns>
-    public override int GetHashCode() => HashCode.Combine(_sign, Interval);
+    public override int GetHashCode() => HashCode.Combine(_sign, _interval);
     #endregion
 
     #region Arithmetic
@@ -102,18 +106,10 @@ public sealed record class SignedInterval
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    /// <exception cref="ArgumentNullException">
-    /// Either <paramref name="lhs"/> or <paramref name="rhs"/> was <see langword="null"/>.
-    /// </exception>
-    public static SignedInterval operator -(SignedInterval lhs, SignedInterval rhs)
-    {
-        Throw.IfArgNull(lhs, nameof(lhs));
-        Throw.IfArgNull(rhs, nameof(rhs));
-
-        return lhs._sign == rhs._sign
-                ? SubtractRelativeToLeftHandSign(lhs, rhs)
-                : new(lhs._interval + rhs._interval, lhs._sign);
-    }
+    public static SignedInterval operator -(in SignedInterval lhs, in SignedInterval rhs)
+        => lhs.Sign == rhs.Sign
+            ? SubtractRelativeToLeftHandSign(lhs, rhs)
+            : new(lhs._interval + rhs._interval, lhs.Sign);
 
     /// <summary>
     /// Computes the sum of the two <see cref="SignedInterval"/> instances passed in.
@@ -121,21 +117,13 @@ public sealed record class SignedInterval
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    /// <exception cref="ArgumentNullException">
-    /// Either <paramref name="lhs"/> or <paramref name="rhs"/> was <see langword="null"/>.
-    /// </exception>
-    public static SignedInterval operator +(SignedInterval lhs, SignedInterval rhs)
-    {
-        Throw.IfArgNull(lhs, nameof(lhs));
-        Throw.IfArgNull(rhs, nameof(rhs));
-
-        return lhs._sign == rhs._sign
-                ? new(lhs._interval + rhs._interval, lhs._sign)
-                : SubtractRelativeToLeftHandSign(lhs, rhs);
-    }
+    public static SignedInterval operator +(in SignedInterval lhs, in SignedInterval rhs)
+        => lhs.Sign == rhs.Sign
+            ? new(lhs._interval + rhs._interval, lhs.Sign)
+            : SubtractRelativeToLeftHandSign(in lhs, in rhs);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static SignedInterval SubtractRelativeToLeftHandSign(SignedInterval lhs, SignedInterval rhs)
+    private static SignedInterval SubtractRelativeToLeftHandSign(in SignedInterval lhs, in SignedInterval rhs)
     {
         Interval.SubtractInPlace(in lhs._interval, in rhs._interval, out var newBase, out var newOctaves);
 
@@ -153,9 +141,9 @@ public sealed record class SignedInterval
             var finalOctaves = -newOctaves;
             if (finalBase.Number != 1) finalOctaves--;
 
-            return new(new(finalBase, finalOctaves), (sbyte)-lhs._sign);
+            return new(new(finalBase, finalOctaves), -lhs.Sign);
         }
-        else return new(new(newBase, newOctaves), lhs._sign);
+        else return new(new(newBase, newOctaves), lhs.Sign);
     }
 
     /// <summary>
@@ -163,11 +151,9 @@ public sealed record class SignedInterval
     /// </summary>
     /// <param name="interval"></param>
     /// <returns></returns>
-    /// <exception cref="ArgumentNullException"><paramref name="interval"/> was <see langword="null"/>.</exception>
-    public static SignedInterval operator -(SignedInterval interval)
+    public static SignedInterval operator -(in SignedInterval interval)
     {
-        Throw.IfArgNull(interval, nameof(interval));
-        return new(in interval._interval, (sbyte)-interval._sign);
+        return new(in interval._interval, -interval.Sign);
     }
     #endregion
 
@@ -178,7 +164,7 @@ public sealed record class SignedInterval
     /// </summary>
     /// <param name="Degree"></param>
     /// <returns></returns>
-    public SignedInterval WithQualityShift(int Degree) => new(_interval.WithQualityShift(Degree), _sign);
+    public SignedInterval WithQualityShift(int Degree) => new(_interval.WithQualityShift(Degree), Sign);
     #endregion
 
     #region Conversion
