@@ -94,7 +94,8 @@ public readonly record struct NotePitchClass
     /// C pitch.
     /// </summary>
     public int SemitonesBelowC
-        // Convert from A relative: Subtract from 15 (12 so are going up instead of down, then subtract -3 so C is at 0)
+        // Convert from A relative: Subtract from 15 (12 so are going down instead of up, then subtract -3 so C is
+        // at 0)
         // Then mod by 12 (so is in range)
         => (15 - (int)Value) % 12;
 
@@ -128,6 +129,22 @@ public readonly record struct NotePitchClass
 
         // Convert to A relative: +15 (+3 so A is at 0, +12 so is positive), %12 (so is in range)
         return (NotePitchClass)((index + 15) % 12);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="NotePitchClass"/> that represents pitches that are the given number of semitones
+    /// below the nearest greater or equal C pitch.
+    /// </summary>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    public static NotePitchClass FromSemitonesBelowC([NonNegative, LessThanInteger(12)] int index)
+    {
+        Throw.IfArgNegative(index, nameof(index));
+        Throw.IfArgGreaterThanOrEqualTo(12, index, nameof(index));
+
+        // Convert to A relative: Subtract from 15 (12 so are going up instead of down, then add 3 so A is at 0)
+        // Then mod by 12 (so is in range)
+        return (NotePitchClass)((15 - index) % 12);
     }
     #endregion
 
