@@ -14,7 +14,7 @@ namespace RemTest.Music.MIDI;
 [TestClass]
 public class MIDINotesTest
 {
-    private static readonly ImmutableArray<(NotePitchInfo Pitch, int Number)> MIDINumberPairs
+    private static readonly ImmutableArray<(NotePitch Pitch, int Number)> MIDINumberPairs
         = ImmutableArray.CreateRange(new[]
         {
             // Random tests
@@ -25,8 +25,8 @@ public class MIDINotesTest
 
             // Extrema and important cases
             (MIDINotes.MaxPitch, MIDINotes.MaxNumber),
-            (NotePitchInfo.ConcertPitch, 69),
-            (NotePitchInfo.C0, 12),
+            (NotePitch.ConcertPitch, 69),
+            (NotePitch.C0, 12),
             (MIDINotes.MinPitch, MIDINotes.MinNumber),
 
             // Out-of-range cases
@@ -49,7 +49,7 @@ public class MIDINotesTest
     }
 
     /// <summary>
-    /// Tests the <see cref="MIDINotes.MIDINumber(NotePitchInfo)"/> extension method.
+    /// Tests the <see cref="MIDINotes.MIDINumber(NotePitch)"/> extension method.
     /// </summary>
     [TestMethod]
     public void TestMIDINumber()
@@ -61,7 +61,7 @@ public class MIDINotesTest
     }
 
     /// <summary>
-    /// Tests the <see cref="MIDINotes.MIDINumberInRange(NotePitchInfo)"/> extension method.
+    /// Tests the <see cref="MIDINotes.MIDINumberInRange(NotePitch)"/> extension method.
     /// </summary>
     [TestMethod]
     public void TestMIDINumberInRange()
@@ -82,7 +82,7 @@ public class MIDINotesTest
     }
 
     /// <summary>
-    /// Tests the <see cref="MIDINotes.TryGetMIDINumberInRange(NotePitchInfo, out int)"/> extension method.
+    /// Tests the <see cref="MIDINotes.TryGetMIDINumberInRange(NotePitch, out int)"/> extension method.
     /// </summary>
     [TestMethod]
     public void TestTryGetMIDINumberInRange()

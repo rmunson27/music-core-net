@@ -27,9 +27,9 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
     public Accidental Accidental => Spelling.Accidental;
 
     /// <summary>
-    /// Gets info for the pitch this note represents.
+    /// Gets the pitch this note represents.
     /// </summary>
-    public NotePitchInfo Pitch
+    public NotePitch Pitch
     {
         get
         {

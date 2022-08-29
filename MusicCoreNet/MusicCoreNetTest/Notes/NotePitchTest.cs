@@ -8,22 +8,22 @@ using System.Threading.Tasks;
 namespace RemTest.Music;
 
 /// <summary>
-/// Tests of the <see cref="NotePitchInfo"/> struct.
+/// Tests of the <see cref="NotePitch"/> struct.
 /// </summary>
 [TestClass]
-public class NotePitchInfoTest
+public class NotePitchTest
 {
-    private static readonly ImmutableArray<(NotePitchInfo Pitch, int Index)> C0IndexPairs
+    private static readonly ImmutableArray<(NotePitch Pitch, int Index)> C0IndexPairs
         = ImmutableArray.CreateRange(new[]
         {
-            (NotePitchInfo.C0, 0),
+            (NotePitch.C0, 0),
             (NotePitchClass.A.WithOctave(4), 57),
             (NotePitchClass.GA.WithOctave(9), 116),
             (NotePitchClass.B.WithOctave(6), 83),
         });
 
     /// <summary>
-    /// Tests the <see cref="NotePitchInfo.FromC0Index(int)"/> factory method.
+    /// Tests the <see cref="NotePitch.FromC0Index(int)"/> factory method.
     /// </summary>
     [TestMethod]
     public void TestFromC0Index()
@@ -31,13 +31,13 @@ public class NotePitchInfoTest
         foreach (var (Pitch, Index) in C0IndexPairs)
         {
             Assert.AreEqual(
-                Pitch, NotePitchInfo.FromC0Index(Index),
-                $"Invalid {nameof(NotePitchInfo.FromC0Index)} result for index {Index}.");
+                Pitch, NotePitch.FromC0Index(Index),
+                $"Invalid {nameof(NotePitch.FromC0Index)} result for index {Index}.");
         }
     }
 
     /// <summary>
-    /// Tests the <see cref="NotePitchInfo.C0Index"/> property.
+    /// Tests the <see cref="NotePitch.C0Index"/> property.
     /// </summary>
     [TestMethod]
     public void TestC0Index()
@@ -49,17 +49,17 @@ public class NotePitchInfoTest
     }
 
     /// <summary>
-    /// Tests the half-step addition operator provided by the <see cref="NotePitchInfo"/> struct.
+    /// Tests the half-step addition operator provided by the <see cref="NotePitch"/> struct.
     /// </summary>
     [TestMethod]
     public void TestAddition()
     {
-        Assert.AreEqual(NotePitchClass.B.WithOctave(4), NotePitchInfo.ConcertPitch + 2);
+        Assert.AreEqual(NotePitchClass.B.WithOctave(4), NotePitch.ConcertPitch + 2);
         Assert.AreEqual(NotePitchClass.DE.WithOctave(6), NotePitchClass.C.WithOctave(4) + 27);
     }
 
     /// <summary>
-    /// Tests the <see cref="NotePitchInfo.Frequency"/> method.
+    /// Tests the <see cref="NotePitch.Frequency"/> method.
     /// </summary>
     [TestMethod]
     public void TestFrequency()
@@ -81,7 +81,7 @@ public class NotePitchInfoTest
         Assert.AreEqual(24.50, NotePitchClass.G.WithOctave(0).Frequency, delta);
         Assert.AreEqual(207.65, NotePitchClass.GA.WithOctave(3).Frequency, delta);
 
-        Assert.AreEqual(440.0, NotePitchInfo.ConcertPitch.Frequency); // Should be exact
+        Assert.AreEqual(440.0, NotePitch.ConcertPitch.Frequency); // Should be exact
 
         // Test extreme values
         Assert.AreEqual(8.18, NotePitchClass.C.WithOctave(-1).Frequency, delta);
@@ -89,13 +89,13 @@ public class NotePitchInfoTest
     }
 
     /// <summary>
-    /// Tests the difference subtraction operator provided by the <see cref="NotePitchInfo"/> struct.
+    /// Tests the difference subtraction operator provided by the <see cref="NotePitch"/> struct.
     /// </summary>
     [TestMethod]
     public void TestDifference()
     {
-        Assert.AreEqual(0, NotePitchInfo.ConcertPitch - NotePitchInfo.ConcertPitch);
-        Assert.AreEqual(10, NotePitchInfo.ConcertPitch - NotePitchClass.B.WithOctave(3));
+        Assert.AreEqual(0, NotePitch.ConcertPitch - NotePitch.ConcertPitch);
+        Assert.AreEqual(10, NotePitch.ConcertPitch - NotePitchClass.B.WithOctave(3));
         Assert.AreEqual(10, NotePitchClass.C.WithOctave(2) - NotePitchClass.D.WithOctave(1));
         Assert.AreEqual(-16, NotePitchClass.DE.WithOctave(4) - NotePitchClass.G.WithOctave(5));
         Assert.AreEqual(-28, NotePitchClass.F.WithOctave(4) - NotePitchClass.A.WithOctave(6));

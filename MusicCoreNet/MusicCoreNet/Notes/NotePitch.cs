@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 namespace Rem.Music;
 
 /// <summary>
-/// Represents information for a pitch that can be represented by a note.
+/// Represents a pitch that can be represented by a note.
 /// </summary>
 /// <param name="Class">The class of the represented pitch.</param>
 /// <param name="Octave">The octave of the represented pitch.</param>
-public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : IComparable<NotePitchInfo>
+public readonly record struct NotePitch(NotePitchClass Class, int Octave) : IComparable<NotePitch>
 {
     #region Constants
     /// <summary>
@@ -21,12 +21,12 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
     /// <remarks>
     /// As indicated by the name of this field, the class of this pitch is <see cref="NotePitchClass.C"/>.
     /// </remarks>
-    public static readonly NotePitchInfo C0 = new(NotePitchClass.C, 0);
+    public static readonly NotePitch C0 = new(NotePitchClass.C, 0);
 
     /// <summary>
     /// Pitch info for the standard concert pitch (A440).
     /// </summary>
-    public static readonly NotePitchInfo ConcertPitch = new(NotePitchClass.A, 4);
+    public static readonly NotePitch ConcertPitch = new(NotePitchClass.A, 4);
 
     /// <summary>
     /// The frequency of the standard concert pitch (A440).
@@ -50,13 +50,13 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
     #region Methods
     #region Factory
     /// <summary>
-    /// Creates a new <see cref="NotePitchInfo"/> from the corresponding index relative to <see cref="C0"/>.
+    /// Creates a new <see cref="NotePitch"/> from the corresponding index relative to <see cref="C0"/>.
     /// </summary>
     /// <param name="Index"></param>
     /// <returns></returns>
     /// <seealso cref="C0"/>
     /// <seealso cref="C0Index"/>
-    public static NotePitchInfo FromC0Index(int Index)
+    public static NotePitch FromC0Index(int Index)
     {
         var octave = Maths.FloorDivRem(Index, 12, out var classCRelativeIndex);
         return new(NotePitchClass.FromSemitonesAboveC(classCRelativeIndex), octave);
@@ -65,37 +65,37 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
 
     #region Arithmetic
     /// <summary>
-    /// Adds the number of semitones passed in to the <see cref="NotePitchInfo"/> passed in.
+    /// Adds the number of semitones passed in to the <see cref="NotePitch"/> passed in.
     /// </summary>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static NotePitchInfo operator +(int lhs, NotePitchInfo rhs) => rhs + lhs;
+    public static NotePitch operator +(int lhs, NotePitch rhs) => rhs + lhs;
 
     /// <summary>
-    /// Subtracts the number of semitones passed in to the <see cref="NotePitchInfo"/> passed in.
+    /// Subtracts the number of semitones passed in to the <see cref="NotePitch"/> passed in.
     /// </summary>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static NotePitchInfo operator -(NotePitchInfo lhs, int rhs) => lhs + (-rhs);
+    public static NotePitch operator -(NotePitch lhs, int rhs) => lhs + (-rhs);
 
     /// <summary>
-    /// Adds the number of semitones passed in to the <see cref="NotePitchInfo"/> passed in.
+    /// Adds the number of semitones passed in to the <see cref="NotePitch"/> passed in.
     /// </summary>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static NotePitchInfo operator +(NotePitchInfo lhs, int rhs) => FromC0Index(lhs.C0Index + rhs);
+    public static NotePitch operator +(NotePitch lhs, int rhs) => FromC0Index(lhs.C0Index + rhs);
 
     /// <summary>
-    /// Gets the difference between the pitches represented by the two supplied <see cref="NotePitchInfo"/> instances
+    /// Gets the difference between the pitches represented by the two supplied <see cref="NotePitch"/> instances
     /// in semitones.
     /// </summary>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static int operator -(NotePitchInfo lhs, NotePitchInfo rhs) => lhs.C0Index - rhs.C0Index;
+    public static int operator -(NotePitch lhs, NotePitch rhs) => lhs.C0Index - rhs.C0Index;
     #endregion
 
     #region Comparison
@@ -105,7 +105,7 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static bool operator <=(NotePitchInfo lhs, NotePitchInfo rhs) => lhs.CompareTo(rhs) <= 0;
+    public static bool operator <=(NotePitch lhs, NotePitch rhs) => lhs.CompareTo(rhs) <= 0;
 
     /// <summary>
     /// Determines if <paramref name="lhs"/> is greater than or equal to <paramref name="rhs"/>.
@@ -113,7 +113,7 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static bool operator >=(NotePitchInfo lhs, NotePitchInfo rhs) => lhs.CompareTo(rhs) >= 0;
+    public static bool operator >=(NotePitch lhs, NotePitch rhs) => lhs.CompareTo(rhs) >= 0;
 
     /// <summary>
     /// Determines if <paramref name="lhs"/> is less than <paramref name="rhs"/>.
@@ -121,7 +121,7 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static bool operator <(NotePitchInfo lhs, NotePitchInfo rhs) => lhs.CompareTo(rhs) < 0;
+    public static bool operator <(NotePitch lhs, NotePitch rhs) => lhs.CompareTo(rhs) < 0;
 
     /// <summary>
     /// Determines if <paramref name="lhs"/> is greater than <paramref name="rhs"/>.
@@ -129,10 +129,10 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static bool operator >(NotePitchInfo lhs, NotePitchInfo rhs) => lhs.CompareTo(rhs) > 0;
+    public static bool operator >(NotePitch lhs, NotePitch rhs) => lhs.CompareTo(rhs) > 0;
 
     /// <inheritdoc/>
-    public int CompareTo(NotePitchInfo other) => Octave - other.Octave switch
+    public int CompareTo(NotePitch other) => Octave - other.Octave switch
     {
         < 0 => -1,
         0 => Math.Sign(Class.SemitonesAboveC - other.Class.SemitonesAboveC),

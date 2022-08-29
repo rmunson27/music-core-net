@@ -155,10 +155,10 @@ public readonly record struct NotePitchClass
 
     #region Conversion
     /// <summary>
-    /// Gets the <see cref="NotePitchInfo"/> equivalent to the current instance equipped with the supplied
+    /// Gets the <see cref="NotePitch"/> equivalent to the current instance equipped with the supplied
     /// octave number.
     /// </summary>
-    public NotePitchInfo WithOctave(int Octave) => new(this, Octave);
+    public NotePitch WithOctave(int Octave) => new(this, Octave);
 
     /// <summary>
     /// Implicitly converts a named <see cref="Values"/> instance to a <see cref="NotePitchClass"/>.

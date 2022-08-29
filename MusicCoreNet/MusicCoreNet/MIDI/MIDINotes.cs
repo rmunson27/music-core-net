@@ -20,9 +20,9 @@ public static class MIDINotes
     public const int MaxNumber = 127;
 
     /// <summary>
-    /// A <see cref="NotePitchInfo"/> representing the highest pitch with a valid MIDI number.
+    /// A <see cref="NotePitch"/> representing the highest pitch with a valid MIDI number.
     /// </summary>
-    public static readonly NotePitchInfo MaxPitch = new(NotePitchClass.G, 9);
+    public static readonly NotePitch MaxPitch = new(NotePitchClass.G, 9);
 
     /// <summary>
     /// The minimum value of the MIDI number range.
@@ -30,9 +30,9 @@ public static class MIDINotes
     public const int MinNumber = 0;
 
     /// <summary>
-    /// A <see cref="NotePitchInfo"/> representing the lowest pitch with a valid MIDI number.
+    /// A <see cref="NotePitch"/> representing the lowest pitch with a valid MIDI number.
     /// </summary>
-    public static readonly NotePitchInfo MinPitch = new(NotePitchClass.C, -1);
+    public static readonly NotePitch MinPitch = new(NotePitchClass.C, -1);
     #endregion
 
     #region Extensions
@@ -96,7 +96,7 @@ public static class MIDINotes
     public static int MIDINumber(this Note note) => note.Pitch.MIDINumber();
     #endregion
 
-    #region NotePitchInfo
+    #region NotePitch
     /// <summary>
     /// Gets the MIDI number of the current instance if it is in the MIDI range.
     /// </summary>
@@ -104,16 +104,16 @@ public static class MIDINotes
     /// Even if the instance is not in the MIDI range, the same algorithm will be used to set the value
     /// of <paramref name="number"/>.
     /// </remarks>
-    /// <param name="info"></param>
+    /// <param name="pitch"></param>
     /// <param name="number"></param>
     /// <returns>
     /// Whether or not the current instance was in the MIDI range.
     /// </returns>
     /// <seealso cref="MaxPitch"/>
     /// <seealso cref="MinPitch"/>
-    public static bool TryGetMIDINumberInRange(this NotePitchInfo info, out int number)
+    public static bool TryGetMIDINumberInRange(this NotePitch pitch, out int number)
     {
-        number = info.MIDINumber();
+        number = pitch.MIDINumber();
         return IsNumberInRange(number);
     }
 
@@ -121,10 +121,10 @@ public static class MIDINotes
     /// Gets the MIDI number of the current instance.
     /// </summary>
     /// <remarks>
-    /// Unlike <see cref="MIDINumber(NotePitchInfo)"/>, this method throws an exception if the result is not in the
+    /// Unlike <see cref="MIDINumber(NotePitch)"/>, this method throws an exception if the result is not in the
     /// MIDI range.
     /// </remarks>
-    /// <param name="info"></param>
+    /// <param name="pitch"></param>
     /// <returns>
     /// A MIDI number greater than or equal to <see cref="MinNumber"/> and less than or equal
     /// to <see cref="MaxNumber"/>.
@@ -135,9 +135,9 @@ public static class MIDINotes
     /// <seealso cref="MaxPitch"/>
     /// <seealso cref="MinPitch"/>
     [return: GreaterThanOrEqualToInteger(MinNumber), LessThanOrEqualToInteger(MaxNumber)]
-    public static int MIDINumberInRange(this NotePitchInfo info)
+    public static int MIDINumberInRange(this NotePitch pitch)
     {
-        var result = info.MIDINumber();
+        var result = pitch.MIDINumber();
         return IsNumberInRange(result)
                 ? result
                 : throw new InvalidOperationException($"Pitch is not in the MIDI range.");
@@ -146,11 +146,11 @@ public static class MIDINotes
     /// <summary>
     /// Determines whether or not the current instance is in the MIDI range.
     /// </summary>
-    /// <param name="info"></param>
+    /// <param name="pitch"></param>
     /// <returns></returns>
     /// <seealso cref="MaxPitch"/>
     /// <seealso cref="MinPitch"/>
-    public static bool IsInMIDIRange(this NotePitchInfo info) => IsNumberInRange(info.MIDINumber());
+    public static bool IsInMIDIRange(this NotePitch pitch) => IsNumberInRange(pitch.MIDINumber());
 
     /// <summary>
     /// Gets the MIDI number of the current instance.
@@ -158,24 +158,24 @@ public static class MIDINotes
     /// <remarks>
     /// This will still return an integer outside of the MIDI range if the current instance is outside of the range.
     /// </remarks>
-    /// <param name="info"></param>
+    /// <param name="pitch"></param>
     /// <returns></returns>
     /// <seealso cref="MaxPitch"/>
     /// <seealso cref="MinPitch"/>
-    public static int MIDINumber(this NotePitchInfo info) => info - MinPitch;
+    public static int MIDINumber(this NotePitch pitch) => pitch - MinPitch;
     #endregion
     #endregion
 
     #region Factories
     /// <summary>
-    /// Converts a MIDI number to the equivalent <see cref="NotePitchInfo"/>.
+    /// Converts a MIDI number to the equivalent <see cref="NotePitch"/>.
     /// </summary>
     /// <remarks>
     /// This method will treat numbers not in the MIDI range as well as numbers that are.
     /// </remarks>
     /// <param name="Number"></param>
     /// <returns></returns>
-    public static NotePitchInfo PitchFromNumber(int Number) => NotePitchInfo.FromC0Index(Number + MinPitch.C0Index);
+    public static NotePitch PitchFromNumber(int Number) => NotePitch.FromC0Index(Number + MinPitch.C0Index);
     #endregion
 
     #region Helpers
