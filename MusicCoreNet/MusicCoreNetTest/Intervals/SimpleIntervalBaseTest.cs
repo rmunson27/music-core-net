@@ -14,6 +14,28 @@ namespace RemTest.Music;
 public class SimpleIntervalBaseTest
 {
     /// <summary>
+    /// Tests the <see cref="SimpleIntervalBase.Create(IntervalQuality, SimpleIntervalNumber)"/> method.
+    /// </summary>
+    [TestMethod]
+    public void TestCreate()
+    {
+        // This should not fail
+        Assert.AreEqual(
+            Interval.Augmented().Fifth(),
+            SimpleIntervalBase.Create(IntervalQuality.Augmented(), SimpleIntervalNumber.Fifth));
+
+        Assert.AreEqual(
+            Interval.Minor().Third(),
+            SimpleIntervalBase.Create(IntervalQuality.Minor, SimpleIntervalNumber.Third));
+
+        // These should fail (as they are mismatched)
+        Assert.ThrowsException<ArgumentException>(
+            () => SimpleIntervalBase.Create(IntervalQuality.Major, SimpleIntervalNumber.Fourth));
+        Assert.ThrowsException<ArgumentException>(
+            () => SimpleIntervalBase.Create(IntervalQuality.Perfect, SimpleIntervalNumber.Third));
+    }
+
+    /// <summary>
     /// A series of pairs of <see cref="SimpleIntervalBase"/> instances and their associated perfect-unison-based
     /// circle of fifths indexes.
     /// </summary>

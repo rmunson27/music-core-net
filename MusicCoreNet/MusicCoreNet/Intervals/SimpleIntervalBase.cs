@@ -87,7 +87,7 @@ public readonly record struct SimpleIntervalBase
     /// </exception>
     public static SimpleIntervalBase Create(IntervalQuality Quality, SimpleIntervalNumber Number)
     {
-        if (Quality.Perfectability != Number.Perfectability)
+        if (!Quality.HasPerfectability(Number.Perfectability))
         {
             throw Interval.PerfectabilityMismatch(Number.Perfectability);
         }

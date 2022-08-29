@@ -223,6 +223,19 @@ public readonly record struct IntervalQuality
 
     #region Classification
     #region Perfectability
+    /// <summary>
+    /// Determines whether or not this instance can represent qualities of the given interval perfectability.
+    /// </summary>
+    /// <remarks>
+    /// This method will return <see langword="true"/> for both <see cref="Perfectable"/> and
+    /// <see cref="Imperfectable"/> if the current instance is augmented or diminished.
+    /// </remarks>
+    /// <param name="perfectability"></param>
+    /// <returns></returns>
+    public bool HasPerfectability(IntervalPerfectability perfectability) => perfectability == Perfectable
+                                                                                ? IsPerfectable()
+                                                                                : IsImperfectable();
+                                                                
     #region Perfectable
     /// <summary>
     /// Gets whether or not this instance can describe perfectable intervals, setting the perfectable quality in an
