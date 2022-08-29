@@ -25,6 +25,26 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     internal int CircleOfFifthsIndexRelativeToC => Letter.CircleOfFifthsIndexRelativeToC + Accidental.IntValue * 7;
 
     /// <summary>
+    /// Gets the number of half steps a note spelled with this instance is above the 'C' pitch in its octave.
+    /// </summary>
+    /// <remarks>
+    /// This property will return a value greater than or equal to 12 if the accidental is sharp enough to raise the
+    /// pitch of a non-'C' note above the 'C' pitch in the octave above, and will return a negative value if the
+    /// accidental is flat enough to lower the pitch of a non-'C' note below the 'C' pitch in its octave.
+    /// </remarks>
+    public int HalfStepsAboveC => Letter.HalfStepsAboveC + Accidental.IntValue;
+
+    /// <summary>
+    /// Gets the number of half steps a note spelled with this instance is below the 'C' pitch in the octave above.
+    /// </summary>
+    /// <remarks>
+    /// This property will return a negative value if the accidental is sharp enough to raise the pitch of a non-'C'
+    /// note above the 'C' pitch in the octave above, and will return a value greater than or equal to 12 if the
+    /// accidental is flat enough to lower the pitch of a non-'C' note below the 'C' pitch in its octave.
+    /// </remarks>
+    public int HalfStepsBelowC => Letter.HalfStepsBelowC - Accidental.IntValue;
+
+    /// <summary>
     /// Gets the pitch class of this instance.
     /// </summary>
     public NotePitchClass PitchClass

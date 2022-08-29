@@ -14,6 +14,44 @@ namespace RemTest.Music;
 public class NoteSpellingTest
 {
     /// <summary>
+    /// Tests the <see cref="NoteSpelling.HalfStepsAboveC"/> property.
+    /// </summary>
+    [TestMethod]
+    public void TestHalfStepsAboveC()
+    {
+        Assert.AreEqual(8, Note.A().Flat().HalfStepsAboveC);
+        Assert.AreEqual(6, Note.F().Sharp().HalfStepsAboveC);
+        Assert.AreEqual(0, Note.C().Natural().HalfStepsAboveC);
+
+        // Should be in the negative range
+        Assert.AreEqual(-1, Note.C().Flat().HalfStepsAboveC);
+        Assert.AreEqual(-2, Note.D().Flat(4).HalfStepsAboveC);
+
+        // Should be out of range of the octave
+        Assert.AreEqual(12, Note.B().Sharp().HalfStepsAboveC);
+        Assert.AreEqual(13, Note.A().Sharp(4).HalfStepsAboveC);
+    }
+
+    /// <summary>
+    /// Tests the <see cref="NoteSpelling.HalfStepsBelowC"/> property.
+    /// </summary>
+    [TestMethod]
+    public void TestHalfStepsBelowC()
+    {
+        Assert.AreEqual(4, Note.A().Flat().HalfStepsBelowC);
+        Assert.AreEqual(6, Note.F().Sharp().HalfStepsBelowC);
+        Assert.AreEqual(0, Note.C().Natural().HalfStepsBelowC);
+
+        // Should be out of range of the octave
+        Assert.AreEqual(12, Note.E().Flat(4).HalfStepsBelowC);
+        Assert.AreEqual(13, Note.D().Flat(3).HalfStepsBelowC);
+
+        // Should be in the negative range
+        Assert.AreEqual(-1, Note.B().Sharp(2).HalfStepsBelowC);
+        Assert.AreEqual(-2, Note.A().Sharp(5).HalfStepsBelowC);
+    }
+
+    /// <summary>
     /// A list of tuples containing two <see cref="NoteSpelling"/> instances and a <see cref="SimpleIntervalBase"/>
     /// representing the difference between the first and the second.
     /// </summary>
