@@ -33,9 +33,7 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
     {
         get
         {
-            var octaveFixup = Maths.FloorDivRem(
-                                Spelling.Letter.HalfStepsAboveC + Spelling.Accidental.IntValue, 12,
-                                out var cRelativeSpellingValue);
+            var octaveFixup = Maths.FloorDivRem(Spelling.HalfStepsAboveC, 12, out var cRelativeSpellingValue);
             return new(NotePitchClass.FromSemitonesAboveC(cRelativeSpellingValue), Octave + octaveFixup);
         }
     }
