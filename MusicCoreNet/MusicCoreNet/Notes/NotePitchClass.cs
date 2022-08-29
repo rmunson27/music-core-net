@@ -82,18 +82,18 @@ public readonly record struct NotePitchClass
     [NamedEnum] public Values Value { get; }
 
     /// <summary>
-    /// Gets the number of semitones from a pitch represented by the current instance down to the nearest lesser or
-    /// equal C pitch.
+    /// Gets the number of semitones pitches described by this instance are above the nearest lesser or equal
+    /// C pitch.
     /// </summary>
-    public int SemitonesDownToC
+    public int SemitonesAboveC
         // Convert from A relative: +9 (-3 so C is at 0, +12 so is positive), %12 (so is in range)
         => ((int)Value + 9) % 12;
 
     /// <summary>
-    /// Gets the number of semitones from a pitch represented by the current instance down to the nearest lesser or
-    /// equal C pitch.
+    /// Gets the number of semitones pitches described by this instance are below the nearest greater or equal
+    /// C pitch.
     /// </summary>
-    public int SemitonesUpToC
+    public int SemitonesBelowC
         // Convert from A relative: Subtract from 15 (12 so are going up instead of down, then subtract -3 so C is at 0)
         // Then mod by 12 (so is in range)
         => (15 - (int)Value) % 12;
@@ -116,14 +116,19 @@ public readonly record struct NotePitchClass
     #region Methods
     #region Factory
     /// <summary>
-    /// Creates a new <see cref="NotePitchClass"/> that represents a pitch that is the given number of semitones
+    /// Creates a new <see cref="NotePitchClass"/> that represents pitches that are the given number of semitones
     /// above the nearest lesser or equal C pitch.
     /// </summary>
     /// <param name="index"></param>
     /// <returns></returns>
-    public static NotePitchClass FromSemitonesDownToC(int index)
+    public static NotePitchClass FromSemitonesAboveC([NonNegative, LessThanInteger(12)] int index)
+    {
+        Throw.IfArgNegative(index, nameof(index));
+        Throw.IfArgGreaterThanOrEqualTo(12, index, nameof(index));
+
         // Convert to A relative: +15 (+3 so A is at 0, +12 so is positive), %12 (so is in range)
-        => (NotePitchClass)((index + 15) % 12);
+        return (NotePitchClass)((index + 15) % 12);
+    }
     #endregion
 
     #region Equality

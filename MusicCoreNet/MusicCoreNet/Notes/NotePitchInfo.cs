@@ -44,7 +44,7 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
     /// Gets an integer index for this instance relative to the pitch <see cref="C0"/>, the lowest pitch in the
     /// zero octave.
     /// </summary>
-    public int C0Index => Class.SemitonesDownToC + Octave * 12;
+    public int C0Index => Class.SemitonesAboveC + Octave * 12;
     #endregion
 
     #region Methods
@@ -59,7 +59,7 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
     public static NotePitchInfo FromC0Index(int Index)
     {
         var octave = Maths.FloorDivRem(Index, 12, out var classCRelativeIndex);
-        return new(NotePitchClass.FromSemitonesDownToC(classCRelativeIndex), octave);
+        return new(NotePitchClass.FromSemitonesAboveC(classCRelativeIndex), octave);
     }
     #endregion
 
@@ -135,7 +135,7 @@ public readonly record struct NotePitchInfo(NotePitchClass Class, int Octave) : 
     public int CompareTo(NotePitchInfo other) => Octave - other.Octave switch
     {
         < 0 => -1,
-        0 => Math.Sign(Class.SemitonesDownToC - other.Class.SemitonesDownToC),
+        0 => Math.Sign(Class.SemitonesAboveC - other.Class.SemitonesAboveC),
         > 0 => 1,
     };
     #endregion

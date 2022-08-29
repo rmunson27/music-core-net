@@ -34,9 +34,9 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
         get
         {
             var octaveFixup = Maths.FloorDivRem(
-                                Spelling.Letter.HalfStepsDownToC + Spelling.Accidental.IntValue, 12,
+                                Spelling.Letter.HalfStepsAboveC + Spelling.Accidental.IntValue, 12,
                                 out var cRelativeSpellingValue);
-            return new(NotePitchClass.FromSemitonesDownToC(cRelativeSpellingValue), Octave + octaveFixup);
+            return new(NotePitchClass.FromSemitonesAboveC(cRelativeSpellingValue), Octave + octaveFixup);
         }
     }
     #endregion
@@ -197,7 +197,7 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
 
         if (accidentalDiff < 0) // Accidental is lower, so letter is higher
         {
-            var octaveRelativeHalfSteps = Letter.HalfStepsUpToC + accidentalDiff;
+            var octaveRelativeHalfSteps = Letter.HalfStepsBelowC + accidentalDiff;
             octave -= Maths.FloorDiv(octaveRelativeHalfSteps, 12);
 
             // If we went up to C (rather than already being at C) add an octave since we have moved up to the
@@ -206,7 +206,7 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
         }
         else if (accidentalDiff > 0) // Accidental is higher, so letter is lower
         {
-            var octaveRelativeHalfSteps = Letter.HalfStepsDownToC - accidentalDiff;
+            var octaveRelativeHalfSteps = Letter.HalfStepsAboveC - accidentalDiff;
             octave += Maths.FloorDiv(octaveRelativeHalfSteps, 12);
         }
 
