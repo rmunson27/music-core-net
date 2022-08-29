@@ -213,5 +213,25 @@ public readonly record struct Interval(SimpleIntervalBase Base, [NonNegative] in
     public static DiminishedIntervalBuilder Diminished([Positive] int Degree = 1)
         => new(Throw.IfArgNotPositive(Degree, nameof(Degree)));
     #endregion
+
+    #region Helpers
+    /// <summary>
+    /// Creates an exception for interval quality and number arguments with mismatched perfectability.
+    /// </summary>
+    /// <param name="numberPerfectability">
+    /// The perfectability of the interval number in question.
+    /// <para/>
+    /// The quality perfectability will be inferred from this value.
+    /// </param>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static ArgumentException PerfectabilityMismatch(IntervalPerfectability numberPerfectability)
+        => new(
+            $"Quality perfectability ({Opposite(numberPerfectability).ToString().ToLower()}) did not match"
+                + $" number perfectability ({numberPerfectability.ToString().ToLower()}).");
+
+    private static IntervalPerfectability Opposite(IntervalPerfectability p)
+        => p == Perfectable ? Imperfectable : Perfectable;
+    #endregion
     #endregion
 }

@@ -89,9 +89,7 @@ public readonly record struct SimpleIntervalBase
     {
         if (Quality.Perfectability != Number.Perfectability)
         {
-            throw new ArgumentException(
-                $"Quality perfectability '{Quality.Perfectability}' did not match number perfectability "
-                    + $" '{Number.Perfectability}'.");
+            throw Interval.PerfectabilityMismatch(Number.Perfectability);
         }
 
         return new(Quality, Number);
