@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RemTest.Music.Notes;
+namespace RemTest.Music;
 
 /// <summary>
 /// Tests of the <see cref="NotePitchClass"/> struct.
