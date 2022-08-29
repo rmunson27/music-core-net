@@ -18,7 +18,6 @@ namespace Rem.Music;
 /// </remarks>
 /// <param name="Letter">The letter of the note spelling to create.</param>
 /// <param name="Accidental">The accidental of the note spelling to create.</param>
-/// <exception cref="InvalidEnumArgumentException"><paramref name="Letter"/> was an unnamed enum value.</exception>
 public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Accidental = default)
 {
     #region Properties And Fields
