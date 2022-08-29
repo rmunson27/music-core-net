@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rem.Core.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -29,6 +30,7 @@ public readonly struct AugmentedIntervalBuilder
     #endregion
 
     #region Builder Methods
+    #region SimpleIntervalBase
     #region Perfectable
     /// <summary>
     /// Creates a fourth with the augmented quality represented by this instance.
@@ -36,7 +38,7 @@ public readonly struct AugmentedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Fourth()
-        => new(PerfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Fourth);
+        => new(IntervalQuality.Augmented(Degree), SimpleIntervalNumber.Fourth);
 
     /// <summary>
     /// Creates a unison with the augmented quality represented by this instance.
@@ -44,7 +46,7 @@ public readonly struct AugmentedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Unison()
-        => new(PerfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Unison);
+        => new(IntervalQuality.Augmented(Degree), SimpleIntervalNumber.Unison);
 
     /// <summary>
     /// Creates a fifth with the augmented quality represented by this instance.
@@ -52,7 +54,7 @@ public readonly struct AugmentedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Fifth()
-        => new(PerfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Fifth);
+        => new(IntervalQuality.Augmented(Degree), SimpleIntervalNumber.Fifth);
     #endregion
 
     #region Imperfectable
@@ -62,7 +64,7 @@ public readonly struct AugmentedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Second()
-        => new(ImperfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Second);
+        => new(IntervalQuality.Augmented(Degree), SimpleIntervalNumber.Second);
 
     /// <summary>
     /// Creates a sixth with the augmented quality represented by this instance.
@@ -70,7 +72,7 @@ public readonly struct AugmentedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Sixth()
-        => new(ImperfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Sixth);
+        => new(IntervalQuality.Augmented(Degree), SimpleIntervalNumber.Sixth);
 
     /// <summary>
     /// Creates a third with the augmented quality represented by this instance.
@@ -78,7 +80,7 @@ public readonly struct AugmentedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Third()
-        => new(ImperfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Third);
+        => new(IntervalQuality.Augmented(Degree), SimpleIntervalNumber.Third);
 
     /// <summary>
     /// Creates a seventh with the augmented quality represented by this instance.
@@ -86,7 +88,27 @@ public readonly struct AugmentedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Seventh()
-        => new(ImperfectableIntervalQuality.Augmented(Degree), SimpleIntervalNumber.Seventh);
+        => new(IntervalQuality.Augmented(Degree), SimpleIntervalNumber.Seventh);
+    #endregion
+    #endregion
+
+    #region Interval
+    /// <summary>
+    /// Creates an interval with the augmented quality represented by this instance and the number passed in.
+    /// </summary>
+    /// <param name="Number"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="Number"/> was not positive.</exception>
+    public Interval WithNumber([Positive] int Number)
+        => WithNumber(new(Throw.IfArgNotPositive(Number, nameof(Number))));
+
+    /// <summary>
+    /// Creates an interval with the augmented quality represented by this instance and the number passed in.
+    /// </summary>
+    /// <param name="Number"></param>
+    /// <returns></returns>
+    public Interval WithNumber(IntervalNumber Number)
+        => new(new(IntervalQuality.Augmented(Degree), Number.Base), Number.AdditionalOctaves);
     #endregion
     #endregion
 }
@@ -113,6 +135,7 @@ public readonly struct DiminishedIntervalBuilder
     #endregion
 
     #region Builder Methods
+    #region SimpleIntervalBase
     #region Perfectable
     /// <summary>
     /// Creates a fourth with the diminished quality represented by this instance.
@@ -120,7 +143,7 @@ public readonly struct DiminishedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Fourth()
-        => new(PerfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Fourth);
+        => new(IntervalQuality.Diminished(Degree), SimpleIntervalNumber.Fourth);
 
     /// <summary>
     /// Creates a unison with the diminished quality represented by this instance.
@@ -128,7 +151,7 @@ public readonly struct DiminishedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Unison()
-        => new(PerfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Unison);
+        => new(IntervalQuality.Diminished(Degree), SimpleIntervalNumber.Unison);
 
     /// <summary>
     /// Creates a fifth with the diminished quality represented by this instance.
@@ -136,7 +159,7 @@ public readonly struct DiminishedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Fifth()
-        => new(PerfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Fifth);
+        => new(IntervalQuality.Diminished(Degree), SimpleIntervalNumber.Fifth);
     #endregion
 
     #region Imperfectable
@@ -146,7 +169,7 @@ public readonly struct DiminishedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Second()
-        => new(ImperfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Second);
+        => new(IntervalQuality.Diminished(Degree), SimpleIntervalNumber.Second);
 
     /// <summary>
     /// Creates a sixth with the diminished quality represented by this instance.
@@ -154,7 +177,7 @@ public readonly struct DiminishedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Sixth()
-        => new(ImperfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Sixth);
+        => new(IntervalQuality.Diminished(Degree), SimpleIntervalNumber.Sixth);
 
     /// <summary>
     /// Creates a third with the diminished quality represented by this instance.
@@ -162,7 +185,7 @@ public readonly struct DiminishedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Third()
-        => new(ImperfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Third);
+        => new(IntervalQuality.Diminished(Degree), SimpleIntervalNumber.Third);
 
     /// <summary>
     /// Creates a seventh with the diminished quality represented by this instance.
@@ -170,7 +193,27 @@ public readonly struct DiminishedIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Seventh()
-        => new(ImperfectableIntervalQuality.Diminished(Degree), SimpleIntervalNumber.Seventh);
+        => new(IntervalQuality.Diminished(Degree), SimpleIntervalNumber.Seventh);
+    #endregion
+    #endregion
+
+    #region Interval
+    /// <summary>
+    /// Creates an interval with the diminished quality represented by this instance and the number passed in.
+    /// </summary>
+    /// <param name="Number"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="Number"/> was not positive.</exception>
+    public Interval WithNumber([Positive] int Number)
+        => WithNumber(new(Throw.IfArgNotPositive(Number, nameof(Number))));
+
+    /// <summary>
+    /// Creates an interval with the diminished quality represented by this instance and the number passed in.
+    /// </summary>
+    /// <param name="Number"></param>
+    /// <returns></returns>
+    public Interval WithNumber(IntervalNumber Number)
+        => new(new(IntervalQuality.Diminished(Degree), Number.Base), Number.AdditionalOctaves);
     #endregion
     #endregion
 }
@@ -180,13 +223,14 @@ public readonly struct DiminishedIntervalBuilder
 /// </summary>
 public readonly struct MajorIntervalBuilder
 {
+    #region SimpleIntervalBase
     /// <summary>
     /// Creates a major second.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Second()
-        => new(ImperfectableIntervalQuality.Major, SimpleIntervalNumber.Second);
+        => new(IntervalQuality.Major, SimpleIntervalNumber.Second);
 
     /// <summary>
     /// Creates a major third.
@@ -194,7 +238,7 @@ public readonly struct MajorIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Third()
-        => new(ImperfectableIntervalQuality.Major, SimpleIntervalNumber.Third);
+        => new(IntervalQuality.Major, SimpleIntervalNumber.Third);
 
     /// <summary>
     /// Creates a major sixth.
@@ -202,7 +246,7 @@ public readonly struct MajorIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Sixth()
-        => new(ImperfectableIntervalQuality.Major, SimpleIntervalNumber.Sixth);
+        => new(IntervalQuality.Major, SimpleIntervalNumber.Sixth);
 
     /// <summary>
     /// Creates a major seventh.
@@ -210,7 +254,36 @@ public readonly struct MajorIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Seventh()
-        => new(ImperfectableIntervalQuality.Major, SimpleIntervalNumber.Seventh);
+        => new(IntervalQuality.Major, SimpleIntervalNumber.Seventh);
+    #endregion
+
+    #region Interval
+    /// <summary>
+    /// Creates a major interval with the number passed in.
+    /// </summary>
+    /// <param name="Number"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="Number"/> was not an imperfectable interval number.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="Number"/> was not positive.</exception>
+    public Interval WithNumber([Positive] int Number)
+        => WithNumber(new(Throw.IfArgNotPositive(Number, nameof(Number))));
+
+    /// <summary>
+    /// Creates a major interval with the number passed in.
+    /// </summary>
+    /// <param name="Number"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="Number"/> was not an imperfectable interval number.
+    /// </exception>
+    public Interval WithNumber(IntervalNumber Number)
+    {
+        if (Number.Perfectability != Imperfectable) throw Interval.PerfectabilityMismatch(Perfectable);
+        return new(new(IntervalQuality.Major, Number.Base), Number.AdditionalOctaves);
+    }
+    #endregion
 }
 
 /// <summary>
@@ -218,13 +291,14 @@ public readonly struct MajorIntervalBuilder
 /// </summary>
 public readonly struct MinorIntervalBuilder
 {
+    #region SimpleIntervalBase
     /// <summary>
     /// Creates a minor second.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Second()
-        => new(ImperfectableIntervalQuality.Minor, SimpleIntervalNumber.Second);
+        => new(IntervalQuality.Minor, SimpleIntervalNumber.Second);
 
     /// <summary>
     /// Creates a minor third.
@@ -232,7 +306,7 @@ public readonly struct MinorIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Third()
-        => new(ImperfectableIntervalQuality.Minor, SimpleIntervalNumber.Third);
+        => new(IntervalQuality.Minor, SimpleIntervalNumber.Third);
 
     /// <summary>
     /// Creates a minor sixth.
@@ -240,7 +314,7 @@ public readonly struct MinorIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Sixth()
-        => new(ImperfectableIntervalQuality.Minor, SimpleIntervalNumber.Sixth);
+        => new(IntervalQuality.Minor, SimpleIntervalNumber.Sixth);
 
     /// <summary>
     /// Creates a minor seventh.
@@ -248,7 +322,36 @@ public readonly struct MinorIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Seventh()
-        => new(ImperfectableIntervalQuality.Minor, SimpleIntervalNumber.Seventh);
+        => new(IntervalQuality.Minor, SimpleIntervalNumber.Seventh);
+    #endregion
+
+    #region Interval
+    /// <summary>
+    /// Creates a minor interval with the number passed in.
+    /// </summary>
+    /// <param name="Number"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="Number"/> was not an imperfectable interval number.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="Number"/> was not positive.</exception>
+    public Interval WithNumber([Positive] int Number)
+        => WithNumber(new(Throw.IfArgNotPositive(Number, nameof(Number))));
+
+    /// <summary>
+    /// Creates a minor interval with the number passed in.
+    /// </summary>
+    /// <param name="Number"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="Number"/> was not an imperfectable interval number.
+    /// </exception>
+    public Interval WithNumber(IntervalNumber Number)
+    {
+        if (Number.Perfectability != Imperfectable) throw Interval.PerfectabilityMismatch(Perfectable);
+        return new(new(IntervalQuality.Minor, Number.Base), Number.AdditionalOctaves);
+    }
+    #endregion
 }
 
 /// <summary>
@@ -256,13 +359,14 @@ public readonly struct MinorIntervalBuilder
 /// </summary>
 public readonly struct PerfectIntervalBuilder
 {
+    #region SimpleIntervalBase
     /// <summary>
     /// Creates a perfect fourth.
     /// </summary>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Fourth()
-        => new(PerfectableIntervalQuality.Perfect, SimpleIntervalNumber.Fourth);
+        => new(IntervalQuality.Perfect, SimpleIntervalNumber.Fourth);
 
     /// <summary>
     /// Creates a perfect unison.
@@ -270,7 +374,7 @@ public readonly struct PerfectIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Unison()
-        => new(PerfectableIntervalQuality.Perfect, SimpleIntervalNumber.Unison);
+        => new(IntervalQuality.Perfect, SimpleIntervalNumber.Unison);
 
     /// <summary>
     /// Creates a perfect fifth.
@@ -278,6 +382,35 @@ public readonly struct PerfectIntervalBuilder
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Fifth()
-        => new(PerfectableIntervalQuality.Perfect, SimpleIntervalNumber.Fifth);
+        => new(IntervalQuality.Perfect, SimpleIntervalNumber.Fifth);
+    #endregion
+
+    #region Interval
+    /// <summary>
+    /// Creates a perfect interval with the number passed in.
+    /// </summary>
+    /// <param name="Number"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="Number"/> was not a perfectable interval number.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="Number"/> was not positive.</exception>
+    public Interval WithNumber([Positive] int Number)
+        => WithNumber(new(Throw.IfArgNotPositive(Number, nameof(Number))));
+
+    /// <summary>
+    /// Creates a perfect interval with the number passed in.
+    /// </summary>
+    /// <param name="Number"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="Number"/> was not a perfectable interval number.
+    /// </exception>
+    public Interval WithNumber(IntervalNumber Number)
+    {
+        if (Number.Perfectability != Perfectable) throw Interval.PerfectabilityMismatch(Imperfectable);
+        return new(new(IntervalQuality.Perfect, Number.Base), Number.AdditionalOctaves);
+    }
+    #endregion
 }
 
