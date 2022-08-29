@@ -136,24 +136,6 @@ public readonly record struct NoteLetter
 
     #region Conversion
     /// <summary>
-    /// Explicitly converts a <see cref="NoteLetter"/> to a <see cref="byte"/> (this cast cannot fail).
-    /// </summary>
-    /// <param name="letter"></param>
-    public static explicit operator byte(NoteLetter letter) => (byte)letter.Value;
-
-    /// <summary>
-    /// Explicitly converts a <see cref="byte"/> to a <see cref="NoteLetter"/>.
-    /// </summary>
-    /// <param name="letter"></param>
-    /// <exception cref="InvalidCastException">
-    /// The <see cref="byte"/> did not represent a <see cref="NoteLetter"/> value.
-    /// </exception>
-    public static explicit operator NoteLetter(byte b)
-        => Enums.IsDefined((Values)b)
-            ? new((Values)b)
-            : throw new InvalidCastException($"Argument did not represent a {nameof(NoteLetter)}.");
-
-    /// <summary>
     /// Implicitly converts a named <see cref="Values"/> instance to a <see cref="NoteLetter"/>.
     /// </summary>
     /// <param name="Value"></param>

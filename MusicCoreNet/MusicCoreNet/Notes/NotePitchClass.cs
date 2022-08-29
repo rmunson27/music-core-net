@@ -161,24 +161,6 @@ public readonly record struct NotePitchClass
     public NotePitchInfo WithOctave(int Octave) => new(this, Octave);
 
     /// <summary>
-    /// Explicitly converts a <see cref="NotePitchClass"/> to a <see cref="byte"/> (this cast cannot fail).
-    /// </summary>
-    /// <param name="letter"></param>
-    public static explicit operator byte(NotePitchClass letter) => (byte)letter.Value;
-
-    /// <summary>
-    /// Explicitly converts a <see cref="byte"/> to a <see cref="NotePitchClass"/>.
-    /// </summary>
-    /// <param name="letter"></param>
-    /// <exception cref="InvalidCastException">
-    /// The <see cref="byte"/> did not represent a <see cref="NotePitchClass"/> value.
-    /// </exception>
-    public static explicit operator NotePitchClass(byte b)
-        => Enums.IsDefined((Values)b)
-            ? new((Values)b)
-            : throw new InvalidCastException($"Argument did not represent a {nameof(NotePitchClass)}.");
-
-    /// <summary>
     /// Implicitly converts a named <see cref="Values"/> instance to a <see cref="NotePitchClass"/>.
     /// </summary>
     /// <param name="Value"></param>
