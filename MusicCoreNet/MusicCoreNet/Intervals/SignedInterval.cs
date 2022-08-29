@@ -37,6 +37,11 @@ public readonly record struct SignedInterval
 
     #region Properties And Fields
     /// <summary>
+    /// Gets the perfectability of this instance.
+    /// </summary>
+    public IntervalPerfectability Perfectability => _interval.Perfectability;
+
+    /// <summary>
     /// Gets the interval this instance represents.
     /// </summary>
     public Interval Interval => _interval;
