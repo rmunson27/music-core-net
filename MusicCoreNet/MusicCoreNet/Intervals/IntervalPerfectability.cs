@@ -48,6 +48,12 @@ public readonly record struct IntervalPerfectability
             : throw new InvalidCastException("Invalid unnamed interval perfectability value.");
 
     /// <summary>
+    /// Gets a string that represents the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString() => Value.ToString();
+
+    /// <summary>
     /// Represents the possible values of this struct.
     /// </summary>
     public enum Values : byte
