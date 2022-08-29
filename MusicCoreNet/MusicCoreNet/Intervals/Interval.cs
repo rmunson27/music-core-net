@@ -47,6 +47,11 @@ public readonly record struct Interval(SimpleIntervalBase Base, [NonNegative] in
     public IntervalPerfectability Perfectability => Base.Perfectability;
 
     /// <summary>
+    /// Gets the number of half steps spanned by this instance.
+    /// </summary>
+    public int HalfSteps => Base.HalfSteps + _additionalOctaves * 12;
+
+    /// <summary>
     /// Gets or initializes the number of additional octaves added on to the base to make up the interval.
     /// </summary>
     /// <exception cref="PropertySetOutOfRangeException">This property was initialized to a negative value.</exception>

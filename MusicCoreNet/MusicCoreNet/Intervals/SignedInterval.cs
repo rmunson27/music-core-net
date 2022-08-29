@@ -42,6 +42,11 @@ public readonly record struct SignedInterval
     public IntervalPerfectability Perfectability => _interval.Perfectability;
 
     /// <summary>
+    /// Gets the number of half steps spanned by this instance.
+    /// </summary>
+    public int HalfSteps => Interval.HalfSteps * Sign;
+
+    /// <summary>
     /// Gets the interval this instance represents.
     /// </summary>
     public Interval Interval => _interval;
