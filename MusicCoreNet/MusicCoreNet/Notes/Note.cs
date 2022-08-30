@@ -1,6 +1,8 @@
-﻿using Rem.Music.Internal;
+﻿using Rem.Core.Attributes;
+using Rem.Music.Internal;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -40,6 +42,28 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
     #endregion
 
     #region Methods
+    #region Factory
+    /// <summary>
+    /// Gets the <see cref="Note"/> with the pitch passed in that has the simplest possible accidental
+    /// (i.e. closest to natural), using the specified <see cref="NonNaturalAccidentalType"/> to assign accidentals
+    /// if necessary.
+    /// </summary>
+    /// <param name="Pitch">The pitch the result represents.</param>
+    /// <param name="AccidentalType">
+    /// An accidental type to use to assign accidentals in ambiguous cases.
+    /// <para/>
+    /// For example, if <see cref="NotePitchClass.GA"/> is passed in, the result will be G# if
+    /// <paramref name="AccidentalType"/> is set to <see cref="NonNaturalAccidentalType.Sharp"/> and Ab if
+    /// it is set to <see cref="NonNaturalAccidentalType.Flat"/>.
+    /// </param>
+    /// <returns></returns>
+    /// <exception cref="InvalidEnumArgumentException">
+    /// <paramref name="AccidentalType"/> was an unnamed enum value.
+    /// </exception>
+    public static Note SimplestWithPitch(NotePitch Pitch, [NamedEnum] NonNaturalAccidentalType AccidentalType)
+        => new(NoteSpelling.SimplestWithPitchClass(Pitch.Class, AccidentalType), Pitch.Octave);
+    #endregion
+
     #region Equality
     /// <summary>
     /// Determines if the current instance is equal to another object of the same type.
