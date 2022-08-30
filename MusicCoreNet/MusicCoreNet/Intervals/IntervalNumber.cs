@@ -313,7 +313,7 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
     public static implicit operator IntervalNumber(SimpleIntervalNumber number) => new(number);
 
     /// <summary>
-    /// Implicitly converts a <see cref="PerfectableSimpleIntervalNumber"/> to an instance of this struct.
+    /// Implicitly converts a named <see cref="PerfectableSimpleIntervalNumber"/> to an instance of this struct.
     /// </summary>
     /// <param name="number"></param>
     /// <exception cref="InvalidEnumArgumentException">
@@ -322,7 +322,7 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
     public static implicit operator IntervalNumber([NamedEnum] PerfectableSimpleIntervalNumber number) => new(number);
 
     /// <summary>
-    /// Implicitly converts a <see cref="ImperfectableSimpleIntervalNumber"/> to an instance of this struct.
+    /// Implicitly converts a named <see cref="ImperfectableSimpleIntervalNumber"/> to an instance of this struct.
     /// </summary>
     /// <exception cref="InvalidEnumArgumentException">
     /// The <see cref="ImperfectableSimpleIntervalNumber"/> to convert was an unnamed enum value.

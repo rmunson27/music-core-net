@@ -2,6 +2,7 @@
 using Rem.Core.Utilities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -139,12 +140,9 @@ public readonly record struct NoteLetter
     /// Implicitly converts a named <see cref="Values"/> instance to a <see cref="NoteLetter"/>.
     /// </summary>
     /// <param name="Value"></param>
-    /// <exception cref="InvalidCastException"><paramref name="Value"/> was an unnamed enum value.</exception>
+    /// <exception cref="InvalidEnumArgumentException"><paramref name="Value"/> was an unnamed enum value.</exception>
     public static implicit operator NoteLetter([NamedEnum] Values Value)
-        => new(
-            Enums.IsDefined(Value)
-                ? Value
-                : throw new InvalidCastException($"Argument was an unnamed enum value."));
+        => new(Throw.IfEnumArgUnnamed(Value, nameof(Value)));
     #endregion
 
     #region Arithmetic
