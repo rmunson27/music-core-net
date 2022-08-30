@@ -11,7 +11,7 @@ namespace Rem.Music;
 
 /// <summary>
 /// A type representing a simple interval (spanning less than one octave) that is used as the base for
-/// general intervals.
+/// general intervals and the difference between <see cref="NoteSpelling"/> instances.
 /// </summary>
 /// <remarks>
 /// The default value of this struct represents a perfect unison.
