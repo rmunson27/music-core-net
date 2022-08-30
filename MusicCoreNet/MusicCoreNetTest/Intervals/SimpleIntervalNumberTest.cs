@@ -16,6 +16,15 @@ using static ImperfectableSimpleIntervalNumber;
 public class SimpleIntervalNumberTest
 {
     /// <summary>
+    /// Ensures the default value is as advertised in doc comments.
+    /// </summary>
+    [TestMethod]
+    public void TestDefault()
+    {
+        Assert.AreEqual(SimpleIntervalNumber.Unison, default);
+    }
+
+    /// <summary>
     /// Tests the <see cref="SimpleIntervalNumber.FromValue(int)"/> factory method.
     /// </summary>
     [TestMethod]
@@ -43,19 +52,5 @@ public class SimpleIntervalNumberTest
         Assert.AreEqual(Fifth, (SimpleIntervalNumber)5);
         Assert.ThrowsException<InvalidCastException>(() => (SimpleIntervalNumber)8);
         Assert.ThrowsException<InvalidCastException>(() => (SimpleIntervalNumber)0);
-    }
-
-    /// <summary>
-    /// Ensures that the default instance of <see cref="SimpleIntervalNumber"/> is as advertised in the documentation.
-    /// </summary>
-    [TestMethod]
-    public void TestDefault()
-    {
-        // First make sure they compare as equal
-        Assert.AreEqual(SimpleIntervalNumber.Unison, default(SimpleIntervalNumber));
-
-        // Second ensure that the default actually stores the expected values
-        Assert.IsTrue(default(SimpleIntervalNumber).IsPerfectable(out var defaultPNumber));
-        Assert.AreEqual(SimpleIntervalNumber.Unison, defaultPNumber);
     }
 }
