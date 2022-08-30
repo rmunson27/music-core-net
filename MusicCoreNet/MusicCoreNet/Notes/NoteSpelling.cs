@@ -2,6 +2,7 @@
 using Rem.Music.Internal;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,22 +59,25 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     /// (i.e. closest to natural), using the specified <see cref="NonNaturalAccidentalType"/> to assign accidentals
     /// if necessary.
     /// </summary>
-    /// <param name="pitchClass">The pitch class of the result.</param>
-    /// <param name="nonNaturalAccidentalType">
+    /// <param name="PitchClass">The pitch class of the result.</param>
+    /// <param name="AccidentalType">
     /// An accidental type to use to assign accidentals in ambiguous cases.
     /// <para/>
     /// For example, if <see cref="NotePitchClass.GA"/> is passed in, the result will be G# if
-    /// <paramref name="nonNaturalAccidentalType"/> is set to <see cref="NonNaturalAccidentalType.Sharp"/> and Ab if
+    /// <paramref name="AccidentalType"/> is set to <see cref="NonNaturalAccidentalType.Sharp"/> and Ab if
     /// it is set to <see cref="NonNaturalAccidentalType.Flat"/>.
     /// </param>
     /// <returns></returns>
+    /// <exception cref="InvalidEnumArgumentException">
+    /// <paramref name="AccidentalType"/> was an unnamed enum value.
+    /// </exception>
     public static NoteSpelling SimplestWithPitchClass(
-        NotePitchClass pitchClass, [NamedEnum] NonNaturalAccidentalType nonNaturalAccidentalType)
+        NotePitchClass PitchClass, [NamedEnum] NonNaturalAccidentalType AccidentalType)
     {
-        var sharpResult = Throw.IfEnumArgUnnamed(nonNaturalAccidentalType, nameof(nonNaturalAccidentalType))
+        var sharpResult = Throw.IfEnumArgUnnamed(AccidentalType, nameof(AccidentalType))
                             == NonNaturalAccidentalType.Sharp;
 
-        return pitchClass.Value switch
+        return PitchClass.Value switch
         {
             NotePitchClass.Values.A => NoteLetter.A,
             NotePitchClass.Values.AB => sharpResult ? Note.A().Sharp() : Note.B().Flat(),
