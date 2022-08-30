@@ -14,6 +14,15 @@ namespace RemTest.Music;
 public class NoteTest
 {
     /// <summary>
+    /// Ensures the default value is as advertised in doc comments.
+    /// </summary>
+    [TestMethod]
+    public void TestDefault()
+    {
+        Assert.AreEqual(Note.C().Natural().WithOctave(0), default);
+    }
+
+    /// <summary>
     /// Tests the <see cref="Note.SimplifyAccidental"/> method.
     /// </summary>
     [TestMethod]

@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 namespace RemTest.Music;
 
 /// <summary>
-/// Tests of the <see cref="PerfectableIntervalQuality"/> and <see cref="ImperfectableIntervalQuality"/> structs.
+/// Tests of the <see cref="IntervalQuality"/>, <see cref="PerfectableIntervalQuality"/> and
+/// <see cref="ImperfectableIntervalQuality"/> structs.
 /// </summary>
 [TestClass]
 public class IntervalQualityTest
@@ -19,12 +20,14 @@ public class IntervalQualityTest
 
     #region General
     /// <summary>
-    /// Ensures that the default value of the <see cref="IntervalQuality"/> struct is the value advertised.
+    /// Ensures that the default values are as advertised in the doc comments.
     /// </summary>
     [TestMethod]
-    public void TestGeneralDefault()
+    public void TestDefaults()
     {
-        Assert.AreEqual(default(IntervalQuality), PerfectableIntervalQuality.Perfect);
+        Assert.AreEqual(IntervalQuality.Perfect, default);
+        Assert.AreEqual(PerfectableIntervalQuality.Perfect, default);
+        Assert.AreEqual(ImperfectableIntervalQuality.Major, default);
     }
 
     /// <summary>

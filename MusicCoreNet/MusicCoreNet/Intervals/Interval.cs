@@ -12,6 +12,9 @@ namespace Rem.Music;
 /// <summary>
 /// Represents a musical interval between two notes.
 /// </summary>
+/// <remarks>
+/// The default value of this struct is a 
+/// </remarks>
 /// <param name="Base">An object defining the quality and base number of the interval.</param>
 /// <param name="AdditionalOctaves">
 /// The number of additional octaves added onto the base to make up the interval.

@@ -14,6 +14,15 @@ namespace RemTest.Music;
 public class NoteSpellingTest
 {
     /// <summary>
+    /// Ensures the default value is as advertised in doc comments.
+    /// </summary>
+    [TestMethod]
+    public void TestDefault()
+    {
+        Assert.AreEqual(Note.C().Natural(), default);
+    }
+
+    /// <summary>
     /// Tests the <see cref="NoteSpelling.HalfStepsAboveC"/> property.
     /// </summary>
     [TestMethod]

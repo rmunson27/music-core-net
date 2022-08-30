@@ -13,7 +13,7 @@ namespace Rem.Music;
 /// Represents the spelling of a note.
 /// </summary>
 /// <remarks>
-/// The default value of this struct represents an A natural spelling.
+/// The default value of this struct represents a 'C' natural spelling.
 /// </remarks>
 /// <param name="Letter">The letter of the note spelling to create.</param>
 /// <param name="Accidental">The accidental of the note spelling to create.</param>

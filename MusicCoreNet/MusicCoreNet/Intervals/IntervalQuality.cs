@@ -600,6 +600,9 @@ public readonly record struct IntervalQuality
 /// <summary>
 /// Represents the quality of a perfectable interval.
 /// </summary>
+/// <remarks>
+/// The default value of this struct represents a perfect interval quality.
+/// </remarks>
 public readonly record struct PerfectableIntervalQuality
 {
     #region Constants
@@ -795,6 +798,9 @@ public readonly record struct PerfectableIntervalQuality
 /// <summary>
 /// Represents the quality of a imperfectable interval.
 /// </summary>
+/// <remarks>
+/// The default value of this struct represents a major interval quality.
+/// </remarks>
 public readonly record struct ImperfectableIntervalQuality
 {
     #region Constants

@@ -13,6 +13,9 @@ namespace Rem.Music;
 /// <summary>
 /// Represents a musical note.
 /// </summary>
+/// <remarks>
+/// The default value of this struct is a 'C' note in the zero octave.
+/// </remarks>
 /// <param name="Spelling">The spelling of the note (letter and accidental).</param>
 /// <param name="Octave">The octave of the note.</param>
 public readonly record struct Note(NoteSpelling Spelling, int Octave)

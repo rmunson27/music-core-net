@@ -8,31 +8,42 @@ using System.Threading.Tasks;
 
 namespace RemTest.Music;
 
+using static NotePitchClass;
+
 /// <summary>
 /// Tests of the <see cref="NotePitchClass"/> struct.
 /// </summary>
 [TestClass]
 public class NotePitchClassTest
 {
+    /// <summary>
+    /// Ensures the default value is as advertised in doc comments.
+    /// </summary>
+    [TestMethod]
+    public void TestDefault()
+    {
+        Assert.AreEqual(C, default);
+    }
+
     private static readonly ImmutableArray<CBasedSemitones> CBasedSemitoneCases
         = ImmutableArray.CreateRange(new CBasedSemitones[]
         {
-            new(NotePitchClass.C, 0, 0),
-            new(NotePitchClass.CD, 1, 11),
-            new(NotePitchClass.D, 2, 10),
-            new(NotePitchClass.DE, 3, 9),
-            new(NotePitchClass.E, 4, 8),
-            new(NotePitchClass.F, 5, 7),
-            new(NotePitchClass.FG, 6, 6),
-            new(NotePitchClass.G, 7, 5),
-            new(NotePitchClass.GA, 8, 4),
-            new(NotePitchClass.A, 9, 3),
-            new(NotePitchClass.AB, 10, 2),
-            new(NotePitchClass.B, 11, 1),
+            new(C, 0, 0),
+            new(CD, 1, 11),
+            new(D, 2, 10),
+            new(DE, 3, 9),
+            new(E, 4, 8),
+            new(F, 5, 7),
+            new(FG, 6, 6),
+            new(G, 7, 5),
+            new(GA, 8, 4),
+            new(A, 9, 3),
+            new(AB, 10, 2),
+            new(B, 11, 1),
         });
 
     /// <summary>
-    /// Tests the <see cref="NotePitchClass.SemitonesAboveC"/> property.
+    /// Tests the <see cref="SemitonesAboveC"/> property.
     /// </summary>
     [TestMethod]
     public void TestSemitonesAboveC()
@@ -44,7 +55,7 @@ public class NotePitchClassTest
     }
 
     /// <summary>
-    /// Tests the <see cref="NotePitchClass.SemitonesBelowC"/> property.
+    /// Tests the <see cref="SemitonesBelowC"/> property.
     /// </summary>
     [TestMethod]
     public void TestSemitonesBelowC()
@@ -56,37 +67,37 @@ public class NotePitchClassTest
     }
 
     /// <summary>
-    /// Tests the <see cref="NotePitchClass.FromSemitonesAboveC(int)"/> factory method.
+    /// Tests the <see cref="FromSemitonesAboveC(int)"/> factory method.
     /// </summary>
     [TestMethod]
     public void TestFromSemitonesAboveC()
     {
         foreach (var (PitchClass, AboveC, _) in CBasedSemitoneCases)
         {
-            Assert.AreEqual(PitchClass, NotePitchClass.FromSemitonesAboveC(AboveC), $"Invalid {AboveC} result.");
+            Assert.AreEqual(PitchClass, FromSemitonesAboveC(AboveC), $"Invalid {AboveC} result.");
         }
 
         // Ensure that exceptions are thrown if out-of-range
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => NotePitchClass.FromSemitonesAboveC(-1));
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => NotePitchClass.FromSemitonesAboveC(12));
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => NotePitchClass.FromSemitonesAboveC(13));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => FromSemitonesAboveC(-1));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => FromSemitonesAboveC(12));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => FromSemitonesAboveC(13));
     }
 
     /// <summary>
-    /// Tests the <see cref="NotePitchClass.FromSemitonesBelowC(int)"/> factory method.
+    /// Tests the <see cref="FromSemitonesBelowC(int)"/> factory method.
     /// </summary>
     [TestMethod]
     public void TestFromSemitonesBelowC()
     {
         foreach (var (PitchClass, _, BelowC) in CBasedSemitoneCases)
         {
-            Assert.AreEqual(PitchClass, NotePitchClass.FromSemitonesBelowC(BelowC), $"Invalid {BelowC} result.");
+            Assert.AreEqual(PitchClass, FromSemitonesBelowC(BelowC), $"Invalid {BelowC} result.");
         }
 
         // Ensure that exceptions are thrown if out-of-range
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => NotePitchClass.FromSemitonesBelowC(-1));
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => NotePitchClass.FromSemitonesBelowC(12));
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => NotePitchClass.FromSemitonesBelowC(13));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => FromSemitonesBelowC(-1));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => FromSemitonesBelowC(12));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => FromSemitonesBelowC(13));
     }
 
     private readonly record struct CBasedSemitones(

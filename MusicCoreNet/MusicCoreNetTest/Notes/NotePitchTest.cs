@@ -13,6 +13,15 @@ namespace RemTest.Music;
 [TestClass]
 public class NotePitchTest
 {
+    /// <summary>
+    /// Ensures the default value is as advertised in doc comments.
+    /// </summary>
+    [TestMethod]
+    public void TestDefault()
+    {
+        Assert.AreEqual(NotePitch.C0, default);
+    }
+
     private static readonly ImmutableArray<(NotePitch Pitch, int Index)> C0IndexPairs
         = ImmutableArray.CreateRange(new[]
         {

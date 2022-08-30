@@ -13,6 +13,15 @@ namespace RemTest.Music;
 public class IntervalNumberTest
 {
     /// <summary>
+    /// Ensures the default value is as advertised in doc comments.
+    /// </summary>
+    [TestMethod]
+    public void TestDefault()
+    {
+        Assert.AreEqual(SimpleIntervalNumber.Unison, default(IntervalNumber));
+    }
+
+    /// <summary>
     /// Tests construction of <see cref="IntervalNumber"/> instances.
     /// </summary>
     [TestMethod]

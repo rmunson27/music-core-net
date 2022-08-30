@@ -15,6 +15,15 @@ using static NoteLetter;
 public class NoteLetterTest
 {
     /// <summary>
+    /// Ensures the default value is as advertised in doc comments.
+    /// </summary>
+    [TestMethod]
+    public void TestDefault()
+    {
+        Assert.AreEqual(C, default);
+    }
+
+    /// <summary>
     /// Tests addition of a <see cref="SimpleIntervalBase"/> to a <see cref="NoteLetter"/>.
     /// </summary>
     [TestMethod]

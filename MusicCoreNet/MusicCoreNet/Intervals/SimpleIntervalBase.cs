@@ -13,6 +13,9 @@ namespace Rem.Music;
 /// A type representing a simple interval (spanning less than one octave) that is used as the base for
 /// general intervals.
 /// </summary>
+/// <remarks>
+/// The default value of this struct represents a perfect unison.
+/// </remarks>
 public readonly record struct SimpleIntervalBase
 {
     #region Constants

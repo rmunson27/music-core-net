@@ -8,23 +8,28 @@ using System.Threading.Tasks;
 namespace Rem.Music;
 
 /// <summary>
-/// Represents a pitch that can be represented by a note.
+/// Represents a pitch that can be written as a note.
 /// </summary>
+/// <remarks>
+/// The default value of this struct is a 'C' pitch in the zero octave.
+/// </remarks>
 /// <param name="Class">The class of the represented pitch.</param>
 /// <param name="Octave">The octave of the represented pitch.</param>
 public readonly record struct NotePitch(NotePitchClass Class, int Octave) : IComparable<NotePitch>
 {
     #region Constants
     /// <summary>
-    /// Pitch info for the lowest pitch in the zero octave.
+    /// The lowest pitch in the zero octave.
     /// </summary>
     /// <remarks>
     /// As indicated by the name of this field, the class of this pitch is <see cref="NotePitchClass.C"/>.
+    /// <para/>
+    /// This is also the default value of the type.
     /// </remarks>
     public static readonly NotePitch C0 = new(NotePitchClass.C, 0);
 
     /// <summary>
-    /// Pitch info for the standard concert pitch (A440).
+    /// The standard concert pitch (A440).
     /// </summary>
     public static readonly NotePitch ConcertPitch = new(NotePitchClass.A, 4);
 
