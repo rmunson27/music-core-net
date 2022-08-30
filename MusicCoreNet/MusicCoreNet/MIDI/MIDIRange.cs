@@ -8,31 +8,31 @@ using System.Threading.Tasks;
 namespace Rem.Music.MIDI;
 
 /// <summary>
-/// Static functionality relating to conversions between note and pitch types in this library and the standard
-/// Musical Instrument Digital Interface (MIDI).
+/// Extensions and other static functionality relating to conversions between types in this library and the numerical
+/// representation used in the standard Musical Instrument Digital Interface (MIDI).
 /// </summary>
-public static class MIDINotes
+public static class MIDIRange
 {
     #region Constants
+    /// <summary>
+    /// The highest pitch with a valid MIDI number.
+    /// </summary>
+    public static readonly NotePitch MaxPitch = new(NotePitchClass.G, 9);
+
+    /// <summary>
+    /// The lowest pitch with a valid MIDI number.
+    /// </summary>
+    public static readonly NotePitch MinPitch = new(NotePitchClass.C, -1);
+
     /// <summary>
     /// The maximum value of the MIDI number range.
     /// </summary>
     public const int MaxNumber = 127;
 
     /// <summary>
-    /// A <see cref="NotePitch"/> representing the highest pitch with a valid MIDI number.
-    /// </summary>
-    public static readonly NotePitch MaxPitch = new(NotePitchClass.G, 9);
-
-    /// <summary>
     /// The minimum value of the MIDI number range.
     /// </summary>
     public const int MinNumber = 0;
-
-    /// <summary>
-    /// A <see cref="NotePitch"/> representing the lowest pitch with a valid MIDI number.
-    /// </summary>
-    public static readonly NotePitch MinPitch = new(NotePitchClass.C, -1);
     #endregion
 
     #region Extensions
@@ -98,7 +98,8 @@ public static class MIDINotes
 
     #region NotePitch
     /// <summary>
-    /// Gets the MIDI number of the current instance if it is in the MIDI range.
+    /// Gets the MIDI number of the current instance in an <see langword="out"/> parameter, returning whether or not
+    /// it is in the MIDI range.
     /// </summary>
     /// <remarks>
     /// Even if the instance is not in the MIDI range, the same algorithm will be used to set the value
@@ -114,7 +115,7 @@ public static class MIDINotes
     public static bool TryGetMIDINumberInRange(this NotePitch pitch, out int number)
     {
         number = pitch.MIDINumber();
-        return IsNumberInRange(number);
+        return IsInRange(number);
     }
 
     /// <summary>
@@ -138,7 +139,7 @@ public static class MIDINotes
     public static int MIDINumberInRange(this NotePitch pitch)
     {
         var result = pitch.MIDINumber();
-        return IsNumberInRange(result)
+        return IsInRange(result)
                 ? result
                 : throw new InvalidOperationException($"Pitch is not in the MIDI range.");
     }
@@ -150,7 +151,7 @@ public static class MIDINotes
     /// <returns></returns>
     /// <seealso cref="MaxPitch"/>
     /// <seealso cref="MinPitch"/>
-    public static bool IsInMIDIRange(this NotePitch pitch) => IsNumberInRange(pitch.MIDINumber());
+    public static bool IsInMIDIRange(this NotePitch pitch) => IsInRange(pitch.MIDINumber());
 
     /// <summary>
     /// Gets the MIDI number of the current instance.
@@ -186,6 +187,6 @@ public static class MIDINotes
     /// <returns></returns>
     /// <seealso cref="MaxNumber"/>
     /// <seealso cref="MinNumber"/>
-    public static bool IsNumberInRange(int n) => n >= MinNumber && n <= MaxNumber;
+    public static bool IsInRange(int n) => n >= MinNumber && n <= MaxNumber;
     #endregion
 }

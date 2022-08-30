@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 namespace RemTest.Music.MIDI;
 
 /// <summary>
-/// Tests of the <see cref="MIDINotes"/> class.
+/// Tests of the <see cref="MIDIRange"/> class.
 /// </summary>
 [TestClass]
-public class MIDINotesTest
+public class MIDIRangeTest
 {
     private static readonly ImmutableArray<(NotePitch Pitch, int Number)> MIDINumberPairs
         = ImmutableArray.CreateRange(new[]
@@ -24,10 +24,10 @@ public class MIDINotesTest
             (NotePitchClass.FG.WithOctave(7), 102),
 
             // Extrema and important cases
-            (MIDINotes.MaxPitch, MIDINotes.MaxNumber),
+            (MIDIRange.MaxPitch, MIDIRange.MaxNumber),
             (NotePitch.ConcertPitch, 69),
             (NotePitch.C0, 12),
-            (MIDINotes.MinPitch, MIDINotes.MinNumber),
+            (MIDIRange.MinPitch, MIDIRange.MinNumber),
 
             // Out-of-range cases
             (NotePitchClass.C.WithOctave(10), 132),
@@ -35,7 +35,7 @@ public class MIDINotesTest
         });
 
     /// <summary>
-    /// Tests the <see cref="MIDINotes.PitchFromNumber(int)"/> factory method.
+    /// Tests the <see cref="MIDIRange.PitchFromNumber(int)"/> factory method.
     /// </summary>
     [TestMethod]
     public void TestPitchFromNumber()
@@ -43,13 +43,13 @@ public class MIDINotesTest
         foreach (var (Pitch, Number) in MIDINumberPairs)
         {
             Assert.AreEqual(
-                Pitch, MIDINotes.PitchFromNumber(Number),
-                $"Invalid {nameof(MIDINotes.PitchFromNumber)} result for number {Number}.");
+                Pitch, MIDIRange.PitchFromNumber(Number),
+                $"Invalid {nameof(MIDIRange.PitchFromNumber)} result for number {Number}.");
         }
     }
 
     /// <summary>
-    /// Tests the <see cref="MIDINotes.MIDINumber(NotePitch)"/> extension method.
+    /// Tests the <see cref="MIDIRange.MIDINumber(NotePitch)"/> extension method.
     /// </summary>
     [TestMethod]
     public void TestMIDINumber()
@@ -61,14 +61,14 @@ public class MIDINotesTest
     }
 
     /// <summary>
-    /// Tests the <see cref="MIDINotes.MIDINumberInRange(NotePitch)"/> extension method.
+    /// Tests the <see cref="MIDIRange.MIDINumberInRange(NotePitch)"/> extension method.
     /// </summary>
     [TestMethod]
     public void TestMIDINumberInRange()
     {
         foreach (var (Pitch, Number) in MIDINumberPairs)
         {
-            if (MIDINotes.IsNumberInRange(Number))
+            if (MIDIRange.IsInRange(Number))
             {
                 Assert.AreEqual(Number, Pitch.MIDINumberInRange(), $"Invalid {Pitch} MIDI number.");
             }
@@ -82,7 +82,7 @@ public class MIDINotesTest
     }
 
     /// <summary>
-    /// Tests the <see cref="MIDINotes.TryGetMIDINumberInRange(NotePitch, out int)"/> extension method.
+    /// Tests the <see cref="MIDIRange.TryGetMIDINumberInRange(NotePitch, out int)"/> extension method.
     /// </summary>
     [TestMethod]
     public void TestTryGetMIDINumberInRange()
@@ -91,7 +91,7 @@ public class MIDINotesTest
         {
             var result = Pitch.TryGetMIDINumberInRange(out var actualNumber);
             Assert.AreEqual(Number, actualNumber);
-            Assert.AreEqual(result, MIDINotes.IsNumberInRange(Number));
+            Assert.AreEqual(result, MIDIRange.IsInRange(Number));
         }
     }
 }
