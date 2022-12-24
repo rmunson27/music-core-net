@@ -16,33 +16,32 @@ namespace Rem.Music;
 /// </remarks>
 public readonly record struct IntervalPerfectability
 {
-    /// <summary>
-    /// Represents perfectable intervals (i.e. a perfect fourth).
-    /// </summary>
+    /// <inheritdoc cref="Values.Perfectable"/>
+    /// <remarks>
+    /// This is the default value of this struct.
+    /// </remarks>
     public static readonly IntervalPerfectability Perfectable = new(Values.Perfectable);
 
-    /// <summary>
-    /// Represents imperfectable intervals (i.e. a major second).
-    /// </summary>
+    /// <inheritdoc cref="Values.Imperfectable"/>
     public static readonly IntervalPerfectability Imperfectable = new(Values.Imperfectable);
 
     /// <summary>
     /// Gets a unique identifier for this value.
     /// </summary>
-    [NamedEnum] public Values Value { get; }
+    [NameableEnum] public Values Value { get; }
 
     /// <summary>
     /// Constructs a new instance of this struct.
     /// </summary>
     /// <param name="Value"></param>
-    private IntervalPerfectability([NamedEnum] Values Value) { this.Value = Value; }
+    private IntervalPerfectability([NameableEnum] Values Value) { this.Value = Value; }
 
     /// <summary>
     /// Implicitly converts a <see cref="Values"/> instance to the value it represents.
     /// </summary>
     /// <param name="value"></param>
     /// <exception cref="InvalidCastException">The value was undefined.</exception>
-    public static implicit operator IntervalPerfectability([NamedEnum] Values value)
+    public static implicit operator IntervalPerfectability([NameableEnum] Values value)
         => Enums.IsDefined(value)
             ? new(value)
             : throw new InvalidCastException("Invalid unnamed interval perfectability value.");
