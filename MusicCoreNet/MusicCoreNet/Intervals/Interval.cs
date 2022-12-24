@@ -13,7 +13,7 @@ namespace Rem.Music;
 /// Represents a musical interval between two notes.
 /// </summary>
 /// <remarks>
-/// The default value of this struct is a 
+/// The default value of this struct is a perfect unison.
 /// </remarks>
 /// <param name="Base">An object defining the quality and base number of the interval.</param>
 /// <param name="AdditionalOctaves">
