@@ -187,7 +187,6 @@ public readonly record struct Interval(SimpleIntervalBase Base, [NonNegative] in
     /// </summary>
     /// <param name="Degree"></param>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static AugmentedIntervalBuilder Augmented([Positive] int Degree = 1)
         => new(Throw.IfArgNotPositive(Degree, nameof(Degree)));
 
@@ -195,21 +194,18 @@ public readonly record struct Interval(SimpleIntervalBase Base, [NonNegative] in
     /// Gets an object that can be used to build a minor interval.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static MinorIntervalBuilder Minor() => new();
 
     /// <summary>
     /// Gets an object that can be used to build a perfect interval.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static PerfectIntervalBuilder Perfect() => new();
 
     /// <summary>
     /// Gets an object that can be used to build a major interval.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static MajorIntervalBuilder Major() => new();
 
     /// <summary>
@@ -217,7 +213,6 @@ public readonly record struct Interval(SimpleIntervalBase Base, [NonNegative] in
     /// </summary>
     /// <param name="Degree"></param>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static DiminishedIntervalBuilder Diminished([Positive] int Degree = 1)
         => new(Throw.IfArgNotPositive(Degree, nameof(Degree)));
     #endregion
