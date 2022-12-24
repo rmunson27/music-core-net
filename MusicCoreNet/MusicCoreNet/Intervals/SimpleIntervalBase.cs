@@ -104,7 +104,7 @@ public readonly record struct SimpleIntervalBase
     /// </summary>
     /// <param name="halfSteps">The number of half steps to span.</param>
     /// <param name="tritoneQualityType">
-    /// The type of quality to assign to a tritone (6 half steps).
+    /// The kind of quality to assign to a tritone (6 half steps).
     /// <para/>
     /// This resolves the ambiguity between an augmented fourth and a diminished fifth.
     /// </param>
@@ -116,11 +116,9 @@ public readonly record struct SimpleIntervalBase
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="halfSteps"/> was negative or >= 12.
     /// </exception>
-    /// <exception cref="InvalidEnumArgumentException">
-    /// <paramref name="tritoneQualityType"/> was an unnamed enum value.
-    /// </exception>
     public static SimpleIntervalBase SimplestWithHalfSteps(
-        [NonNegative, LessThanInteger(12)] int halfSteps, [NamedEnum] NonBasicIntervalQualityType tritoneQualityType)
+        [NonNegative, LessThanInteger(12)] int halfSteps,
+        PeripheralIntervalQualityKind tritoneQualityType)
         => new(
             IntervalQuality.OfSimplestIntervalWithHalfSteps(halfSteps, tritoneQualityType),
             SimpleIntervalNumber.OfSimplestIntervalWithHalfSteps(halfSteps, tritoneQualityType));
