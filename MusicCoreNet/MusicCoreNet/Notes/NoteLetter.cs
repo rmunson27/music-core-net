@@ -73,16 +73,8 @@ public readonly record struct NoteLetter
     /// Gets an index representing the position of a natural note spelling described by the current instance relative
     /// to the C natural note spelling.
     /// </summary>
-    internal int CircleOfFifthsIndexRelativeToC => Value switch
-    {
-        Values.C => 0,
-        Values.D => 2,
-        Values.E => 4,
-        Values.F => -1,
-        Values.G => 1,
-        Values.A => 3,
-        _ => 5,
-    };
+    internal int CircleOfFifthsIndexRelativeToC
+        => unchecked(Value <= Values.E ? (int)Value << 1 : ((int)Value << 1) - 7);
 
     /// <summary>
     /// Gets the number of half steps that the natural note spelling described by this letter is above the nearest
@@ -99,16 +91,8 @@ public readonly record struct NoteLetter
     /// <summary>
     /// Gets the pitch class associated with the natural note spelling described by this letter.
     /// </summary>
-    public NotePitchClass PitchClass => Value switch
-    {
-        Values.C => NotePitchClass.C,
-        Values.D => NotePitchClass.D,
-        Values.E => NotePitchClass.E,
-        Values.F => NotePitchClass.F,
-        Values.G => NotePitchClass.G,
-        Values.A => NotePitchClass.A,
-        _ => NotePitchClass.B, // Values.B
-    };
+    public NotePitchClass PitchClass
+        => new(unchecked((NotePitchClass.Values)(Value <= Values.E ? (int)Value << 1 : ((int)Value << 1) - 1)));
     #endregion
 
     #region Constructor
