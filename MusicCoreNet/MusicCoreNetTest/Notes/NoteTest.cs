@@ -69,15 +69,15 @@ public class NoteTest
         {
             Assert.AreEqual(
                 First, Second + Difference,
-                $"Invalid {Second.ToMusicalNotationString()} + {Difference} result.");
+                $"Invalid {Second.ToASCIIMusicalNotationString()} + {Difference} result.");
 
             SignedInterval signedDifference = Difference;
             Assert.AreEqual(
                 First, Second + signedDifference,
-                $"Invalid {Second.ToMusicalNotationString()} + {signedDifference} result.");
+                $"Invalid {Second.ToASCIIMusicalNotationString()} + {signedDifference} result.");
             Assert.AreEqual(
                 Second, First + (-signedDifference),
-                $"Invalid {First.ToMusicalNotationString()} + {-signedDifference} result.");
+                $"Invalid {First.ToASCIIMusicalNotationString()} + {-signedDifference} result.");
         }
     }
 
@@ -91,15 +91,15 @@ public class NoteTest
         {
             Assert.AreEqual(
                 Second, First - Difference,
-                $"Invalid {First.ToMusicalNotationString()} - {Difference} result.");
+                $"Invalid {First.ToASCIIMusicalNotationString()} - {Difference} result.");
 
             SignedInterval signedDifference = Difference;
             Assert.AreEqual(
                 Second, First - signedDifference,
-                $"Invalid {First.ToMusicalNotationString()} - {signedDifference} result.");
+                $"Invalid {First.ToASCIIMusicalNotationString()} - {signedDifference} result.");
             Assert.AreEqual(
                 First, Second - (-signedDifference),
-                $"Invalid {First.ToMusicalNotationString()} - {-signedDifference} result.");
+                $"Invalid {First.ToASCIIMusicalNotationString()} - {-signedDifference} result.");
         }
     }
 
@@ -113,10 +113,10 @@ public class NoteTest
         {
             Assert.AreEqual(
                 Difference, Left - Right,
-                $"Unexpected {Left.ToMusicalNotationString()} - {Right.ToMusicalNotationString()} result.");
+                $"Unexpected {Left.ToASCIIMusicalNotationString()} - {Right.ToASCIIMusicalNotationString()} result.");
             Assert.AreEqual(
                 -(SignedInterval)Difference, Right - Left,
-                $"Unexpected {Right.ToMusicalNotationString()} - {Left.ToMusicalNotationString()} result.");
+                $"Unexpected {Right.ToASCIIMusicalNotationString()} - {Left.ToASCIIMusicalNotationString()} result.");
         }
     }
 
@@ -142,21 +142,21 @@ public class NoteTest
         {
             Assert.IsTrue(
                 First.IsEnharmonicallyEquivalentTo(First),
-                $"{First.ToMusicalNotationString()} was not enharmonically equivalent to itself.");
+                $"{First.ToASCIIMusicalNotationString()} was not enharmonically equivalent to itself.");
 
             Assert.IsTrue(
                 Second.IsEnharmonicallyEquivalentTo(Second),
-                $"{Second.ToMusicalNotationString()} was not enharmonically equivalent to itself.");
+                $"{Second.ToASCIIMusicalNotationString()} was not enharmonically equivalent to itself.");
 
             Assert.IsTrue(
                 First.IsEnharmonicallyEquivalentTo(Second),
-                $"{First.ToMusicalNotationString()} was not enharmonically equivalent"
-                    + $" to {Second.ToMusicalNotationString()}.");
+                $"{First.ToASCIIMusicalNotationString()} was not enharmonically equivalent"
+                    + $" to {Second.ToASCIIMusicalNotationString()}.");
 
             Assert.IsTrue(
                 Second.IsEnharmonicallyEquivalentTo(First),
-                $"{Second.ToMusicalNotationString()} was not enharmonically equivalent"
-                    + $" to {First.ToMusicalNotationString()}.");
+                $"{Second.ToASCIIMusicalNotationString()} was not enharmonically equivalent"
+                    + $" to {First.ToASCIIMusicalNotationString()}.");
         }
     }
 

@@ -52,19 +52,16 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
     /// if necessary.
     /// </summary>
     /// <param name="Pitch">The pitch the result represents.</param>
-    /// <param name="AccidentalType">
-    /// An accidental type to use to assign accidentals in ambiguous cases.
+    /// <param name="AccidentalKind">
+    /// The kind of accidental to assign in ambiguous cases.
     /// <para/>
     /// For example, if <see cref="NotePitchClass.GA"/> is passed in, the result will be G# if
-    /// <paramref name="AccidentalType"/> is set to <see cref="NonNaturalAccidentalType.Sharp"/> and Ab if
-    /// it is set to <see cref="NonNaturalAccidentalType.Flat"/>.
+    /// <paramref name="AccidentalKind"/> is set to <see cref="ModifyingAccidentalKind.Sharp"/> and Ab if
+    /// it is set to <see cref="ModifyingAccidentalKind.Flat"/>.
     /// </param>
     /// <returns></returns>
-    /// <exception cref="InvalidEnumArgumentException">
-    /// <paramref name="AccidentalType"/> was an unnamed enum value.
-    /// </exception>
-    public static Note SimplestWithPitch(NotePitch Pitch, [NameableEnum] NonNaturalAccidentalType AccidentalType)
-        => new(NoteSpelling.SimplestWithPitchClass(Pitch.Class, AccidentalType), Pitch.Octave);
+    public static Note SimplestWithPitch(NotePitch Pitch, ModifyingAccidentalKind AccidentalKind)
+        => new(NoteSpelling.SimplestWithPitchClass(Pitch.Class, AccidentalKind), Pitch.Octave);
     #endregion
 
     #region Equality
@@ -217,7 +214,7 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
     public Note SimplifyAccidental()
     {
         var simplifiedSpelling = Spelling.SimplifyAccidental();
-        var accidentalDiff = simplifiedSpelling.Accidental.IntValue - Accidental.IntValue;
+        var accidentalDiff = simplifiedSpelling.Accidental.Modification - Accidental.Modification;
         var octave = Octave;
 
         if (accidentalDiff < 0) // Accidental is lower, so letter is higher
@@ -248,11 +245,36 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
         => $"{nameof(Note)} {{ Letter = {Letter}, Accidental = {Accidental}, Octave = {Octave} }}";
 
     /// <summary>
+    /// Gets a musical notation string that represents this instance using ASCII characters.
+    /// </summary>
+    /// <returns></returns>
+    public string ToASCIIMusicalNotationString() => ToMusicalNotationString(Spelling.ToASCIIMusicalNotationString());
+
+    /// <summary>
+    /// Gets a musical notation string that represents this instance using unicode (UTF-16) characters.
+    /// </summary>
+    /// <param name="showNatural">Whether or not to show the natural if this instance is natural.</param>
+    /// <returns></returns>
+    /// <seealso cref="NoteSpelling.ToUnicodeMusicalNotationString(bool)"/>
+    public string ToUnicodeMusicalNotationString(bool showNatural = false)
+        => ToMusicalNotationString(Spelling.ToUnicodeMusicalNotationString(showNatural));
+
+    /// <summary>
+    /// Gets a musical notation string that represents this instance using UTF32 characters.
+    /// </summary>
+    /// <param name="showNatural">Whether or not to show the natural if this instance is natural.</param>
+    /// <returns></returns>
+    /// <seealso cref="NoteSpelling.ToUTF32MusicalNotationString(bool)"/>
+    public string ToUTF32MusicalNotationString(bool showNatural = false)
+        => ToMusicalNotationString(Spelling.ToUTF32MusicalNotationString(showNatural));
+
+    /// <summary>
     /// Gets a musical notation string that represents the current instance.
     /// </summary>
     /// <returns></returns>
-    public string ToMusicalNotationString()
-        => $"{Spelling.ToMusicalNotationString()}{(Octave < 0 ? $"({Octave})" : Octave)}";
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private string ToMusicalNotationString(string noteSpellingStr)
+        => $"{noteSpellingStr}{(Octave < 0 ? $"({Octave})" : Octave)}";
     #endregion
 
     #region Builder

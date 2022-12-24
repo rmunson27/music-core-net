@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,7 +24,7 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     /// <summary>
     /// Gets the circle of fifths index of this instance relative to C natural.
     /// </summary>
-    internal int CircleOfFifthsIndexRelativeToC => Letter.CircleOfFifthsIndexRelativeToC + Accidental.IntValue * 7;
+    internal int CircleOfFifthsIndexRelativeToC => Letter.CircleOfFifthsIndexRelativeToC + Accidental.Modification * 7;
 
     /// <summary>
     /// Gets the number of half steps a note spelled with this instance is above the 'C' pitch in its octave.
@@ -33,7 +34,7 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     /// pitch of a non-'C' note above the 'C' pitch in the octave above, and will return a negative value if the
     /// accidental is flat enough to lower the pitch of a non-'C' note below the 'C' pitch in its octave.
     /// </remarks>
-    public int HalfStepsAboveC => Letter.HalfStepsAboveC + Accidental.IntValue;
+    public int HalfStepsAboveC => Letter.HalfStepsAboveC + Accidental.Modification;
 
     /// <summary>
     /// Gets the number of half steps a note spelled with this instance is below the 'C' pitch in the octave above.
@@ -43,13 +44,13 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     /// note above the 'C' pitch in the octave above, and will return a value greater than or equal to 12 if the
     /// accidental is flat enough to lower the pitch of a non-'C' note below the 'C' pitch in its octave.
     /// </remarks>
-    public int HalfStepsBelowC => Letter.HalfStepsBelowC - Accidental.IntValue;
+    public int HalfStepsBelowC => Letter.HalfStepsBelowC - Accidental.Modification;
 
     /// <summary>
     /// Gets the pitch class of this instance.
     /// </summary>
     public NotePitchClass PitchClass
-        => NotePitchClass.FromSemitonesAboveC(Maths.FloorRem(Letter.HalfStepsAboveC + Accidental.IntValue, 12));
+        => NotePitchClass.FromSemitonesAboveC(Maths.FloorRem(Letter.HalfStepsAboveC + Accidental.Modification, 12));
     #endregion
 
     #region Methods
@@ -60,37 +61,29 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     /// if necessary.
     /// </summary>
     /// <param name="PitchClass">The pitch class of the result.</param>
-    /// <param name="AccidentalType">
-    /// An accidental type to use to assign accidentals in ambiguous cases.
+    /// <param name="AccidentalKind">
+    /// The kind of accidentals to assign in ambiguous cases.
     /// <para/>
     /// For example, if <see cref="NotePitchClass.GA"/> is passed in, the result will be G# if
-    /// <paramref name="AccidentalType"/> is set to <see cref="NonNaturalAccidentalType.Sharp"/> and Ab if
-    /// it is set to <see cref="NonNaturalAccidentalType.Flat"/>.
+    /// <paramref name="AccidentalKind"/> is set to <see cref="ModifyingAccidentalKind.Sharp"/> and Ab if
+    /// it is set to <see cref="ModifyingAccidentalKind.Flat"/>.
     /// </param>
     /// <returns></returns>
-    /// <exception cref="InvalidEnumArgumentException">
-    /// <paramref name="AccidentalType"/> was an unnamed enum value.
-    /// </exception>
     public static NoteSpelling SimplestWithPitchClass(
-        NotePitchClass PitchClass, [NameableEnum] NonNaturalAccidentalType AccidentalType)
+        NotePitchClass PitchClass, ModifyingAccidentalKind AccidentalKind)
     {
-        var sharpResult = Throw.IfEnumArgUnnamed(AccidentalType, nameof(AccidentalType))
-                            == NonNaturalAccidentalType.Sharp;
+        var sharpResult = AccidentalKind.Value == ModifyingAccidentalKind.Values.Sharp;
 
         return PitchClass.Value switch
         {
-            NotePitchClass.Values.A => NoteLetter.A,
             NotePitchClass.Values.AB => sharpResult ? Note.A().Sharp() : Note.B().Flat(),
-            NotePitchClass.Values.B => NoteLetter.B,
-            NotePitchClass.Values.C => NoteLetter.C,
             NotePitchClass.Values.CD => sharpResult ? Note.C().Sharp() : Note.D().Flat(),
-            NotePitchClass.Values.D => NoteLetter.D,
             NotePitchClass.Values.DE => sharpResult ? Note.D().Sharp() : Note.E().Flat(),
-            NotePitchClass.Values.E => NoteLetter.E,
-            NotePitchClass.Values.F => NoteLetter.F,
             NotePitchClass.Values.FG => sharpResult ? Note.F().Sharp() : Note.G().Flat(),
-            NotePitchClass.Values.G => NoteLetter.G,
-            _ => sharpResult ? Note.G().Sharp() : Note.A().Flat(),
+            NotePitchClass.Values.GA => sharpResult ? Note.G().Sharp() : Note.A().Flat(),
+
+            var x when x <= NotePitchClass.Values.E => new(new((NoteLetter.Values)((int)x >> 1))),
+            var x => unchecked(new(new((NoteLetter.Values)(((int)x + 1) >> 1)))),
         };
     }
     #endregion
@@ -110,7 +103,7 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
             PitchClass,
 
             // Default this parameter if the accidental is natural - it will not be used
-            Accidental.IsNatural() ? NonNaturalAccidentalType.Flat : (NonNaturalAccidentalType)Accidental.Type);
+            Accidental.Kind.IsModifying(out var modifying) ? modifying : default);
     #endregion
 
     #region Arithmetic
@@ -150,7 +143,7 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     public static SimpleIntervalBase operator -(NoteSpelling lhs, NoteSpelling rhs)
     {
         var letterDifference = lhs.Letter - rhs.Letter;
-        return letterDifference.WithQualityShiftedBy(lhs.Accidental.IntValue - rhs.Accidental.IntValue);
+        return letterDifference.WithQualityShiftedBy(lhs.Accidental.Modification - rhs.Accidental.Modification);
     }
     #endregion
 
@@ -199,10 +192,32 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     public override string ToString() => $"{nameof(NoteSpelling)} {{ Letter = {Letter}, Accidental = {Accidental} }}";
 
     /// <summary>
-    /// Gets a musical notation string that represents the current instance.
+    /// Gets a musical notation string that represents this instance using ASCII characters.
     /// </summary>
     /// <returns></returns>
-    public string ToMusicalNotationString() => $"{Letter}{Accidental.ToMusicalNotationString()}";
+    /// <seealso cref="Accidental.ToASCIIMusicalNotationString"/>
+    public string ToASCIIMusicalNotationString() => ToMusicalNotationString(Accidental.ToASCIIMusicalNotationString());
+
+    /// <summary>
+    /// Gets a musical notation string that represents this instance using unicode (UTF-16) characters.
+    /// </summary>
+    /// <param name="showNatural">Whether or not to show the natural if this instance is natural.</param>
+    /// <returns></returns>
+    /// <seealso cref="Accidental.ToUnicodeMusicalNotationString(bool)"/>
+    public string ToUnicodeMusicalNotationString(bool showNatural = false)
+        => ToMusicalNotationString(Accidental.ToUnicodeMusicalNotationString(showNatural));
+
+    /// <summary>
+    /// Gets a musical notation string that represents this instance using uTF32 (UTF-16) characters.
+    /// </summary>
+    /// <param name="showNatural">Whether or not to show the natural if this instance is natural.</param>
+    /// <returns></returns>
+    /// <seealso cref="Accidental.ToUTF32MusicalNotationString(bool)"/>
+    public string ToUTF32MusicalNotationString(bool showNatural = false)
+        => ToMusicalNotationString(Accidental.ToUTF32MusicalNotationString(showNatural));
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private string ToMusicalNotationString(string accidentalString) => $"{Letter}{accidentalString}";
     #endregion
     #endregion
 }

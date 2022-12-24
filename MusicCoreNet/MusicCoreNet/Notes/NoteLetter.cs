@@ -116,7 +116,7 @@ public readonly record struct NoteLetter
     /// Constructs a new <see cref="NoteLetter"/>.
     /// </summary>
     /// <param name="Value"></param>
-    private NoteLetter([NameableEnum] Values Value) { this.Value = Value; }
+    internal NoteLetter([NameableEnum] Values Value) { this.Value = Value; }
     #endregion
 
     #region Methods

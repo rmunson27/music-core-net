@@ -105,7 +105,7 @@ public readonly record struct NotePitchClass
     /// Constructs a new instance of this struct.
     /// </summary>
     /// <param name="Value"></param>
-    private NotePitchClass([NameableEnum] Values Value) { this.Value = Value; }
+    internal NotePitchClass([NameableEnum] Values Value) { this.Value = Value; }
     #endregion
 
     #region Methods

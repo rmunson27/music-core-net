@@ -13,16 +13,21 @@ namespace RemTest.Music;
 public class AccidentalTest
 {
     /// <summary>
-    /// Tests the <see cref="Accidental.ToMusicalNotationString"/> method.
+    /// Tests the <see cref="Accidental.ToASCIIMusicalNotationString"/> method.
     /// </summary>
+    /// <remarks>
+    /// Since <see cref="Accidental.ToUnicodeMusicalNotationString(bool)"/> and
+    /// <see cref="Accidental.ToUTF32MusicalNotationString(bool)"/> use the same internal method to compute their
+    /// results, this method suffices to test those methods as well.
+    /// </remarks>
     [TestMethod]
-    public void TestToMusicalNotationString()
+    public void TestToASCIIMusicalNotationString()
     {
-        Assert.AreEqual("#x", Accidental.Sharp(3).ToMusicalNotationString());
-        Assert.AreEqual("x", Accidental.Sharp(2).ToMusicalNotationString());
-        Assert.AreEqual("#", Accidental.Sharp().ToMusicalNotationString());
-        Assert.AreEqual(string.Empty, Accidental.Natural.ToMusicalNotationString());
-        Assert.AreEqual("b", Accidental.Flat().ToMusicalNotationString());
-        Assert.AreEqual("bb", Accidental.Flat(2).ToMusicalNotationString());
+        Assert.AreEqual("#x", Accidental.Sharp(3).ToASCIIMusicalNotationString());
+        Assert.AreEqual("x", Accidental.Sharp(2).ToASCIIMusicalNotationString());
+        Assert.AreEqual("#", Accidental.Sharp().ToASCIIMusicalNotationString());
+        Assert.AreEqual(string.Empty, Accidental.Natural.ToASCIIMusicalNotationString());
+        Assert.AreEqual("b", Accidental.Flat().ToASCIIMusicalNotationString());
+        Assert.AreEqual("bb", Accidental.Flat(2).ToASCIIMusicalNotationString());
     }
 }

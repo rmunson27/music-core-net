@@ -84,10 +84,10 @@ public class NoteSpellingTest
         {
             Assert.AreEqual(
                 First, Second + Difference,
-                $"Invalid {Second.ToMusicalNotationString()} + {Difference} result.");
+                $"Invalid {Second.ToASCIIMusicalNotationString()} + {Difference} result.");
             Assert.AreEqual(
                 Second, First + Difference.Inversion(),
-                $"Invalid {First.ToMusicalNotationString()} + {Difference.Inversion()} result.");
+                $"Invalid {First.ToASCIIMusicalNotationString()} + {Difference.Inversion()} result.");
         }
     }
 
@@ -101,10 +101,10 @@ public class NoteSpellingTest
         {
             Assert.AreEqual(
                 Second, First - Difference,
-                $"Invalid {First.ToMusicalNotationString()} - {Difference} result.");
+                $"Invalid {First.ToASCIIMusicalNotationString()} - {Difference} result.");
             Assert.AreEqual(
                 First, Second - Difference.Inversion(),
-                $"Invalid {Second.ToMusicalNotationString()} + {Difference.Inversion()} result.");
+                $"Invalid {Second.ToASCIIMusicalNotationString()} + {Difference.Inversion()} result.");
         }
     }
 
@@ -127,21 +127,21 @@ public class NoteSpellingTest
         {
             Assert.IsTrue(
                 First.IsEnharmonicallyEquivalentTo(First),
-                $"{First.ToMusicalNotationString()} was not enharmonically equivalent to itself.");
+                $"{First.ToASCIIMusicalNotationString()} was not enharmonically equivalent to itself.");
 
             Assert.IsTrue(
                 Second.IsEnharmonicallyEquivalentTo(Second),
-                $"{Second.ToMusicalNotationString()} was not enharmonically equivalent to itself.");
+                $"{Second.ToASCIIMusicalNotationString()} was not enharmonically equivalent to itself.");
 
             Assert.IsTrue(
                 First.IsEnharmonicallyEquivalentTo(Second),
-                $"{First.ToMusicalNotationString()} was not enharmonically equivalent"
-                    + $" to {Second.ToMusicalNotationString()}.");
+                $"{First.ToASCIIMusicalNotationString()} was not enharmonically equivalent"
+                    + $" to {Second.ToASCIIMusicalNotationString()}.");
 
             Assert.IsTrue(
                 Second.IsEnharmonicallyEquivalentTo(First),
-                $"{Second.ToMusicalNotationString()} was not enharmonically equivalent"
-                    + $" to {First.ToMusicalNotationString()}.");
+                $"{Second.ToASCIIMusicalNotationString()} was not enharmonically equivalent"
+                    + $" to {First.ToASCIIMusicalNotationString()}.");
         }
     }
 
@@ -169,7 +169,7 @@ public class NoteSpellingTest
     }
 
     /// <summary>
-    /// Tests the <see cref="NoteSpelling.SimplestWithPitchClass(NotePitchClass, NonNaturalAccidentalType)"/>
+    /// Tests the <see cref="NoteSpelling.SimplestWithPitchClass(NotePitchClass, ModifyingAccidentalKind)"/>
     /// factory method.
     /// </summary>
     [TestMethod]
@@ -196,23 +196,23 @@ public class NoteSpellingTest
         NotePitchClass pitchClass, NoteLetter sharpLetter, NoteLetter flatLetter)
     {
         TestSimplestWithPitchClassPair(
-            pitchClass, new(sharpLetter, Accidental.Sharp()), NonNaturalAccidentalType.Sharp);
+            pitchClass, new(sharpLetter, Accidental.Sharp()), ModifyingAccidentalKind.Sharp);
         TestSimplestWithPitchClassPair(
-            pitchClass, new(flatLetter, Accidental.Flat()), NonNaturalAccidentalType.Flat);
+            pitchClass, new(flatLetter, Accidental.Flat()), ModifyingAccidentalKind.Flat);
     }
 
     private static void TestSimplestWithPitchClassPair(
         NotePitchClass pitchClass, NoteSpelling expectedNote,
-        NonNaturalAccidentalType? nonNaturalAccidentalType = null)
+        ModifyingAccidentalKind? nonNaturalAccidentalType = null)
     {
         Assert.AreEqual(
             expectedNote,
-            NoteSpelling.SimplestWithPitchClass(pitchClass, nonNaturalAccidentalType ?? NonNaturalAccidentalType.Flat),
+            NoteSpelling.SimplestWithPitchClass(pitchClass, nonNaturalAccidentalType ?? ModifyingAccidentalKind.Flat),
             $"Invalid {nameof(NoteSpelling.SimplestWithPitchClass)}"
                 + $"({pitchClass}, {(nonNaturalAccidentalType?.ToString() ?? "_")}) result.");
         Assert.AreEqual(
             pitchClass, expectedNote.PitchClass,
-            $"Note '{expectedNote.ToMusicalNotationString()}' did not have the expected pitch class.");
+            $"Note '{expectedNote.ToASCIIMusicalNotationString()}' did not have the expected pitch class.");
     }
 
     /// <summary>
@@ -225,11 +225,11 @@ public class NoteSpellingTest
         {
             Assert.AreEqual(
                 Difference, First - Second,
-                $"Invalid {First.ToMusicalNotationString()} - {Second.ToMusicalNotationString()} result.");
+                $"Invalid {First.ToASCIIMusicalNotationString()} - {Second.ToASCIIMusicalNotationString()} result.");
             Assert.AreEqual(
                 Difference.Inversion(),
                 Second - First,
-                $"Invalid {Second.ToMusicalNotationString()} - {First.ToMusicalNotationString()} result.");
+                $"Invalid {Second.ToASCIIMusicalNotationString()} - {First.ToASCIIMusicalNotationString()} result.");
         }
     }
 }
