@@ -61,7 +61,7 @@ public readonly record struct NoteLetter
     /// <summary>
     /// Gets an <see langword="enum"/> value uniquely identifying the current instance.
     /// </summary>
-    [NamedEnum] public Values Value { get; }
+    [NameableEnum] public Values Value { get; }
 
     /// <summary>
     /// Gets an index representing the position of the current instance in a C-based octave relative to the C-note
@@ -116,7 +116,7 @@ public readonly record struct NoteLetter
     /// Constructs a new <see cref="NoteLetter"/>.
     /// </summary>
     /// <param name="Value"></param>
-    private NoteLetter([NamedEnum] Values Value) { this.Value = Value; }
+    private NoteLetter([NameableEnum] Values Value) { this.Value = Value; }
     #endregion
 
     #region Methods
@@ -141,7 +141,7 @@ public readonly record struct NoteLetter
     /// </summary>
     /// <param name="Value"></param>
     /// <exception cref="InvalidEnumArgumentException"><paramref name="Value"/> was an unnamed enum value.</exception>
-    public static implicit operator NoteLetter([NamedEnum] Values Value)
+    public static implicit operator NoteLetter([NameableEnum] Values Value)
         => new(Throw.IfEnumArgUnnamed(Value, nameof(Value)));
     #endregion
 

@@ -23,37 +23,37 @@ public readonly record struct SimpleIntervalNumber
     /// <summary>
     /// The <see cref="SimpleIntervalNumber"/> representing a fourth.
     /// </summary>
-    [NamedEnum] public static readonly SimpleIntervalNumber Fourth = PerfectableSimpleIntervalNumber.Fourth;
+    [NameableEnum] public static readonly SimpleIntervalNumber Fourth = PerfectableSimpleIntervalNumber.Fourth;
 
     /// <summary>
     /// The <see cref="SimpleIntervalNumber"/> representing a unison.
     /// </summary>
-    [NamedEnum] public static readonly SimpleIntervalNumber Unison = PerfectableSimpleIntervalNumber.Unison;
+    [NameableEnum] public static readonly SimpleIntervalNumber Unison = PerfectableSimpleIntervalNumber.Unison;
 
     /// <summary>
     /// The <see cref="SimpleIntervalNumber"/> representing a fifth.
     /// </summary>
-    [NamedEnum] public static readonly SimpleIntervalNumber Fifth = PerfectableSimpleIntervalNumber.Fifth;
+    [NameableEnum] public static readonly SimpleIntervalNumber Fifth = PerfectableSimpleIntervalNumber.Fifth;
 
     /// <summary>
     /// The <see cref="SimpleIntervalNumber"/> representing a second.
     /// </summary>
-    [NamedEnum] public static readonly SimpleIntervalNumber Second = ImperfectableSimpleIntervalNumber.Second;
+    [NameableEnum] public static readonly SimpleIntervalNumber Second = ImperfectableSimpleIntervalNumber.Second;
 
     /// <summary>
     /// The <see cref="SimpleIntervalNumber"/> representing a third.
     /// </summary>
-    [NamedEnum] public static readonly SimpleIntervalNumber Third = ImperfectableSimpleIntervalNumber.Third;
+    [NameableEnum] public static readonly SimpleIntervalNumber Third = ImperfectableSimpleIntervalNumber.Third;
 
     /// <summary>
     /// The <see cref="SimpleIntervalNumber"/> representing a sixth.
     /// </summary>
-    [NamedEnum] public static readonly SimpleIntervalNumber Sixth = ImperfectableSimpleIntervalNumber.Sixth;
+    [NameableEnum] public static readonly SimpleIntervalNumber Sixth = ImperfectableSimpleIntervalNumber.Sixth;
 
     /// <summary>
     /// The <see cref="SimpleIntervalNumber"/> representing a seventh.
     /// </summary>
-    [NamedEnum] public static readonly SimpleIntervalNumber Seventh = ImperfectableSimpleIntervalNumber.Seventh;
+    [NameableEnum] public static readonly SimpleIntervalNumber Seventh = ImperfectableSimpleIntervalNumber.Seventh;
     #endregion
 
     #region Properties And Fields

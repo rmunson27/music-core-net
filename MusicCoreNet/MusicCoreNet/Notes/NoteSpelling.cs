@@ -72,7 +72,7 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     /// <paramref name="AccidentalType"/> was an unnamed enum value.
     /// </exception>
     public static NoteSpelling SimplestWithPitchClass(
-        NotePitchClass PitchClass, [NamedEnum] NonNaturalAccidentalType AccidentalType)
+        NotePitchClass PitchClass, [NameableEnum] NonNaturalAccidentalType AccidentalType)
     {
         var sharpResult = Throw.IfEnumArgUnnamed(AccidentalType, nameof(AccidentalType))
                             == NonNaturalAccidentalType.Sharp;

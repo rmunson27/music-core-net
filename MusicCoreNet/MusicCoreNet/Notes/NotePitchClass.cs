@@ -83,7 +83,7 @@ public readonly record struct NotePitchClass
     /// <summary>
     /// Gets an <see langword="enum"/> value uniquely identifying the current instance.
     /// </summary>
-    [NamedEnum] public Values Value { get; }
+    [NameableEnum] public Values Value { get; }
 
     /// <summary>
     /// Gets the number of semitones that pitches described by this instance are above the nearest lesser or equal
@@ -105,7 +105,7 @@ public readonly record struct NotePitchClass
     /// Constructs a new instance of this struct.
     /// </summary>
     /// <param name="Value"></param>
-    private NotePitchClass([NamedEnum] Values Value) { this.Value = Value; }
+    private NotePitchClass([NameableEnum] Values Value) { this.Value = Value; }
     #endregion
 
     #region Methods
@@ -166,7 +166,7 @@ public readonly record struct NotePitchClass
     /// </summary>
     /// <param name="Value"></param>
     /// <exception cref="InvalidEnumArgumentException"><paramref name="Value"/> was an unnamed enum value.</exception>
-    public static implicit operator NotePitchClass([NamedEnum] Values Value)
+    public static implicit operator NotePitchClass([NameableEnum] Values Value)
         => new(Throw.IfEnumArgUnnamed(Value, nameof(Value)));
     #endregion
 

@@ -63,7 +63,7 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
     /// <exception cref="InvalidEnumArgumentException">
     /// <paramref name="AccidentalType"/> was an unnamed enum value.
     /// </exception>
-    public static Note SimplestWithPitch(NotePitch Pitch, [NamedEnum] NonNaturalAccidentalType AccidentalType)
+    public static Note SimplestWithPitch(NotePitch Pitch, [NameableEnum] NonNaturalAccidentalType AccidentalType)
         => new(NoteSpelling.SimplestWithPitchClass(Pitch.Class, AccidentalType), Pitch.Octave);
     #endregion
 
