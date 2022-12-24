@@ -25,21 +25,21 @@ public class SimpleIntervalNumberTest
     }
 
     /// <summary>
-    /// Tests the <see cref="SimpleIntervalNumber.FromValue(int)"/> factory method.
+    /// Tests the <see cref="SimpleIntervalNumber.FromNumericalValue(int)"/> factory method.
     /// </summary>
     [TestMethod]
     public void TestFromValue()
     {
-        Assert.AreEqual(Unison, SimpleIntervalNumber.FromValue(1));
-        Assert.AreEqual(Second, SimpleIntervalNumber.FromValue(2));
-        Assert.AreEqual(Third, SimpleIntervalNumber.FromValue(3));
-        Assert.AreEqual(Fourth, SimpleIntervalNumber.FromValue(4));
-        Assert.AreEqual(Fifth, SimpleIntervalNumber.FromValue(5));
-        Assert.AreEqual(Sixth, SimpleIntervalNumber.FromValue(6));
-        Assert.AreEqual(Seventh, SimpleIntervalNumber.FromValue(7));
+        Assert.AreEqual(Unison, SimpleIntervalNumber.FromNumericalValue(1));
+        Assert.AreEqual(Second, SimpleIntervalNumber.FromNumericalValue(2));
+        Assert.AreEqual(Third, SimpleIntervalNumber.FromNumericalValue(3));
+        Assert.AreEqual(Fourth, SimpleIntervalNumber.FromNumericalValue(4));
+        Assert.AreEqual(Fifth, SimpleIntervalNumber.FromNumericalValue(5));
+        Assert.AreEqual(Sixth, SimpleIntervalNumber.FromNumericalValue(6));
+        Assert.AreEqual(Seventh, SimpleIntervalNumber.FromNumericalValue(7));
 
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => SimpleIntervalNumber.FromValue(8));
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => SimpleIntervalNumber.FromValue(0));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => SimpleIntervalNumber.FromNumericalValue(8));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => SimpleIntervalNumber.FromNumericalValue(0));
     }
 
     /// <summary>

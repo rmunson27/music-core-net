@@ -164,7 +164,7 @@ public readonly record struct NoteLetter
     /// <param name="rhs"></param>
     /// <returns></returns>
     public static NoteLetter operator +(NoteLetter lhs, SimpleIntervalNumber rhs)
-        => new((Values)((lhs.CBasedIndex + rhs.Value - 1) % 7));
+        => new((Values)((lhs.CBasedIndex + rhs.NumericalValue - 1) % 7));
 
     /// <summary>
     /// Finds the difference between the two <see cref="NoteLetter"/> instances passed in.

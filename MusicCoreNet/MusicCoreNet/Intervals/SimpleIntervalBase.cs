@@ -170,10 +170,9 @@ public readonly record struct SimpleIntervalBase
     /// <param name="Quality"></param>
     /// <param name="Number"></param>
     /// <returns></returns>
-    /// <exception cref="InvalidEnumArgumentException"><paramref name="Number"/> was an unnamed enum value.</exception>
     public static SimpleIntervalBase CreatePerfectable(
-        PerfectableIntervalQuality Quality, [NamedEnum] PerfectableSimpleIntervalNumber Number)
-        => new(Quality, Throw.IfEnumArgUnnamed(Number, nameof(Number)));
+        PerfectableIntervalQuality Quality, PerfectableSimpleIntervalNumber Number)
+        => new(Quality, Number);
 
     /// <summary>
     /// Creates a new imperfectable instance of this struct with the supplied quality and number.
@@ -181,10 +180,9 @@ public readonly record struct SimpleIntervalBase
     /// <param name="Quality"></param>
     /// <param name="Number"></param>
     /// <returns></returns>
-    /// <exception cref="InvalidEnumArgumentException"><paramref name="Number"/> was an unnamed enum value.</exception>
     public static SimpleIntervalBase CreateImperfectable(
-        ImperfectableIntervalQuality Quality, [NamedEnum] ImperfectableSimpleIntervalNumber Number)
-        => new(Quality, Throw.IfEnumArgUnnamed(Number, nameof(Number)));
+        ImperfectableIntervalQuality Quality, ImperfectableSimpleIntervalNumber Number)
+        => new(Quality, Number);
     #endregion
 
     #region Classification
