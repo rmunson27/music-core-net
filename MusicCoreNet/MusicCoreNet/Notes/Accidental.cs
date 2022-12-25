@@ -96,7 +96,7 @@ public readonly record struct Accidental
     public AccidentalKind Kind => new(unchecked((AccidentalKind.Values)Math.Sign(Modification)));
 
     /// <summary>
-    /// Gets a value describing the modification this instance makes to a pitch of a note to which it is applied.
+    /// Gets an integer describing the modification this instance makes to a pitch of a note to which it is applied.
     /// </summary>
     /// <remarks>
     /// This will be positive if the current instance is sharp, zero if it is natural, and negative if it is flat,
