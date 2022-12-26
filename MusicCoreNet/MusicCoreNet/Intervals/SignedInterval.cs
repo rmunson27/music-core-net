@@ -96,11 +96,29 @@ public readonly record struct SignedInterval
 
     #region Equality
     /// <summary>
+    /// Determines if the two <see cref="SignedInterval"/> instances are equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator ==(in SignedInterval lhs, in SignedInterval rhs) => lhs.Equals(in rhs);
+
+    /// <summary>
+    /// Determines if the two <see cref="SignedInterval"/> instances are not equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator !=(in SignedInterval lhs, in SignedInterval rhs) => !lhs.Equals(in rhs);
+
+    bool IEquatable<SignedInterval>.Equals(SignedInterval other) => Equals(in other);
+
+    /// <summary>
     /// Determines if the current instance is equal to another object of the same type.
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
-    public bool Equals(SignedInterval other) => _sign == other._sign && Interval == other.Interval;
+    public bool Equals(in SignedInterval other) => _sign == other._sign && Interval == other.Interval;
 
     /// <summary>
     /// Gets a hash code for the current instance.

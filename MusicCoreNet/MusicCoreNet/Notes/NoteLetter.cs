@@ -218,7 +218,7 @@ public readonly record struct NoteLetter
     /// <summary>
     /// Represents the potential values of this struct.
     /// </summary>
-    public enum Values
+    public enum Values : byte
     {
         /// <summary>
         /// Represents a 'C' note.

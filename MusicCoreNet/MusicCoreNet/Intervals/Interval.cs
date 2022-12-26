@@ -84,11 +84,29 @@ public readonly record struct Interval(SimpleIntervalBase Base, [NonNegative] in
 
     #region Equality
     /// <summary>
+    /// Determines whether two <see cref="Interval"/> instances are equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator ==(in Interval lhs, in Interval rhs) => lhs.Equals(in rhs);
+
+    /// <summary>
+    /// Determines whether two <see cref="Interval"/> instances are not equal.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static bool operator !=(in Interval lhs, in Interval rhs) => !lhs.Equals(in rhs);
+
+    bool IEquatable<Interval>.Equals(Interval other) => Equals(in other);
+
+    /// <summary>
     /// Determines if the current instance is equal to another object of the same type.
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
-    public bool Equals(Interval other) => AdditionalOctaves == other.AdditionalOctaves && Base == other.Base;
+    public bool Equals(in Interval other) => AdditionalOctaves == other.AdditionalOctaves && Base == other.Base;
 
     /// <summary>
     /// Gets a hash code for the current instance.
