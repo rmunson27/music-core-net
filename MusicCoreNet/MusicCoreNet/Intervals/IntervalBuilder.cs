@@ -36,7 +36,6 @@ public readonly struct AugmentedIntervalBuilder
     /// Creates a fourth with the augmented quality represented by this instance.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Fourth()
         => new(IntervalQuality.Augmented(Degree), SimpleIntervalNumber.Fourth);
 
@@ -44,7 +43,6 @@ public readonly struct AugmentedIntervalBuilder
     /// Creates a unison with the augmented quality represented by this instance.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Unison()
         => new(IntervalQuality.Augmented(Degree), SimpleIntervalNumber.Unison);
 
@@ -52,7 +50,6 @@ public readonly struct AugmentedIntervalBuilder
     /// Creates a fifth with the augmented quality represented by this instance.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Fifth()
         => new(IntervalQuality.Augmented(Degree), SimpleIntervalNumber.Fifth);
     #endregion
@@ -62,7 +59,6 @@ public readonly struct AugmentedIntervalBuilder
     /// Creates a second with the augmented quality represented by this instance.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Second()
         => new(IntervalQuality.Augmented(Degree), SimpleIntervalNumber.Second);
 
@@ -70,7 +66,6 @@ public readonly struct AugmentedIntervalBuilder
     /// Creates a sixth with the augmented quality represented by this instance.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Sixth()
         => new(IntervalQuality.Augmented(Degree), SimpleIntervalNumber.Sixth);
 
@@ -78,7 +73,6 @@ public readonly struct AugmentedIntervalBuilder
     /// Creates a third with the augmented quality represented by this instance.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Third()
         => new(IntervalQuality.Augmented(Degree), SimpleIntervalNumber.Third);
 
@@ -86,7 +80,6 @@ public readonly struct AugmentedIntervalBuilder
     /// Creates a seventh with the augmented quality represented by this instance.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Seventh()
         => new(IntervalQuality.Augmented(Degree), SimpleIntervalNumber.Seventh);
     #endregion
@@ -141,7 +134,6 @@ public readonly struct DiminishedIntervalBuilder
     /// Creates a fourth with the diminished quality represented by this instance.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Fourth()
         => new(IntervalQuality.Diminished(Degree), SimpleIntervalNumber.Fourth);
 
@@ -149,7 +141,6 @@ public readonly struct DiminishedIntervalBuilder
     /// Creates a unison with the diminished quality represented by this instance.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Unison()
         => new(IntervalQuality.Diminished(Degree), SimpleIntervalNumber.Unison);
 
@@ -157,7 +148,6 @@ public readonly struct DiminishedIntervalBuilder
     /// Creates a fifth with the diminished quality represented by this instance.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Fifth()
         => new(IntervalQuality.Diminished(Degree), SimpleIntervalNumber.Fifth);
     #endregion
@@ -167,7 +157,6 @@ public readonly struct DiminishedIntervalBuilder
     /// Creates a second with the diminished quality represented by this instance.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Second()
         => new(IntervalQuality.Diminished(Degree), SimpleIntervalNumber.Second);
 
@@ -175,7 +164,6 @@ public readonly struct DiminishedIntervalBuilder
     /// Creates a sixth with the diminished quality represented by this instance.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Sixth()
         => new(IntervalQuality.Diminished(Degree), SimpleIntervalNumber.Sixth);
 
@@ -183,7 +171,6 @@ public readonly struct DiminishedIntervalBuilder
     /// Creates a third with the diminished quality represented by this instance.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Third()
         => new(IntervalQuality.Diminished(Degree), SimpleIntervalNumber.Third);
 
@@ -191,7 +178,6 @@ public readonly struct DiminishedIntervalBuilder
     /// Creates a seventh with the diminished quality represented by this instance.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Seventh()
         => new(IntervalQuality.Diminished(Degree), SimpleIntervalNumber.Seventh);
     #endregion
@@ -228,7 +214,6 @@ public readonly struct MajorIntervalBuilder
     /// Creates a major second.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Second()
         => new(IntervalQuality.Major, SimpleIntervalNumber.Second);
 
@@ -236,7 +221,6 @@ public readonly struct MajorIntervalBuilder
     /// Creates a major third.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Third()
         => new(IntervalQuality.Major, SimpleIntervalNumber.Third);
 
@@ -244,7 +228,6 @@ public readonly struct MajorIntervalBuilder
     /// Creates a major sixth.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Sixth()
         => new(IntervalQuality.Major, SimpleIntervalNumber.Sixth);
 
@@ -252,7 +235,6 @@ public readonly struct MajorIntervalBuilder
     /// Creates a major seventh.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Seventh()
         => new(IntervalQuality.Major, SimpleIntervalNumber.Seventh);
     #endregion
@@ -296,7 +278,6 @@ public readonly struct MinorIntervalBuilder
     /// Creates a minor second.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Second()
         => new(IntervalQuality.Minor, SimpleIntervalNumber.Second);
 
@@ -304,7 +285,6 @@ public readonly struct MinorIntervalBuilder
     /// Creates a minor third.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Third()
         => new(IntervalQuality.Minor, SimpleIntervalNumber.Third);
 
@@ -312,7 +292,6 @@ public readonly struct MinorIntervalBuilder
     /// Creates a minor sixth.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Sixth()
         => new(IntervalQuality.Minor, SimpleIntervalNumber.Sixth);
 
@@ -320,7 +299,6 @@ public readonly struct MinorIntervalBuilder
     /// Creates a minor seventh.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Seventh()
         => new(IntervalQuality.Minor, SimpleIntervalNumber.Seventh);
     #endregion
@@ -364,7 +342,6 @@ public readonly struct PerfectIntervalBuilder
     /// Creates a perfect fourth.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Fourth()
         => new(IntervalQuality.Perfect, SimpleIntervalNumber.Fourth);
 
@@ -372,7 +349,6 @@ public readonly struct PerfectIntervalBuilder
     /// Creates a perfect unison.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Unison()
         => new(IntervalQuality.Perfect, SimpleIntervalNumber.Unison);
 
@@ -380,7 +356,6 @@ public readonly struct PerfectIntervalBuilder
     /// Creates a perfect fifth.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SimpleIntervalBase Fifth()
         => new(IntervalQuality.Perfect, SimpleIntervalNumber.Fifth);
     #endregion
