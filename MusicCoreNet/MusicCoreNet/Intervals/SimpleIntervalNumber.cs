@@ -21,6 +21,12 @@ public readonly record struct SimpleIntervalNumber
 {
     #region Constants
     /// <summary>
+    /// The number of distinct <see cref="SimpleIntervalNumber"/> values.
+    /// </summary>
+    public const int ValuesCount
+        = PerfectableSimpleIntervalNumber.ValuesCount + ImperfectableSimpleIntervalNumber.ValuesCount;
+
+    /// <summary>
     /// Represents a fourth.
     /// </summary>
     public static readonly SimpleIntervalNumber Fourth = PerfectableSimpleIntervalNumber.Fourth;
@@ -80,7 +86,7 @@ public readonly record struct SimpleIntervalNumber
     /// <summary>
     /// Gets the numerical value of this instance.
     /// </summary>
-    [GreaterThanOrEqualToInteger(1), LessThanOrEqualToInteger(7)]
+    [GreaterThanOrEqualToInteger(1), LessThanOrEqualToInteger(ValuesCount)]
     public int NumericalValue => IsPerfectable()
                                     ? InternalNumber.Perfectable.NumericalValue
                                     : (int)InternalNumber.Imperfectable.NumericalValue;
@@ -128,10 +134,11 @@ public readonly record struct SimpleIntervalNumber
     /// <param name="halfSteps"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="halfSteps"/> was negative or >= 12.
+    /// <paramref name="halfSteps"/> was or spanned an octave or more.
     /// </exception>
     internal static SimpleIntervalNumber OfSimplestIntervalWithHalfSteps(
-        [NonNegative, LessThanInteger(12)] int halfSteps, PeripheralIntervalQualityKind tritoneQualityType)
+        [NonNegative, LessThanInteger(NotePitchClass.ValuesCount)] int halfSteps,
+        PeripheralIntervalQualityKind tritoneQualityType)
         => OfSimplestIntervalWithHalfSteps(halfSteps)
             ?? (tritoneQualityType == PeripheralIntervalQualityKind.Augmented
                     ? Fourth
@@ -145,10 +152,10 @@ public readonly record struct SimpleIntervalNumber
     /// <param name="halfSteps"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="halfSteps"/> was negative or >= 12.
+    /// <paramref name="halfSteps"/> was negative or spanned an octave or more.
     /// </exception>
     internal static SimpleIntervalNumber? OfSimplestIntervalWithHalfSteps(
-        [NonNegative, LessThanInteger(12)] int halfSteps)
+        [NonNegative, LessThanInteger(NotePitchClass.ValuesCount)] int halfSteps)
         => halfSteps switch
         {
             0 => Unison,
@@ -191,7 +198,7 @@ public readonly record struct SimpleIntervalNumber
     /// <paramref name="Value"/> did not represent a simple interval number.
     /// </exception>
     public static SimpleIntervalNumber FromNumericalValue(
-        [GreaterThanOrEqualToInteger(1), LessThanOrEqualToInteger(7)] int Value)
+        [GreaterThanOrEqualToInteger(1), LessThanOrEqualToInteger(ValuesCount)] int Value)
         => Value switch
         {
             1 or 4 or 5 => (PerfectableSimpleIntervalNumber)Value,
@@ -590,11 +597,11 @@ public readonly record struct SimpleIntervalNumber
     /// Explicitly converts an <see cref="int"/> to an instance of this struct.
     /// </summary>
     /// <param name="value"></param>
-    /// <exception cref="InvalidCastException">The <see cref="int"/> value was not in the range 1..7.</exception>
+    /// <exception cref="InvalidCastException">The <see cref="int"/> value was out of range.</exception>
     public static explicit operator SimpleIntervalNumber(int value)
-        => value < 1 || value > 7
+        => value < 1 || value > ValuesCount
             ? throw new InvalidCastException(
-                "Cannot cast integer outside of the range 1..7 to a simple interval number.")
+                $"Cannot cast integer outside of the range 1..{ValuesCount} to a simple interval number.")
             : FromNumericalValue(value);
 
     /// <summary>
@@ -670,6 +677,11 @@ public readonly record struct SimpleIntervalNumber
 public readonly record struct PerfectableSimpleIntervalNumber
 {
     #region Constants
+    /// <summary>
+    /// The number of distinct <see cref="PerfectableSimpleIntervalNumber"/> instances.
+    /// </summary>
+    public const int ValuesCount = 3;
+
     /// <summary>
     /// The offset between the numerical value of <see cref="Values.Unison"/> and the numerical value
     /// of <see cref="Unison"/>.
@@ -863,6 +875,11 @@ public readonly record struct PerfectableSimpleIntervalNumber
 public readonly record struct ImperfectableSimpleIntervalNumber
 {
     #region Constants
+    /// <summary>
+    /// The number of distinct <see cref="ImperfectableSimpleIntervalNumber"/> instances.
+    /// </summary>
+    public const int ValuesCount = 4;
+
     /// <summary>
     /// The offset between the numerical value of <see cref="Values.Second"/> and the numerical value
     /// of <see cref="Second"/>.

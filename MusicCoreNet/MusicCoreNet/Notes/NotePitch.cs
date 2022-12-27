@@ -43,13 +43,14 @@ public readonly record struct NotePitch(NotePitchClass Class, int Octave) : ICom
     /// <summary>
     /// Gets the frequency of the represented pitch.
     /// </summary>
-    public double Frequency => ConcertPitchFrequency * Math.Pow(2, (this - ConcertPitch) / 12.0);
+    public double Frequency
+        => ConcertPitchFrequency * Math.Pow(2, (this - ConcertPitch) / (double)NotePitchClass.ValuesCount);
 
     /// <summary>
     /// Gets an integer index for this instance relative to the pitch <see cref="C0"/>, the lowest pitch in the
     /// zero octave.
     /// </summary>
-    public int C0Index => Class.SemitonesAboveC + Octave * 12;
+    public int C0Index => Class.SemitonesAboveC + Octave * NotePitchClass.ValuesCount;
     #endregion
 
     #region Methods
@@ -63,7 +64,7 @@ public readonly record struct NotePitch(NotePitchClass Class, int Octave) : ICom
     /// <seealso cref="C0Index"/>
     public static NotePitch FromC0Index(int Index)
     {
-        var octave = Maths.FloorDivRem(Index, 12, out var classCRelativeIndex);
+        var octave = Maths.FloorDivRem(Index, NotePitchClass.ValuesCount, out var classCRelativeIndex);
         return new(NotePitchClass.FromSemitonesAboveC(classCRelativeIndex), octave);
     }
     #endregion

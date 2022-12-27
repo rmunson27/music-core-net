@@ -20,7 +20,7 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
     /// <summary>
     /// Gets the integer value of this number.
     /// </summary>
-    [Positive] public int Value => Base.NumericalValue + AdditionalOctaves * 7;
+    [Positive] public int Value => Base.NumericalValue + AdditionalOctaves * SimpleIntervalNumber.ValuesCount;
 
     /// <summary>
     /// Gets the perfectability of this instance.
@@ -70,9 +70,9 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
     public IntervalNumber([Positive] int Value)
     {
         Throw.IfArgNotPositive(Value, nameof(Value));
-        var base7Value = Value - 1;
-        Base = SimpleIntervalNumber.FromNumericalValue(base7Value % 7 + 1);
-        AdditionalOctaves = base7Value / 7;
+        var valueMinus1 = Value - 1;
+        Base = SimpleIntervalNumber.FromNumericalValue(valueMinus1 % SimpleIntervalNumber.ValuesCount + 1);
+        AdditionalOctaves = valueMinus1 / SimpleIntervalNumber.ValuesCount;
     }
     #endregion
 

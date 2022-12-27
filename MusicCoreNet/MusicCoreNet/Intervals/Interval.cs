@@ -52,7 +52,7 @@ public readonly record struct Interval(SimpleIntervalBase Base, [NonNegative] in
     /// <summary>
     /// Gets the number of half steps spanned by this instance.
     /// </summary>
-    public int HalfSteps => Base.HalfSteps + _additionalOctaves * 12;
+    public int HalfSteps => Base.HalfSteps + _additionalOctaves * NotePitchClass.ValuesCount;
 
     /// <summary>
     /// Gets or initializes the number of additional octaves added on to the base to make up the interval.

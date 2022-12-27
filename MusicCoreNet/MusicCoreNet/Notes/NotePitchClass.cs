@@ -18,6 +18,11 @@ public readonly record struct NotePitchClass
 {
     #region Constants
     /// <summary>
+    /// The number of distinct <see cref="NotePitchClass"/> values.
+    /// </summary>
+    public const int ValuesCount = 12;
+
+    /// <summary>
     /// Represents notes that are enharmonically equivalent to an 'A' note.
     /// </summary>
     public static readonly NotePitchClass A = new(Values.A);
@@ -95,8 +100,9 @@ public readonly record struct NotePitchClass
     /// C pitch.
     /// </summary>
     public int SemitonesBelowC =>
-        // Subtract from 12 (so are going down instead of up) then mod by 12 (to put the C case in range at 0)
-        (12 - (int)Value) % 12;
+        // Subtract from number of pitch classes (so are going down instead of up) then mod by number of pitch classes
+        // (to put the C case in range at 0)
+        (NotePitchClass.ValuesCount - (int)Value) % NotePitchClass.ValuesCount;
     #endregion
 
     #region Constructor

@@ -50,7 +50,8 @@ public readonly record struct SimpleIntervalBase
     /// Gets the circle of fifths index of this instance relative to a perfect unison.
     /// </summary>
     public int CircleOfFifthsIndex => Number.CircleOfFifthsIndex
-                                        + Quality.PerfectOrMajorBasedIndex(Perfectability) * 7;
+                                        + Quality.PerfectOrMajorBasedIndex(Perfectability)
+                                            * SimpleIntervalNumber.ValuesCount;
 
     /// <summary>
     /// Gets the number of half steps spanning the simple interval represented by this object.
@@ -114,10 +115,10 @@ public readonly record struct SimpleIntervalBase
     /// fifth as appropriate if <paramref name="halfSteps"/> indicates a tritone.
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="halfSteps"/> was negative or >= 12.
+    /// <paramref name="halfSteps"/> was negative or spanned an octave or more.
     /// </exception>
     public static SimpleIntervalBase SimplestWithHalfSteps(
-        [NonNegative, LessThanInteger(12)] int halfSteps,
+        [NonNegative, LessThanInteger(NotePitchClass.ValuesCount)] int halfSteps,
         PeripheralIntervalQualityKind tritoneQualityType)
         => new(
             IntervalQuality.OfSimplestIntervalWithHalfSteps(halfSteps, tritoneQualityType),
@@ -134,9 +135,10 @@ public readonly record struct SimpleIntervalBase
     /// as this case is ambiguous between an augmented fourth and a diminished fifth).
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="halfSteps"/> was negative or >= 12.
+    /// <paramref name="halfSteps"/> was negative or spanned an octave or more.
     /// </exception>
-    public static SimpleIntervalBase? SimplestWithHalfSteps([NonNegative, LessThanInteger(12)] int halfSteps)
+    public static SimpleIntervalBase? SimplestWithHalfSteps(
+        [NonNegative, LessThanInteger(NotePitchClass.ValuesCount)] int halfSteps)
         => IntervalQuality.OfSimplestIntervalWithHalfSteps(halfSteps) is IntervalQuality quality
             ? new(
                 quality,
@@ -153,7 +155,8 @@ public readonly record struct SimpleIntervalBase
         // Find the quality and number circle of fifths indexes
         // Need to adjust for the fact that a perfect fourth has index -1 with respect to a perfect unison
         // (and the perfect quality has index 0 in that case)
-        var qualityCircleOfFifthsIndex = Maths.FloorDivRem(Index + 1, 7, out var numberCircleOfFifthsIndex);
+        var qualityCircleOfFifthsIndex
+            = Maths.FloorDivRem(Index + 1, SimpleIntervalNumber.ValuesCount, out var numberCircleOfFifthsIndex);
         numberCircleOfFifthsIndex--;
         if (numberCircleOfFifthsIndex == -1) qualityCircleOfFifthsIndex++;
 
@@ -386,7 +389,7 @@ public readonly record struct SimpleIntervalBase
         #region Number
         var newUnisonBasedNumberIndex = lhs.Number.CircleOfFifthsIndex + rhs.Number.CircleOfFifthsIndex;
         var ubni_determinant = newUnisonBasedNumberIndex + 1; // Get rid of the -1 label for fourths
-        var qualityShift = Maths.FloorDivRem(ubni_determinant, 7, out ubni_determinant);
+        var qualityShift = Maths.FloorDivRem(ubni_determinant, SimpleIntervalNumber.ValuesCount, out ubni_determinant);
         newUnisonBasedNumberIndex = ubni_determinant - 1; // Add back the -1 label for fourths
         var newNumber = SimpleIntervalNumber.FromCircleOfFifthsIndex(newUnisonBasedNumberIndex);
         #endregion

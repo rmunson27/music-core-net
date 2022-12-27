@@ -22,7 +22,8 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     /// <summary>
     /// Gets the circle of fifths index of this instance relative to C natural.
     /// </summary>
-    internal int CircleOfFifthsIndexRelativeToC => Letter.CircleOfFifthsIndexRelativeToC + Accidental.Modification * 7;
+    internal int CircleOfFifthsIndexRelativeToC
+        => Letter.CircleOfFifthsIndexRelativeToC + Accidental.Modification * NoteLetter.ValuesCount;
 
     /// <summary>
     /// Gets the number of half steps a note spelled with this instance is above the 'C' pitch in its octave.
@@ -48,7 +49,8 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     /// Gets the pitch class of this instance.
     /// </summary>
     public NotePitchClass PitchClass
-        => NotePitchClass.FromSemitonesAboveC(Maths.FloorRem(Letter.HalfStepsAboveC + Accidental.Modification, 12));
+        => NotePitchClass.FromSemitonesAboveC(
+            Maths.FloorRem(Letter.HalfStepsAboveC + Accidental.Modification, NotePitchClass.ValuesCount));
     #endregion
 
     #region Methods

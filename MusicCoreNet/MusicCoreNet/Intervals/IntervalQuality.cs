@@ -204,7 +204,7 @@ public readonly record struct IntervalQuality
     /// <returns></returns>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="halfSteps"/> was negative.</exception>
     internal static IntervalQuality? OfSimplestIntervalWithHalfSteps([NonNegative] int halfSteps)
-        => (halfSteps % 12) switch
+        => (halfSteps % NotePitchClass.ValuesCount) switch
         {
             1 or 3 or 8 or 10 => Minor,
             0 or 5 or 7 => Perfect,
@@ -972,6 +972,11 @@ public readonly record struct PeripheralIntervalQualityKind
 {
     #region Constants
     /// <summary>
+    /// The number of distinct <see cref="PeripheralIntervalQualityKind"/> values.
+    /// </summary>
+    public const int ValuesCount = 2;
+
+    /// <summary>
     /// The offset to subtract from <see cref="Value"/> to get the value of the
     /// corresponding <see cref="IntervalQualityKind"/> value.
     /// </summary>
@@ -1074,6 +1079,11 @@ public readonly record struct PeripheralIntervalQualityKind
 public readonly record struct CentralIntervalQualityKind
 {
     #region Constants
+    /// <summary>
+    /// The number of distinct <see cref="CentralIntervalQualityKind"/> values.
+    /// </summary>
+    public const int ValuesCount = 3;
+
     /// <inheritdoc cref="Values.Major"/>
     public static readonly CentralIntervalQualityKind Major = new(Values.Major);
 
@@ -1256,6 +1266,11 @@ public readonly record struct CentralIntervalQualityKind
 public readonly record struct PerfectableIntervalQualityKind
 {
     #region Constants
+    /// <summary>
+    /// The number of distinct <see cref="PerfectableIntervalQualityKind"/> values.
+    /// </summary>
+    public const int ValuesCount = 3;
+
     /// <inheritdoc cref="Values.Augmented"/>
     public static readonly PerfectableIntervalQualityKind Augmented = new(Values.Augmented);
 
@@ -1467,6 +1482,11 @@ public readonly record struct PerfectableIntervalQualityKind
 public readonly record struct ImperfectableIntervalQualityKind
 {
     #region Constants
+    /// <summary>
+    /// The number of distinct <see cref="ImperfectableIntervalQualityKind"/> values.
+    /// </summary>
+    public const int ValuesCount = 4;
+
     /// <summary>
     /// The offset to subtract from <see cref="Value"/> to get the value of the
     /// corresponding <see cref="IntervalQualityKind"/> value.
@@ -1686,6 +1706,11 @@ public readonly record struct ImperfectableIntervalQualityKind
 public readonly record struct IntervalQualityKind
 {
     #region Constants
+    /// <summary>
+    /// The number of distinct <see cref="IntervalQualityKind"/> values.
+    /// </summary>
+    public const int ValuesCount = 5;
+
     /// <inheritdoc cref="Values.Augmented"/>
     public static readonly IntervalQualityKind Augmented = new(Values.Augmented);
 

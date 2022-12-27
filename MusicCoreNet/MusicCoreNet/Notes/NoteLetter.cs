@@ -22,6 +22,16 @@ public readonly record struct NoteLetter
 {
     #region Constants
     /// <summary>
+    /// The number of distinct values of this type.
+    /// </summary>
+    public const int ValuesCount = 7;
+
+    /// <summary>
+    /// The maximum numerical value of instances of type <see cref="Values"/>.
+    /// </summary>
+    private const int MaxNumericalValue = ValuesCount - 1;
+
+    /// <summary>
     /// Represents a 'C' note.
     /// </summary>
     public static readonly NoteLetter C = new(Values.C);
@@ -74,7 +84,7 @@ public readonly record struct NoteLetter
     /// to the C natural note spelling.
     /// </summary>
     internal int CircleOfFifthsIndexRelativeToC
-        => unchecked(Value <= Values.E ? (int)Value << 1 : ((int)Value << 1) - 7);
+        => unchecked(Value <= Values.E ? (int)Value << 1 : ((int)Value << 1) - ValuesCount);
 
     /// <summary>
     /// Gets the number of half steps that the natural note spelling described by this letter is above the nearest
@@ -148,7 +158,7 @@ public readonly record struct NoteLetter
     /// <param name="rhs"></param>
     /// <returns></returns>
     public static NoteLetter operator +(NoteLetter lhs, SimpleIntervalNumber rhs)
-        => new((Values)((lhs.CBasedIndex + rhs.NumericalValue - 1) % 7));
+        => new((Values)((lhs.CBasedIndex + rhs.NumericalValue - 1) % ValuesCount));
 
     /// <summary>
     /// Finds the difference between the two <see cref="NoteLetter"/> instances passed in.
@@ -158,7 +168,8 @@ public readonly record struct NoteLetter
     /// <returns></returns>
     public static SimpleIntervalBase operator -(NoteLetter lhs, NoteLetter rhs)
     {
-        var halfSteps = (lhs.HalfStepsAboveC - rhs.HalfStepsAboveC + 12) % 12;
+        var halfSteps = (lhs.HalfStepsAboveC - rhs.HalfStepsAboveC + NotePitchClass.ValuesCount)
+                            % NotePitchClass.ValuesCount;
         return SimpleIntervalBase.SimplestWithHalfSteps(halfSteps) switch
         {
             null => lhs == B ? Interval.Augmented().Fourth() : Interval.Diminished().Fifth(),
@@ -195,7 +206,7 @@ public readonly record struct NoteLetter
     {
         var newLetter = this + number;
 
-        var halfSteps = newLetter.HalfStepsAboveC - HalfStepsAboveC + 12;
+        var halfSteps = newLetter.HalfStepsAboveC - HalfStepsAboveC + NotePitchClass.ValuesCount;
         differenceQuality = IntervalQuality.OfSimplestIntervalWithHalfSteps(halfSteps)
                                 ?? (this == F
                                         ? PerfectableIntervalQuality.Augmented()
