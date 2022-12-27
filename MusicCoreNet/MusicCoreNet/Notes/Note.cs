@@ -18,7 +18,7 @@ namespace Rem.Music;
 /// </remarks>
 /// <param name="Spelling">The spelling of the note (letter and accidental).</param>
 /// <param name="Octave">The octave of the note.</param>
-public readonly record struct Note(NoteSpelling Spelling, int Octave) : IEquatable<NaturalNote>
+public readonly record struct Note(NoteSpelling Spelling, int Octave)
 {
     #region Properties
     /// <summary>
@@ -72,8 +72,7 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave) : IEquatab
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
-    public bool Equals(Note other)
-        => Octave == other.Octave && Letter == other.Letter && other.Accidental == Accidental.Natural;
+    public bool Equals(Note other) => Octave == other.Octave && Accidental == other.Accidental;
 
     /// <summary>
     /// Gets a hash code for the current instance.
