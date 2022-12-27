@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rem.Core.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -76,4 +77,31 @@ public readonly record struct NaturalNote(NoteLetter Letter, int Octave) : IEqua
         var newLetter = Letter.ShiftedBy(amount, out var octaveDifference);
         return new(newLetter, Octave + octaveDifference);
     }
+
+    /// <summary>
+    /// Creates a new <see cref="Note"/> equivalent to this instance sharped by the given degree.
+    /// </summary>
+    /// <param name="Degree"></param>
+    /// <returns></returns>
+    public Note Sharp([Positive] int Degree = 1) => WithAccidental(Accidental.Sharp(Degree));
+
+    /// <summary>
+    /// Gets this instance typed as a <see cref="Note"/>.
+    /// </summary>
+    /// <returns></returns>
+    public Note Natural() => this;
+
+    /// <summary>
+    /// Creates a new <see cref="Note"/> equivalent to this instance flattened by the given degree.
+    /// </summary>
+    /// <param name="Degree"></param>
+    /// <returns></returns>
+    public Note Flat([Positive] int Degree = 1) => WithAccidental(Accidental.Flat(Degree));
+
+    /// <summary>
+    /// Creates a new <see cref="Note"/> equivalent to this instance with the specified <see cref="Accidental"/>.
+    /// </summary>
+    /// <param name="Accidental">The accidental to create the <see cref="Note"/> with.</param>
+    /// <returns></returns>
+    public Note WithAccidental(Accidental Accidental) => new(new(Letter, Accidental), Octave);
 }

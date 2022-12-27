@@ -130,6 +130,35 @@ public readonly record struct NoteLetter
     public override int GetHashCode() => Value.GetHashCode();
     #endregion
 
+    #region Conversion
+    /// <summary>
+    /// Creates a new <see cref="NoteSpelling"/> equivalent to this instance sharped by the given degree.
+    /// </summary>
+    /// <param name="Degree"></param>
+    /// <returns></returns>
+    public NoteSpelling Sharp([Positive] int Degree = 1) => WithAccidental(Accidental.Sharp(Degree));
+
+    /// <summary>
+    /// Gets this instance typed as a <see cref="NoteSpelling"/>.
+    /// </summary>
+    /// <returns></returns>
+    public NoteSpelling Natural() => this;
+
+    /// <summary>
+    /// Creates a new <see cref="NoteSpelling"/> equivalent to this instance flatted by the given degree.
+    /// </summary>
+    /// <param name="Degree"></param>
+    /// <returns></returns>
+    public NoteSpelling Flat([Positive] int Degree = 1) => WithAccidental(Accidental.Flat(Degree));
+
+    /// <summary>
+    /// Creates a new <see cref="NoteSpelling"/> equivalent to this instance with the specified accidental.
+    /// </summary>
+    /// <param name="Accidental"></param>
+    /// <returns></returns>
+    public NoteSpelling WithAccidental(Accidental Accidental) => new(this, Accidental);
+    #endregion
+
     #region Arithmetic
     /// <summary>
     /// Gets a <see cref="NoteLetter"/> equivalent to this one shifted by the specified amount.
