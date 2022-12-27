@@ -120,6 +120,22 @@ public class NoteTest
         }
     }
 
+    /// <summary>
+    /// Test the <see cref="NoteSpelling.LetterShiftedBy(int)"/> method.
+    /// </summary>
+    [TestMethod]
+    public void TestLetterShiftedBy()
+    {
+        Assert.AreEqual(Note.D().Sharp().WithOctave(4), Note.A().Sharp().WithOctave(3).LetterShiftedBy(3));
+        Assert.AreEqual(Note.E().Sharp().WithOctave(3), Note.A().Sharp().WithOctave(3).LetterShiftedBy(-3));
+
+        Assert.AreEqual(Note.A().Flat().WithOctave(4), Note.A().Flat().WithOctave(3).LetterShiftedBy(7));
+        Assert.AreEqual(Note.A().Flat().WithOctave(2), Note.A().Flat().WithOctave(3).LetterShiftedBy(-7));
+
+        Assert.AreEqual(Note.A().Flat().WithOctave(5), Note.A().Flat().WithOctave(3).LetterShiftedBy(14));
+        Assert.AreEqual(Note.A().Flat().WithOctave(1), Note.A().Flat().WithOctave(3).LetterShiftedBy(-14));
+    }
+
     private static readonly ImmutableArray<(Note First, Note Second)> EnharmonicEquivalentPairs
         = ImmutableArray.CreateRange(new[]
         {

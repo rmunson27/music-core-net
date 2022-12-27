@@ -141,6 +141,14 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
 
             // Default this parameter if the accidental is natural - it will not be used
             Accidental.Kind.IsModifying(out var modifying) ? modifying : default);
+
+    /// <summary>
+    /// Gets a <see cref="NoteSpelling"/> equivalent to this one with the letter shifted by the specified amount.
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <returns></returns>
+    /// <seealso cref="NoteLetter.ShiftedBy(int)"/>
+    public NoteSpelling LetterShiftedBy(int amount) => this with { Letter = Letter.ShiftedBy(amount) };
     #endregion
 
     #region Arithmetic

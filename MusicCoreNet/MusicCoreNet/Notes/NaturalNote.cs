@@ -65,4 +65,15 @@ public readonly record struct NaturalNote(NoteLetter Letter, int Octave) : IEqua
     /// </summary>
     /// <returns></returns>
     public override string ToString() => Note.ToString(Letter, Accidental.Natural, Octave);
+
+    /// <summary>
+    /// Gets a <see cref="Note"/> equivalent to this one with the letter shifted by the specified amount.
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <returns></returns>
+    public NaturalNote LetterShiftedBy(int amount)
+    {
+        var newLetter = Letter.ShiftedBy(amount, out var octaveDifference);
+        return new(newLetter, Octave + octaveDifference);
+    }
 }

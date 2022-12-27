@@ -281,6 +281,17 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
 
         return new(simplifiedSpelling, octave);
     }
+
+    /// <summary>
+    /// Gets a <see cref="Note"/> equivalent to this one with the letter shifted by the specified amount.
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <returns></returns>
+    public Note LetterShiftedBy(int amount)
+    {
+        var newLetter = Letter.ShiftedBy(amount, out var octaveDifference);
+        return new(Spelling with { Letter = newLetter }, Octave + octaveDifference);
+    }
     #endregion
 
     #region Conversion

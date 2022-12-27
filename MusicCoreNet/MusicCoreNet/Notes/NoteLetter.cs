@@ -148,6 +148,20 @@ public readonly record struct NoteLetter
     }
 
     /// <summary>
+    /// Gets a <see cref="NoteLetter"/> equivalent to this one shifted by the specified amount, setting the octave
+    /// overflow or underflow in an <see langword="out"/> parameter.
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <param name="octaveDifference"></param>
+    /// <returns></returns>
+    internal NoteLetter ShiftedBy(int amount, out int octaveDifference)
+    {
+        var shiftedBase = (int)Value + amount;
+        octaveDifference = Maths.FloorDivRem(shiftedBase, ValuesCount, out shiftedBase);
+        return new((Values)shiftedBase);
+    }
+
+    /// <summary>
     /// Gets a <see cref="NoteLetter"/> equivalent to the value passed in with the <see cref="SimpleIntervalNumber"/>
     /// passed in subtracted.
     /// </summary>

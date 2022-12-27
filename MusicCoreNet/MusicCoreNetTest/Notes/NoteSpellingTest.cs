@@ -169,6 +169,22 @@ public class NoteSpellingTest
     }
 
     /// <summary>
+    /// Test the <see cref="NoteSpelling.LetterShiftedBy(int)"/> method.
+    /// </summary>
+    [TestMethod]
+    public void TestLetterShiftedBy()
+    {
+        Assert.AreEqual(Note.D().Sharp(), Note.A().Sharp().LetterShiftedBy(3));
+        Assert.AreEqual(Note.E().Sharp(), Note.A().Sharp().LetterShiftedBy(-3));
+
+        Assert.AreEqual(Note.A().Flat(), Note.A().Flat().LetterShiftedBy(7));
+        Assert.AreEqual(Note.A().Flat(), Note.A().Flat().LetterShiftedBy(-7));
+
+        Assert.AreEqual(Note.A().Flat(), Note.A().Flat().LetterShiftedBy(14));
+        Assert.AreEqual(Note.A().Flat(), Note.A().Flat().LetterShiftedBy(-14));
+    }
+
+    /// <summary>
     /// Tests the <see cref="NoteSpelling.SimplestWithPitchClass(NotePitchClass, ModifyingAccidentalKind)"/>
     /// factory method.
     /// </summary>
