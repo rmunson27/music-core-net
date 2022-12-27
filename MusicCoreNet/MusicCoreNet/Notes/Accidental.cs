@@ -350,7 +350,7 @@ public readonly record struct ModifyingAccidentalKind
     /// <remarks>
     /// This makes <see cref="Sharp"/> the default.
     /// </remarks>
-    public const int ValueOffset = -(int)AccidentalKind.Values.Sharp;
+    internal const int ValueOffset = -(int)AccidentalKind.Values.Sharp;
 
     /// <summary>
     /// Uniquely represents this instance as an <see langword="enum"/> value.

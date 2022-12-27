@@ -983,7 +983,7 @@ public readonly record struct PeripheralIntervalQualityKind
     /// <remarks>
     /// This makes <see cref="Augmented"/> the default.
     /// </remarks>
-    public const sbyte ValueOffset = -(sbyte)BaseValues.Augmented;
+    internal const sbyte ValueOffset = -(sbyte)BaseValues.Augmented;
 
     /// <inheritdoc cref="Values.Augmented"/>
     public static readonly PeripheralIntervalQualityKind Augmented = new(Values.Augmented);
@@ -1494,7 +1494,7 @@ public readonly record struct ImperfectableIntervalQualityKind
     /// <remarks>
     /// This makes <see cref="Major"/> the default.
     /// </remarks>
-    public const sbyte ValueOffset = -(sbyte)BaseValues.Major;
+    internal const sbyte ValueOffset = -(sbyte)BaseValues.Major;
 
     /// <inheritdoc cref="Values.Augmented"/>
     public static readonly ImperfectableIntervalQualityKind Augmented = new(Values.Augmented);
