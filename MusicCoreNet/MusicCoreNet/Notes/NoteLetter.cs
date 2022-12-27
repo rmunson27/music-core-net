@@ -157,6 +157,13 @@ public readonly record struct NoteLetter
     /// <param name="Accidental"></param>
     /// <returns></returns>
     public NoteSpelling WithAccidental(Accidental Accidental) => new(this, Accidental);
+
+    /// <summary>
+    /// Creates a new <see cref="NaturalNote"/> equivalent to this instance with the specified octave.
+    /// </summary>
+    /// <param name="Octave"></param>
+    /// <returns></returns>
+    public NaturalNote WithOctave(int Octave) => new(this, Octave);
     #endregion
 
     #region Arithmetic
