@@ -353,62 +353,49 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
         => $"{noteSpellingStr}{(Octave < 0 ? $"({Octave})" : Octave)}";
     #endregion
 
-    #region Builder
+    #region Letters
     /// <summary>
-    /// Gets a builder object that can be used to quickly create an 'A' <see cref="NoteSpelling"/> with a
-    /// given accidental.
+    /// Gets a <see cref="NoteLetter"/> representing an 'A' note.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteBuilder A() => new(NoteLetter.A);
+    public static NoteLetter A() => NoteLetter.A;
 
     /// <summary>
-    /// Gets a builder object that can be used to quickly create a 'B' <see cref="NoteSpelling"/> with a
-    /// given accidental.
+    /// Gets a <see cref="NoteLetter"/> representing a 'B' note.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteBuilder B() => new(NoteLetter.B);
+    public static NoteLetter B() => NoteLetter.B;
 
     /// <summary>
-    /// Gets a builder object that can be used to quickly create a 'C' <see cref="NoteSpelling"/> with a
-    /// given accidental.
+    /// Gets a <see cref="NoteLetter"/> representing a 'C' note.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteBuilder C() => new(NoteLetter.C);
+    public static NoteLetter C() => NoteLetter.C;
 
     /// <summary>
-    /// Gets a builder object that can be used to quickly create a 'D' <see cref="NoteSpelling"/> with a
-    /// given accidental.
+    /// Gets a <see cref="NoteLetter"/> representing a 'D' note.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteBuilder D() => new(NoteLetter.D);
+    public static NoteLetter D() => NoteLetter.D;
 
     /// <summary>
-    /// Gets a builder object that can be used to quickly create an 'E' <see cref="NoteSpelling"/> with a
-    /// given accidental.
+    /// Gets a <see cref="NoteLetter"/> representing an 'E' note.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteBuilder E() => new(NoteLetter.E);
+    public static NoteLetter E() => NoteLetter.E;
 
     /// <summary>
-    /// Gets a builder object that can be used to quickly create an 'F' <see cref="NoteSpelling"/> with a
+    /// Gets a <see cref="NoteLetter"/> representing an 'F' note.
     /// given accidental.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteBuilder F() => new(NoteLetter.F);
+    public static NoteLetter F() => NoteLetter.F;
 
     /// <summary>
-    /// Gets a builder object that can be used to quickly create a 'G' <see cref="NoteSpelling"/> with a
-    /// given accidental.
+    /// Gets a <see cref="NoteLetter"/> representing a 'G' note.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static NoteBuilder G() => new(NoteLetter.G);
+    public static NoteLetter G() => NoteLetter.G;
     #endregion
     #endregion
 }
