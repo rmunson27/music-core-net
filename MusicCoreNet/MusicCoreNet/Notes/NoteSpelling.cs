@@ -1,4 +1,5 @@
-﻿using Rem.Music.Internal;
+﻿using Rem.Core.Attributes;
+using Rem.Music.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,6 +87,42 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
             var x => unchecked(new(new((NoteLetter.Values)(((int)x + 1) >> 1)))),
         };
     }
+    #endregion
+
+    #region Classification
+    /// <summary>
+    /// Determines whether or not this <see cref="NoteSpelling"/> is sharp, setting the degree to which it is in an
+    /// <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="Degree"></param>
+    /// <returns></returns>
+    public bool IsSharp([NonNegative] out int Degree) => Accidental.IsSharp(out Degree);
+
+    /// <summary>
+    /// Determines whether or not this <see cref="NoteSpelling"/> is sharp.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsSharp() => Accidental.IsSharp();
+
+    /// <summary>
+    /// Determines whether or not this <see cref="NoteSpelling"/> is natural.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsNatural() => Accidental.IsNatural();
+
+    /// <summary>
+    /// Determines whether or not this <see cref="NoteSpelling"/> is flat, setting the degree to which it is in an
+    /// <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="Degree"></param>
+    /// <returns></returns>
+    public bool IsFlat([NonNegative] out int Degree) => Accidental.IsFlat(out Degree);
+
+    /// <summary>
+    /// Determines whether or not this <see cref="NoteSpelling"/> is flat.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsFlat() => Accidental.IsFlat();
     #endregion
 
     #region Computation

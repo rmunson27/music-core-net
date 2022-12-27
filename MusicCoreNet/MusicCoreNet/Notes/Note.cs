@@ -1,4 +1,6 @@
-﻿using Rem.Music.Internal;
+﻿using Rem.Core.Attributes;
+using Rem.Core.ComponentModel;
+using Rem.Music.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +18,7 @@ namespace Rem.Music;
 /// </remarks>
 /// <param name="Spelling">The spelling of the note (letter and accidental).</param>
 /// <param name="Octave">The octave of the note.</param>
-public readonly record struct Note(NoteSpelling Spelling, int Octave)
+public readonly record struct Note(NoteSpelling Spelling, int Octave) : IEquatable<NaturalNote>
 {
     #region Properties
     /// <summary>
@@ -70,7 +72,8 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
-    public bool Equals(Note other) => Octave == other.Octave && Spelling == other.Spelling;
+    public bool Equals(Note other)
+        => Octave == other.Octave && Letter == other.Letter && other.Accidental == Accidental.Natural;
 
     /// <summary>
     /// Gets a hash code for the current instance.
@@ -84,6 +87,51 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
     /// <param name="other"></param>
     /// <returns></returns>
     public bool IsEnharmonicallyEquivalentTo(Note other) => Pitch == other.Pitch;
+    #endregion
+
+    #region Classification
+    /// <summary>
+    /// Determines whether or not this <see cref="Note"/> is sharp, setting the degree to which it is in an
+    /// <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="Degree"></param>
+    /// <returns></returns>
+    public bool IsSharp([NonNegative] out int Degree) => Accidental.IsSharp(out Degree);
+
+    /// <summary>
+    /// Determines whether or not this <see cref="Note"/> is sharp.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsSharp() => Accidental.IsSharp();
+
+    /// <summary>
+    /// Determines whether or not this <see cref="Note"/> is natural, setting the value in an <see langword="out"/>
+    /// parameter if so.
+    /// </summary>
+    /// <param name="naturalNote"></param>
+    /// <returns></returns>
+    public bool IsNatural(out NaturalNote naturalNote)
+        => IsNatural() ? Try.Success(out naturalNote, new(Letter, Octave)) : Try.Failure(out naturalNote);
+
+    /// <summary>
+    /// Determines whether or not this <see cref="Note"/> is natural.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsNatural() => Accidental.IsNatural();
+
+    /// <summary>
+    /// Determines whether or not this <see cref="Note"/> is flat, setting the degree to which it is in an
+    /// <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="Degree"></param>
+    /// <returns></returns>
+    public bool IsFlat([NonNegative] out int Degree) => Accidental.IsFlat(out Degree);
+
+    /// <summary>
+    /// Determines whether or not this <see cref="Note"/> is flat.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsFlat() => Accidental.IsFlat();
     #endregion
 
     #region Arithmetic
@@ -234,6 +282,14 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
 
         return new(simplifiedSpelling, octave);
     }
+    #endregion
+
+    #region Conversion
+    /// <summary>
+    /// Implicitly converts a <see cref="NaturalNote"/> to a <see cref="Note"/>.
+    /// </summary>
+    /// <param name="naturalNote"></param>
+    public static implicit operator Note(NaturalNote naturalNote) => new(naturalNote.Letter, naturalNote.Octave);
     #endregion
 
     #region ToString
