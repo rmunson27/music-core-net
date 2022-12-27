@@ -27,7 +27,6 @@ public readonly struct NoteBuilder
     /// Creates the <see cref="NoteSpelling"/> representing a natural with the note letter represented by this instance.
     /// </summary>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public NoteSpelling Natural() => new(Letter, Accidental.Natural);
 
     /// <summary>
@@ -36,7 +35,6 @@ public readonly struct NoteBuilder
     /// </summary>
     /// <param name="Degree"></param>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public NoteSpelling Sharp([Positive] int Degree = 1)
         => new(Letter, Accidental.Sharp(Throw.IfArgNotPositive(Degree, nameof(Degree))));
 
@@ -46,7 +44,6 @@ public readonly struct NoteBuilder
     /// </summary>
     /// <param name="Degree"></param>
     /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public NoteSpelling Flat([Positive] int Degree = 1)
         => new(Letter, Accidental.Flat(Throw.IfArgNotPositive(Degree, nameof(Degree))));
 
