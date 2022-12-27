@@ -1,5 +1,6 @@
 ﻿using Rem.Core.Attributes;
 using Rem.Core.Utilities;
+using Rem.Music.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -140,6 +141,22 @@ public readonly record struct NoteLetter
     #endregion
 
     #region Arithmetic
+    /// <summary>
+    /// Gets a <see cref="NoteLetter"/> equivalent to this one shifted by the specified amount.
+    /// </summary>
+    /// <remarks>
+    /// If the supplied amount is positive, this will shift forward in the alphabet; for example,
+    /// <c>A.ShiftedBy(1)</c> will yield <c>B</c>.
+    /// </remarks>
+    /// <param name="amount">The amount to shift this instance by.</param>
+    /// <returns>A <see cref="NoteLetter"/> equivalent to this one shifted by <paramref name="amount"/>.</returns>
+    public NoteLetter ShiftedBy(int amount)
+    {
+        var shiftedBase = (int)Value + amount;
+        if (shiftedBase < 0 || shiftedBase > MaxNumericalValue) shiftedBase = Maths.FloorRem(shiftedBase, ValuesCount);
+        return new((Values)shiftedBase);
+    }
+
     /// <summary>
     /// Gets a <see cref="NoteLetter"/> equivalent to the value passed in with the <see cref="SimpleIntervalNumber"/>
     /// passed in subtracted.

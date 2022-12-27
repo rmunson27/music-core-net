@@ -58,4 +58,25 @@ public class NoteLetterTest
         Assert.AreEqual(Interval.Augmented().Fourth(), B - F);
         Assert.AreEqual(Interval.Diminished().Fifth(), F - B);
     }
+
+    /// <summary>
+    /// Tests the <see cref="NoteLetter.ShiftedBy(int)"/> method.
+    /// </summary>
+    [TestMethod]
+    public void TestShiftedBy()
+    {
+        Assert.AreEqual(A, B.ShiftedBy(-15));
+        Assert.AreEqual(A, B.ShiftedBy(-8));
+        Assert.AreEqual(B, B.ShiftedBy(-7));
+        Assert.AreEqual(G, B.ShiftedBy(-2));
+        Assert.AreEqual(A, B.ShiftedBy(-1));
+
+        Assert.AreEqual(B, B.ShiftedBy(0));
+
+        Assert.AreEqual(C, B.ShiftedBy(1));
+        Assert.AreEqual(D, B.ShiftedBy(2));
+        Assert.AreEqual(B, B.ShiftedBy(7));
+        Assert.AreEqual(C, B.ShiftedBy(8));
+        Assert.AreEqual(C, B.ShiftedBy(15));
+    }
 }
