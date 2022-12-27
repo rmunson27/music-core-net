@@ -57,7 +57,7 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     #region Factory
     /// <summary>
     /// Gets the <see cref="NoteSpelling"/> with the pitch class passed in that has the simplest possible accidental
-    /// (i.e. closest to natural), using the specified <see cref="NonNaturalAccidentalType"/> to assign accidentals
+    /// (i.e. closest to natural), using the specified <see cref="ModifyingAccidentalKind"/> to assign accidentals
     /// if necessary.
     /// </summary>
     /// <param name="PitchClass">The pitch class of the result.</param>

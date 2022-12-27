@@ -332,6 +332,9 @@ public readonly record struct Accidental
 /// <summary>
 /// Represents the kind of an accidental that actually modifies the note (sharp or flat).
 /// </summary>
+/// <remarks>
+/// The default instance of this type represents sharps.
+/// </remarks>
 public readonly record struct ModifyingAccidentalKind
 {
     /// <inheritdoc cref="Values.Sharp"/>
