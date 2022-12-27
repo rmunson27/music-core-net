@@ -130,16 +130,6 @@ public readonly record struct NoteLetter
     public override int GetHashCode() => Value.GetHashCode();
     #endregion
 
-    #region Conversion
-    /// <summary>
-    /// Implicitly converts a named <see cref="Values"/> instance to a <see cref="NoteLetter"/>.
-    /// </summary>
-    /// <param name="Value"></param>
-    /// <exception cref="InvalidEnumArgumentException"><paramref name="Value"/> was an unnamed enum value.</exception>
-    public static implicit operator NoteLetter([NameableEnum] Values Value)
-        => new(Throw.IfEnumArgUnnamed(Value, nameof(Value)));
-    #endregion
-
     #region Arithmetic
     /// <summary>
     /// Gets a <see cref="NoteLetter"/> equivalent to this one shifted by the specified amount.
