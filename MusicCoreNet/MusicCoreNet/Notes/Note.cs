@@ -297,8 +297,18 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave) : IEquatab
     /// Gets a string that represents the current instance.
     /// </summary>
     /// <returns></returns>
-    public override string ToString()
-        => $"{nameof(Note)} {{ Letter = {Letter}, Accidental = {Accidental}, Octave = {Octave} }}";
+    public override string ToString() => ToString(Letter, Accidental, Octave);
+
+    /// <summary>
+    /// Gets a string that represents the note with the specified components.
+    /// </summary>
+    /// <param name="letter"></param>
+    /// <param name="accidental"></param>
+    /// <param name="octave"></param>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static string ToString(NoteLetter letter, Accidental accidental, int octave)
+        => $"{nameof(Note)} {{ Letter = {letter}, Accidental = {accidental}, Octave = {octave} }}";
 
     /// <summary>
     /// Gets a musical notation string that represents this instance using ASCII characters.

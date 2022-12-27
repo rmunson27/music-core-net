@@ -59,4 +59,10 @@ public readonly record struct NaturalNote(NoteLetter Letter, int Octave) : IEqua
     /// <exception cref="InvalidCastException">The cast was invalid.</exception>
     public static explicit operator NaturalNote(Note note)
         => note.IsNatural(out var naturalNote) ? naturalNote : throw new InvalidCastException("Note is not natural.");
+
+    /// <summary>
+    /// Gets a string that represents the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString() => Note.ToString(Letter, Accidental.Natural, Octave);
 }
