@@ -79,7 +79,7 @@ public readonly record struct Interval(SimpleIntervalBase Base, [NonNegative] in
     /// The perfectability of the quality and number did not match.
     /// </exception>
     public static Interval Create(IntervalQuality Quality, IntervalNumber Number)
-        => new(SimpleIntervalBase.Create(Quality, Number.Base), Number.AdditionalOctaves);
+        => new(SimpleIntervalBase.Create(Quality, Number.SimpleBase), Number.AdditionalOctaves);
     #endregion
 
     #region Equality
@@ -199,40 +199,41 @@ public readonly record struct Interval(SimpleIntervalBase Base, [NonNegative] in
     public override string ToString() => $"{nameof(Interval)} {{ Quality = {Quality}, Number = {Number} }}";
     #endregion
 
-    #region Builder
+    #region Qualities
     /// <summary>
-    /// Gets an object that can be used to build an augmented interval of the given augmented degree.
+    /// Creates a new <see cref="PeripheralIntervalQuality"/> representing an augmented interval quality with the
+    /// given degree.
     /// </summary>
     /// <param name="Degree"></param>
     /// <returns></returns>
-    public static AugmentedIntervalBuilder Augmented([Positive] int Degree = 1)
-        => new(Throw.IfArgNotPositive(Degree, nameof(Degree)));
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="Degree"/> was not positive.</exception>
+    public static PeripheralIntervalQuality Augmented([Positive] int Degree = 1)
+        => PeripheralIntervalQuality.Augmented(Degree);
 
     /// <summary>
-    /// Gets an object that can be used to build a minor interval.
+    /// Gets an <see cref="ImperfectableIntervalQuality"/> representing a minor interval quality.
     /// </summary>
-    /// <returns></returns>
-    public static MinorIntervalBuilder Minor() => new();
+    public static ImperfectableIntervalQuality Minor => ImperfectableIntervalQuality.Minor;
 
     /// <summary>
-    /// Gets an object that can be used to build a perfect interval.
+    /// Gets a <see cref="PerfectableIntervalQuality"/> representing a perfect interval quality.
     /// </summary>
-    /// <returns></returns>
-    public static PerfectIntervalBuilder Perfect() => new();
+    public static PerfectableIntervalQuality Perfect => PerfectableIntervalQuality.Perfect;
 
     /// <summary>
-    /// Gets an object that can be used to build a major interval.
+    /// Gets an <see cref="ImperfectableIntervalQuality"/> representing a major interval quality.
     /// </summary>
-    /// <returns></returns>
-    public static MajorIntervalBuilder Major() => new();
+    public static ImperfectableIntervalQuality Major => ImperfectableIntervalQuality.Major;
 
     /// <summary>
-    /// Gets an object that can be used to build a diminished interval of the given diminished degree.
+    /// Creates a new <see cref="PeripheralIntervalQuality"/> representing an augmented interval quality with the
+    /// given degree.
     /// </summary>
     /// <param name="Degree"></param>
     /// <returns></returns>
-    public static DiminishedIntervalBuilder Diminished([Positive] int Degree = 1)
-        => new(Throw.IfArgNotPositive(Degree, nameof(Degree)));
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="Degree"/> was not positive.</exception>
+    public static PeripheralIntervalQuality Diminished([Positive] int Degree = 1)
+        => PeripheralIntervalQuality.Diminished(Degree);
     #endregion
 
     #region Helpers

@@ -229,7 +229,7 @@ public readonly record struct NoteLetter
                             % NotePitchClass.ValuesCount;
         return SimpleIntervalBase.SimplestWithHalfSteps(halfSteps) switch
         {
-            null => lhs == B ? Interval.Augmented().Fourth() : Interval.Diminished().Fifth(),
+            null => lhs == B ? Interval.Augmented().Fourth : Interval.Diminished().Fifth,
             SimpleIntervalBase sib => sib,
         };
     }

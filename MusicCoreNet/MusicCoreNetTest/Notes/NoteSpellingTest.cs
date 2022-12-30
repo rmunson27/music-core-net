@@ -67,11 +67,11 @@ public class NoteSpellingTest
     private static readonly ImmutableArray<(NoteSpelling First, NoteSpelling Second, SimpleIntervalBase Difference)> Differences
         = ImmutableArray.CreateRange(new[]
         {
-            (Note.A(), Note.C(), Interval.Major().Sixth()),
-            (Note.F().Sharp(), Note.C(), Interval.Augmented().Fourth()),
-            (Note.G().Sharp(), Note.B().Flat(), Interval.Augmented().Sixth()),
-            (Note.B().Sharp(), Note.D().Flat(), Interval.Augmented(2).Sixth()),
-            (Note.E(), Note.G().Sharp(), Interval.Minor().Sixth()),
+            (Note.A(), Note.C(), Interval.Major.Sixth),
+            (Note.F().Sharp(), Note.C(), Interval.Augmented().Fourth),
+            (Note.G().Sharp(), Note.B().Flat(), Interval.Augmented().Sixth),
+            (Note.B().Sharp(), Note.D().Flat(), Interval.Augmented(2).Sixth),
+            (Note.E(), Note.G().Sharp(), Interval.Minor.Sixth),
         });
 
     /// <summary>

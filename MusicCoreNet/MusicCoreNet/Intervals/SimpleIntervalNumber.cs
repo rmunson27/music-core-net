@@ -29,37 +29,37 @@ public readonly record struct SimpleIntervalNumber
     /// <summary>
     /// Represents a fourth.
     /// </summary>
-    public static readonly SimpleIntervalNumber Fourth = PerfectableSimpleIntervalNumber.Fourth;
+    public static readonly PerfectableSimpleIntervalNumber Fourth = PerfectableSimpleIntervalNumber.Fourth;
 
     /// <summary>
     /// Represents a unison.
     /// </summary>
-    public static readonly SimpleIntervalNumber Unison = PerfectableSimpleIntervalNumber.Unison;
+    public static readonly PerfectableSimpleIntervalNumber Unison = PerfectableSimpleIntervalNumber.Unison;
 
     /// <summary>
     /// Represents a fifth.
     /// </summary>
-    public static readonly SimpleIntervalNumber Fifth = PerfectableSimpleIntervalNumber.Fifth;
+    public static readonly PerfectableSimpleIntervalNumber Fifth = PerfectableSimpleIntervalNumber.Fifth;
 
     /// <summary>
     /// Represents a second.
     /// </summary>
-    public static readonly SimpleIntervalNumber Second = ImperfectableSimpleIntervalNumber.Second;
+    public static readonly ImperfectableSimpleIntervalNumber Second = ImperfectableSimpleIntervalNumber.Second;
 
     /// <summary>
     /// Represents a third.
     /// </summary>
-    public static readonly SimpleIntervalNumber Third = ImperfectableSimpleIntervalNumber.Third;
+    public static readonly ImperfectableSimpleIntervalNumber Third = ImperfectableSimpleIntervalNumber.Third;
 
     /// <summary>
     /// Represents a sixth.
     /// </summary>
-    public static readonly SimpleIntervalNumber Sixth = ImperfectableSimpleIntervalNumber.Sixth;
+    public static readonly ImperfectableSimpleIntervalNumber Sixth = ImperfectableSimpleIntervalNumber.Sixth;
 
     /// <summary>
     /// Represents a seventh.
     /// </summary>
-    public static readonly SimpleIntervalNumber Seventh = ImperfectableSimpleIntervalNumber.Seventh;
+    public static readonly ImperfectableSimpleIntervalNumber Seventh = ImperfectableSimpleIntervalNumber.Seventh;
     #endregion
 
     #region Properties And Fields

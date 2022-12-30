@@ -45,14 +45,14 @@ public class NoteTest
         = ImmutableArray.CreateRange(new[]
         {
             (Note.F().Sharp().WithOctave(4), Note.C().Sharp().WithOctave(3),
-             Interval.Perfect().Fourth().WithAdditionalOctaves(1)),
+             Interval.Perfect.Fourth.WithAdditionalOctaves(1)),
 
-            (Note.B().WithOctave(2), Note.F().WithOctave(2), Interval.Augmented().Fourth()),
+            (Note.B().WithOctave(2), Note.F().WithOctave(2), Interval.Augmented().Fourth),
 
             (Note.C().WithOctave(4), Note.E().Flat().WithOctave(2),
-             Interval.Major().Sixth().WithAdditionalOctaves(1)),
+             Interval.Major.Sixth.WithAdditionalOctaves(1)),
 
-            (Note.B().Flat().WithOctave(5), Note.F().WithOctave(5), Interval.Perfect().Fourth()),
+            (Note.B().Flat().WithOctave(5), Note.F().WithOctave(5), Interval.Perfect.Fourth),
 
             (Note.C().WithOctave(3), Note.C().WithOctave(2), Interval.PerfectOctave),
 

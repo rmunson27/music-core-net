@@ -48,7 +48,7 @@ public readonly record struct IntervalQuality
     {
         StorageType.Perfectable => _quality.Perfectable.CircleOfFifthsIndex,
         StorageType.Imperfectable => _quality.Imperfectable.CircleOfFifthsIndex,
-        _ => _quality.NonBasicDegree + Math.Sign(_quality.NonBasicDegree), // Add 1 to make room for major and minor
+        _ => _quality.PeripheralDegree + Math.Sign(_quality.PeripheralDegree), // Add 1 to make room for major and minor
     };
 
     /// <summary>
@@ -58,7 +58,7 @@ public readonly record struct IntervalQuality
     {
         StorageType.Perfectable => _quality.Perfectable.Kind,
         StorageType.Imperfectable => _quality.Imperfectable.Kind,
-        _ => _quality.NonBasicDegree > 0 ? IntervalQualityKind.Augmented : IntervalQualityKind.Diminished,
+        _ => _quality.PeripheralDegree > 0 ? IntervalQualityKind.Augmented : IntervalQualityKind.Diminished,
     };
 
     /// <summary>
@@ -78,10 +78,10 @@ public readonly record struct IntervalQuality
     internal PerfectableIntervalQuality UnsafeAsPerfectable
         => _storageType == StorageType.Perfectable
             ? _quality.Perfectable
-            : new(_quality.NonBasicDegree);
+            : new(_quality.PeripheralDegree);
 
     /// <summary>
-    /// Gets this instance as a <see cref="ImperfectableIntervalQuality"/> without fully performing internal storage
+    /// Gets this instance as an <see cref="ImperfectableIntervalQuality"/> without fully performing internal storage
     /// type checking.
     /// </summary>
     /// <remarks>
@@ -92,7 +92,31 @@ public readonly record struct IntervalQuality
             ? _quality.Imperfectable
 
             // Remove 1 from negative degree to make room for minor
-            : new(_quality.NonBasicDegree < 0 ? _quality.NonBasicDegree - 1 : _quality.NonBasicDegree);
+            : new(_quality.PeripheralDegree < 0 ? _quality.PeripheralDegree - 1 : _quality.PeripheralDegree);
+
+    /// <summary>
+    /// Gets this instance as a <see cref="CentralIntervalQuality"/> without fully performing internal storage
+    /// type checking.
+    /// </summary>
+    /// <remarks>
+    /// This operation is unsafe and should only be used internally.
+    /// </remarks>
+    internal CentralIntervalQuality UnsafeAsCentral
+        => _storageType == StorageType.Imperfectable
+            ? new(_quality.Imperfectable.MajorBasedIndex == 0 ? 1 : -1)
+            : CentralIntervalQuality.Perfect;
+
+    /// <summary>
+    /// Gets this instance as a <see cref="PeripheralIntervalQuality"/> without fully performing internal storage
+    /// type checking.
+    /// </summary>
+    /// <remarks>
+    /// This operation is unsafe and should only be used internally.
+    /// </remarks>
+    internal PeripheralIntervalQuality UnsafeAsPeripheral
+        => _quality.PeripheralDegree > 0
+                ? new(PeripheralIntervalQualityKind.Augmented, _quality.PeripheralDegree)
+                : new(PeripheralIntervalQualityKind.Diminished, -_quality.PeripheralDegree);
 
     private readonly Storage _quality;
     #endregion
@@ -114,8 +138,8 @@ public readonly record struct IntervalQuality
         }
         else // Augmented or diminished
         {
-            _quality.NonBasicDegree = Quality.PerfectBasedIndex;
-            _storageType = StorageType.NonBasic;
+            _quality.PeripheralDegree = Quality.PerfectBasedIndex;
+            _storageType = StorageType.Peripheral;
         }
     }
 
@@ -131,8 +155,8 @@ public readonly record struct IntervalQuality
         switch (Quality.MajorBasedIndex)
         {
             case < -1: // Diminished
-                _quality.NonBasicDegree = Quality.MajorBasedIndex + 1; // Add 1 to ignore minor
-                _storageType = StorageType.NonBasic;
+                _quality.PeripheralDegree = Quality.MajorBasedIndex + 1; // Add 1 to ignore minor
+                _storageType = StorageType.Peripheral;
                 break;
 
             case 0 or -1: // Major or minor
@@ -141,8 +165,8 @@ public readonly record struct IntervalQuality
                 break;
 
             default: // Augmented
-                _quality.NonBasicDegree = Quality.MajorBasedIndex;
-                _storageType = StorageType.NonBasic;
+                _quality.PeripheralDegree = Quality.MajorBasedIndex;
+                _storageType = StorageType.Peripheral;
                 break;
         }
     }
@@ -154,9 +178,8 @@ public readonly record struct IntervalQuality
     /// <param name="NonBasicDegree"></param>
     private IntervalQuality([NonZero] int NonBasicDegree)
     {
-        _quality = new();
-        _quality.NonBasicDegree = NonBasicDegree;
-        _storageType = StorageType.NonBasic;
+        _quality = new() { PeripheralDegree = NonBasicDegree };
+        _storageType = StorageType.Peripheral;
     }
     #endregion
 
@@ -231,78 +254,6 @@ public readonly record struct IntervalQuality
     #endregion
 
     #region Classification
-    #region Perfectability
-    /// <summary>
-    /// Determines whether or not this instance can represent qualities of the given interval perfectability.
-    /// </summary>
-    /// <remarks>
-    /// This method will return <see langword="true"/> for both <see cref="Perfectable"/> and
-    /// <see cref="Imperfectable"/> if the current instance is augmented or diminished.
-    /// </remarks>
-    /// <param name="perfectability"></param>
-    /// <returns></returns>
-    public bool HasPerfectability(IntervalPerfectability perfectability) => perfectability == Perfectable
-                                                                                ? IsPerfectable()
-                                                                                : IsImperfectable();
-                                                                
-    #region Perfectable
-    /// <summary>
-    /// Gets whether or not this instance can describe perfectable intervals, setting the perfectable quality in an
-    /// <see langword="out"/> parameter if so.
-    /// </summary>
-    /// <param name="Quality"></param>
-    /// <returns></returns>
-    public bool IsPerfectable(out PerfectableIntervalQuality Quality)
-    {
-        switch (_storageType)
-        {
-            case StorageType.Imperfectable:
-                Quality = default;
-                return false;
-
-            default:
-                Quality = UnsafeAsPerfectable;
-                return true;
-        }
-    }
-
-    /// <summary>
-    /// Gets whether or not this instance can describe perfectable intervals.
-    /// </summary>
-    /// <returns></returns>
-    public bool IsPerfectable() => Perfectability is null || Perfectability == Perfectable;
-    #endregion
-
-    #region Imperfectable
-    /// <summary>
-    /// Gets whether or not this instance can describe imperfectable intervals, setting the imperfectable quality in an
-    /// <see langword="out"/> parameter if so.
-    /// </summary>
-    /// <param name="Quality"></param>
-    /// <returns></returns>
-    public bool IsImperfectable(out ImperfectableIntervalQuality Quality)
-    {
-        switch (_storageType)
-        {
-            case StorageType.Perfectable:
-                Quality = default;
-                return false;
-
-            default:
-                Quality = UnsafeAsImperfectable;
-                return true;
-        }
-    }
-
-    /// <summary>
-    /// Gets whether or not this instance is imperfectable.
-    /// </summary>
-    /// <returns></returns>
-    public bool IsImperfectable() => Perfectability is null || Perfectability == Imperfectable;
-    #endregion
-    #endregion
-
-    #region Specific Quality
     /// <summary>
     /// Gets whether or not this interval quality represents an augmented interval, setting the
     /// <paramref name="Degree"/> parameter to the degree to which it is if so.
@@ -310,24 +261,13 @@ public readonly record struct IntervalQuality
     /// <param name="Degree"></param>
     /// <returns></returns>
     public bool IsAugmented([NonNegative] out int Degree)
-    {
-        if (IsAugmented())
-        {
-            Degree = _quality.NonBasicDegree;
-            return true;
-        }
-        else
-        {
-            Degree = default;
-            return false;
-        }
-    }
+        => IsAugmented() ? Try.Success(out Degree, _quality.PeripheralDegree) : Try.Failure(out Degree);
 
     /// <summary>
     /// Gets whether or not this interval quality represents an augmented interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsAugmented() => _storageType == StorageType.NonBasic && _quality.NonBasicDegree > 0;
+    public bool IsAugmented() => _storageType == StorageType.Peripheral && _quality.PeripheralDegree > 0;
 
     /// <summary>
     /// Gets whether or not this interval quality represents a major interval.
@@ -354,25 +294,13 @@ public readonly record struct IntervalQuality
     /// <param name="Degree"></param>
     /// <returns></returns>
     public bool IsDiminished([NonNegative] out int Degree)
-    {
-        if (IsDiminished())
-        {
-            Degree = -_quality.NonBasicDegree;
-            return true;
-        }
-        else
-        {
-            Degree = default;
-            return false;
-        }
-    }
+        => IsDiminished() ? Try.Success(out Degree, -_quality.PeripheralDegree) : Try.Failure(out Degree);
 
     /// <summary>
     /// Gets whether or not this interval quality represents a diminished interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsDiminished() => _storageType == StorageType.NonBasic && _quality.NonBasicDegree < 0;
-    #endregion
+    public bool IsDiminished() => _storageType == StorageType.Peripheral && _quality.PeripheralDegree < 0;
     #endregion
 
     #region Equality
@@ -387,7 +315,7 @@ public readonly record struct IntervalQuality
             {
                 StorageType.Perfectable => _quality.Perfectable == other._quality.Perfectable,
                 StorageType.Imperfectable => _quality.Imperfectable == other._quality.Imperfectable,
-                _ => _quality.NonBasicDegree == other._quality.NonBasicDegree,
+                _ => _quality.PeripheralDegree == other._quality.PeripheralDegree,
             };
 
     /// <summary>
@@ -398,7 +326,7 @@ public readonly record struct IntervalQuality
     {
         StorageType.Perfectable => _quality.Perfectable.GetHashCode(),
         StorageType.Imperfectable => _quality.Imperfectable.GetHashCode(),
-        _ => _quality.NonBasicDegree.GetHashCode(),
+        _ => _quality.PeripheralDegree.GetHashCode(),
     };
 
     #region Operators And Explicit `IEquatable` Implementations
@@ -480,36 +408,184 @@ public readonly record struct IntervalQuality
 
     #region Conversion
     /// <summary>
-    /// Implicitly converts a <see cref="PerfectableIntervalQuality"/> to an instance of this type.
+    /// Gets a new <see cref="Interval"/> with this quality and the specified number.
     /// </summary>
-    /// <param name="Quality"></param>
-    public static implicit operator IntervalQuality(PerfectableIntervalQuality Quality) => new(Quality);
+    /// <param name="number"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">
+    /// The perfectabilities of this quality and <paramref name="number"/> did not match.
+    /// </exception>
+    /// <exception cref="InvalidCastException">
+    /// <paramref name="number"/> was not positive.
+    /// </exception>
+    public Interval WithNumber(int number) => WithNumber((IntervalNumber)number);
 
     /// <summary>
-    /// Implicitly converts a <see cref="ImperfectableIntervalQuality"/> to an instance of this type.
+    /// Gets a new <see cref="Interval"/> with this quality and the specified number.
     /// </summary>
-    /// <param name="Quality"></param>
-    public static implicit operator IntervalQuality(ImperfectableIntervalQuality Quality) => new(Quality);
+    /// <param name="number"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">
+    /// The perfectabilities of this quality and <paramref name="number"/> did not match.
+    /// </exception>
+    public Interval WithNumber(IntervalNumber number) => Interval.Create(this, number);
 
     /// <summary>
-    /// Explicitly converts an instance of this type to a <see cref="PerfectableIntervalQuality"/>.
+    /// Determines whether this instance is described by the perfectability passed in.
     /// </summary>
-    /// <param name="Quality"></param>
-    /// <exception cref="InvalidCastException">The instance passed in was not perfectable.</exception>
-    public static explicit operator PerfectableIntervalQuality(IntervalQuality Quality)
-        => Quality.IsPerfectable(out var pQuality)
-            ? pQuality
-            : throw new InvalidCastException("Interval quality was not perfectable.");
+    /// <param name="perfectability"></param>
+    /// <returns></returns>
+    public bool IsPerfectability(IntervalPerfectability perfectability) => perfectability == Perfectable
+                                                                            ? IsPerfectable()
+                                                                            : IsImperfectable();
 
     /// <summary>
-    /// Explicitly converts an instance of this type to a <see cref="ImperfectableIntervalQuality"/>.
+    /// Determines if this instance represents the quality of a perfectable interval, setting the equivalent
+    /// <see cref="PerfectableIntervalQuality"/> in an <see langword="out"/> parameter if so and setting the
+    /// equivalent <see cref="ImperfectableIntervalQuality"/> in an <see langword="out"/> parameter if not.
     /// </summary>
-    /// <param name="Quality"></param>
-    /// <exception cref="InvalidCastException">The instance passed in was not perfectable.</exception>
-    public static explicit operator ImperfectableIntervalQuality(IntervalQuality Quality)
-        => Quality.IsImperfectable(out var iQuality)
-            ? iQuality
-            : throw new InvalidCastException("Interval quality was not imperfectable.");
+    /// <param name="quality"></param>
+    /// <param name="imperfectableQuality"></param>
+    /// <returns></returns>
+    public bool IsPerfectable(
+        out PerfectableIntervalQuality quality, out ImperfectableIntervalQuality imperfectableQuality)
+        => IsPerfectable()
+            ? Try.Success(out quality, UnsafeAsPerfectable, out imperfectableQuality)
+            : Try.Failure(out quality, out imperfectableQuality, UnsafeAsImperfectable);
+
+    /// <summary>
+    /// Determines if this instance represents the quality of a perfectable interval, setting the equivalent
+    /// <see cref="PerfectableIntervalQuality"/> in an <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <returns></returns>
+    public bool IsPerfectable(out PerfectableIntervalQuality quality)
+        => IsPerfectable()
+            ? Try.Success(out quality, UnsafeAsPerfectable)
+            : Try.Failure(out quality);
+
+    /// <summary>
+    /// Determines if this instance represents the quality of a perfectable interval.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPerfectable() => _storageType is not StorageType.Imperfectable;
+
+    /// <summary>
+    /// Determines if this instance represents the quality of an imperfectable interval, setting the equivalent
+    /// <see cref="ImperfectableIntervalQuality"/> in an <see langword="out"/> parameter if so and setting the
+    /// equivalent <see cref="PerfectableIntervalQuality"/> in an <see langword="out"/> parameter if not.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <param name="perfectableQuality"></param>
+    /// <returns></returns>
+    public bool IsImperfectable(
+        out ImperfectableIntervalQuality quality, out PerfectableIntervalQuality perfectableQuality)
+        => IsImperfectable()
+            ? Try.Success(out quality, UnsafeAsImperfectable, out perfectableQuality)
+            : Try.Failure(out quality, out perfectableQuality, UnsafeAsPerfectable);
+
+    /// <summary>
+    /// Determines if this instance represents the quality of an imperfectable interval, setting the equivalent
+    /// <see cref="ImperfectableIntervalQuality"/> in an <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <returns></returns>
+    public bool IsImperfectable(out ImperfectableIntervalQuality quality)
+        => IsImperfectable()
+            ? Try.Success(out quality, UnsafeAsImperfectable)
+            : Try.Failure(out quality);
+
+    /// <summary>
+    /// Determines if this instance represents the quality of an imperfect interval.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsImperfectable() => _storageType is not StorageType.Perfectable;
+
+    /// <summary>
+    /// Determines if this instance represents a central interval quality, setting the equivalent
+    /// <see cref="CentralIntervalQuality"/> in an <see langword="out"/> parameter if so and the equivalent
+    /// <see cref="PeripheralIntervalQuality"/> in an <see langword="out"/> parameter if not.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <param name="peripheralQuality"></param>
+    /// <returns></returns>
+    public bool IsCentral(out CentralIntervalQuality quality, out PeripheralIntervalQuality peripheralQuality)
+        => IsCentral()
+            ? Try.Success(out quality, UnsafeAsCentral, out peripheralQuality)
+            : Try.Failure(out quality, out peripheralQuality, UnsafeAsPeripheral);
+
+    /// <summary>
+    /// Determines if this instance represents a central interval quality, setting the equivalent
+    /// <see cref="CentralIntervalQuality"/> in an <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <returns></returns>
+    public bool IsCentral(out CentralIntervalQuality quality)
+        => IsCentral() ? Try.Success(out quality, UnsafeAsCentral) : Try.Failure(out quality);
+
+    /// <summary>
+    /// Determines if this instance represents a central interval quality.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsCentral() => _storageType is not StorageType.Peripheral;
+
+    /// <summary>
+    /// Determines if this instance represents a peripheral interval quality, setting the equivalent
+    /// <see cref="PeripheralIntervalQuality"/> in an <see langword="out"/> parameter if so, and setting the
+    /// equivalent <see cref="CentralIntervalQuality"/> in an <see langword="out"/> parameter if not.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <param name="centralQuality"></param>
+    /// <returns></returns>
+    public bool IsPeripheral(out PeripheralIntervalQuality quality, out CentralIntervalQuality centralQuality)
+        => IsPeripheral()
+            ? Try.Success(out quality, UnsafeAsPeripheral, out centralQuality)
+            : Try.Failure(out quality, out centralQuality, UnsafeAsCentral);
+
+    /// <summary>
+    /// Determines if this instance represents a peripheral interval quality, setting the equivalent
+    /// <see cref="PeripheralIntervalQuality"/> in an <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <returns></returns>
+    public bool IsPeripheral(out PeripheralIntervalQuality quality)
+        => IsPeripheral() ? Try.Success(out quality, UnsafeAsPeripheral) : Try.Failure(out quality);
+
+    /// <summary>
+    /// Determines if this instance represents a peripheral interval quality.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPeripheral() => _storageType is StorageType.Peripheral;
+
+    /// <summary>
+    /// Implicitly converts a <see cref="PerfectableIntervalQuality"/> to an <see cref="IntervalQuality"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    public static implicit operator IntervalQuality(PerfectableIntervalQuality quality) => new(quality);
+
+    /// <summary>
+    /// Implicitly converts a <see cref="ImperfectableIntervalQuality"/> to an <see cref="IntervalQuality"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    public static implicit operator IntervalQuality(ImperfectableIntervalQuality quality) => new(quality);
+
+    /// <summary>
+    /// Implicitly converts a <see cref="CentralIntervalQuality"/> to an <see cref="IntervalQuality"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    public static implicit operator IntervalQuality(CentralIntervalQuality quality) => quality.Kind.Value switch
+    {
+        CentralIntervalQualityKind.Values.Perfect => Perfect,
+        CentralIntervalQualityKind.Values.Major => Major,
+        _ => Minor,
+    };
+
+    /// <summary>
+    /// Implicitly converts a <see cref="PeripheralIntervalQuality"/> to an <see cref="IntervalQuality"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    public static implicit operator IntervalQuality(PeripheralIntervalQuality quality)
+        => quality.IsDiminished() ? new(-quality.Degree) : new(quality.Degree);
     #endregion
 
     #region Computation
@@ -525,10 +601,10 @@ public readonly record struct IntervalQuality
         StorageType.Perfectable => _quality.Perfectable.PerfectBasedIndex,
         StorageType.Imperfectable => _quality.Imperfectable.MajorBasedIndex,
         _ => nonAmbiguousPerfectability == Perfectable
-                ? _quality.NonBasicDegree
+                ? _quality.PeripheralDegree
 
                 // Remove 1 to make room for minor
-                : (_quality.NonBasicDegree < 0 ? _quality.NonBasicDegree - 1 : _quality.NonBasicDegree),
+                : (_quality.PeripheralDegree < 0 ? _quality.PeripheralDegree - 1 : _quality.PeripheralDegree),
     };
 
     /// <summary>
@@ -539,7 +615,7 @@ public readonly record struct IntervalQuality
     {
         StorageType.Perfectable => new(_quality.Perfectable.Inversion()),
         StorageType.Imperfectable => new(_quality.Imperfectable.Inversion()),
-        _ => new(-_quality.NonBasicDegree),
+        _ => new(-_quality.PeripheralDegree),
     };
     #endregion
 
@@ -573,7 +649,7 @@ public readonly record struct IntervalQuality
         public ImperfectableIntervalQuality Imperfectable;
 
         [FieldOffset(0)]
-        public int NonBasicDegree;
+        public int PeripheralDegree;
     }
 
     /// <summary>
@@ -583,7 +659,7 @@ public readonly record struct IntervalQuality
     {
         Perfectable = Values.Perfectable,
         Imperfectable = Values.Imperfectable,
-        NonBasic = Perfectable + Imperfectable + 1,
+        Peripheral = Perfectable + Imperfectable + 1,
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -593,6 +669,448 @@ public readonly record struct IntervalQuality
         StorageType.Imperfectable => Imperfectable,
         _ => null,
     };
+    #endregion
+
+    #region Helpers
+    /// <summary>
+    /// Returns an exception that describes <paramref name="actualQualityName"/> as not being described by
+    /// <paramref name="expectedQualityKind"/>.
+    /// </summary>
+    /// <param name="actualQualityName"></param>
+    /// <param name="expectedQualityKind"></param>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static InvalidCastException DoesNotMatch(string actualQualityName, string expectedQualityKind)
+        => new($"Interval quality {actualQualityName} is not {expectedQualityKind}.");
+
+    #region Strings
+    /// <summary>
+    /// Gets a string representing the specified diminished interval quality.
+    /// </summary>
+    /// <param name="degree"></param>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static string DiminishedString(int degree) => $"Diminished {{ Degree = {degree} }}";
+
+    /// <summary>
+    /// A string representing the minor interval quality.
+    /// </summary>
+    internal const string MinorString = "Minor";
+
+    /// <summary>
+    /// A string representing the perfect interval quality.
+    /// </summary>
+    internal const string PerfectString = "Perfect";
+
+    /// <summary>
+    /// A string representing the major interval quality.
+    /// </summary>
+    internal const string MajorString = "Major";
+
+    /// <summary>
+    /// Gets a string representing the specified augmented interval quality.
+    /// </summary>
+    /// <param name="degree"></param>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static string AugmentedString(int degree) => $"Augmented {{ Degree == {degree} }}";
+    #endregion
+    #endregion
+}
+
+/// <summary>
+/// Represents a central interval quality (minor, perfect or major).
+/// </summary>
+/// <remarks>
+/// The default instance of this type represents the perfect interval quality.
+/// </remarks>
+public readonly record struct CentralIntervalQuality
+{
+    #region Constants
+    /// <summary>
+    /// A minor interval quality.
+    /// </summary>
+    public static readonly CentralIntervalQuality Minor = new(CentralIntervalQualityKind.Minor);
+
+    /// <summary>
+    /// A perfect interval quality.
+    /// </summary>
+    /// <remarks>
+    /// This is the default value of this type.
+    /// </remarks>
+    public static readonly CentralIntervalQuality Perfect = new(CentralIntervalQualityKind.Perfect);
+
+    /// <summary>
+    /// A major interval quality.
+    /// </summary>
+    public static readonly CentralIntervalQuality Major = new(CentralIntervalQualityKind.Major);
+    #endregion
+
+    #region Properties
+    /// <summary>
+    /// Gets an index that can be used to order <see cref="IntervalQuality"/> instances based on their positions in
+    /// the circle of fifths relative to <see cref="PerfectableIntervalQuality.Perfect"/>.
+    /// </summary>
+    public int CircleOfFifthsIndex => (int)Kind.Value;
+
+    private static PerfectableIntervalQuality UnsafeAsPerfectable => PerfectableIntervalQuality.Perfect;
+
+    private ImperfectableIntervalQuality UnsafeAsImperfectable
+        => Kind == CentralIntervalQualityKind.Major
+            ? ImperfectableIntervalQuality.Major
+            : ImperfectableIntervalQuality.Minor;
+
+    /// <summary>
+    /// Gets the kind of this instance.
+    /// </summary>
+    public CentralIntervalQualityKind Kind { get; }
+    #endregion
+
+    #region Constructor
+    /// <summary>
+    /// Constructs a new <see cref="CentralIntervalQuality"/> with the given kind.
+    /// </summary>
+    /// <param name="kind"></param>
+    internal CentralIntervalQuality(CentralIntervalQualityKind kind) { Kind = kind; }
+
+    /// <summary>
+    /// Constructs a new <see cref="CentralIntervalQuality"/> with the given circle of fifths index.
+    /// </summary>
+    /// <param name="circleOfFifthsIndex"></param>
+    internal CentralIntervalQuality(int circleOfFifthsIndex)
+    {
+        Kind = new((CentralIntervalQualityKind.Values)circleOfFifthsIndex);
+    }
+    #endregion
+
+    #region Classification
+    /// <summary>
+    /// Determines whether or not this instance is major.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsMajor() => Kind == CentralIntervalQualityKind.Major;
+
+    /// <summary>
+    /// Determines whether or not this instance is perfect.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPerfect() => Kind == CentralIntervalQualityKind.Perfect;
+
+    /// <summary>
+    /// Determines whether or not this instance is minor.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsMinor() => Kind == CentralIntervalQualityKind.Minor;
+    #endregion
+
+    #region Conversion
+    /// <summary>
+    /// Gets a new <see cref="Interval"/> with this quality and the specified number.
+    /// </summary>
+    /// <param name="number"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">
+    /// The perfectabilities of this quality and <paramref name="number"/> did not match.
+    /// </exception>
+    public Interval WithNumber(IntervalNumber number) => Interval.Create(this, number);
+
+    /// <summary>
+    /// Determines whether this instance is described by the perfectability passed in.
+    /// </summary>
+    /// <param name="perfectability"></param>
+    /// <returns></returns>
+    public bool IsPerfectability(IntervalPerfectability perfectability) => perfectability == Perfectable
+                                                                            ? IsPerfectable()
+                                                                            : IsImperfectable();
+
+    /// <summary>
+    /// Determines whether this instance is perfectable, setting the equivalent
+    /// <see cref="PerfectableIntervalQuality"/> in an <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <param name="imperfectableQuality"></param>
+    /// <returns></returns>
+    public bool IsPerfectable(
+        out PerfectableIntervalQuality quality, out ImperfectableIntervalQuality imperfectableQuality)
+        => IsPerfectable()
+            ? Try.Success(out quality, CentralIntervalQuality.UnsafeAsPerfectable, out imperfectableQuality)
+            : Try.Failure(out quality, out imperfectableQuality, UnsafeAsImperfectable);
+
+    /// <summary>
+    /// Determines whether this instance is perfectable, setting the equivalent
+    /// <see cref="PerfectableIntervalQuality"/> in an <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <returns></returns>
+    public bool IsPerfectable(out PerfectableIntervalQuality quality)
+        => IsPerfectable() ? Try.Success(out quality, PerfectableIntervalQuality.Perfect) : Try.Failure(out quality);
+
+    /// <summary>
+    /// Determines if this instance is perfectable.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPerfectable() => Kind == CentralIntervalQualityKind.Perfect;
+
+    /// <summary>
+    /// Determines whether this instance is imperfectable, setting the equivalent
+    /// <see cref="ImperfectableIntervalQuality"/> in an <see langword="out"/> parameter if so, and setting the
+    /// equivalent <see cref="PerfectableIntervalQuality"/> in an <see langword="out"/> parameter if not.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <param name="perfectableQuality"></param>
+    /// <returns></returns>
+    public bool IsImperfectable(
+        out ImperfectableIntervalQuality quality, out PerfectableIntervalQuality perfectableQuality)
+        => IsImperfectable()
+            ? Try.Success(out quality, UnsafeAsImperfectable, out perfectableQuality)
+            : Try.Failure(out quality, out perfectableQuality, CentralIntervalQuality.UnsafeAsPerfectable);
+
+    /// <summary>
+    /// Determines whether this instance is imperfectable, setting the equivalent
+    /// <see cref="ImperfectableIntervalQuality"/> in an <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <returns></returns>
+    public bool IsImperfectable(out ImperfectableIntervalQuality quality)
+        => IsImperfectable() ? Try.Success(out quality, UnsafeAsImperfectable) : Try.Failure(out quality);
+
+    /// <summary>
+    /// Determines if this instance is imperfectable.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsImperfectable() => Kind != CentralIntervalQualityKind.Perfect;
+
+    /// <summary>
+    /// Explicitly converts an <see cref="ImperfectableIntervalQuality"/> to a <see cref="CentralIntervalQuality"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <exception cref="InvalidCastException">The cast was invalid.</exception>
+    public static explicit operator CentralIntervalQuality(IntervalQuality quality)
+        => quality.IsCentral(out var cq) ? cq : throw IntervalQuality.DoesNotMatch(quality.ToString(), "central");
+
+    /// <summary>
+    /// Explicitly converts an <see cref="ImperfectableIntervalQuality"/> to a <see cref="CentralIntervalQuality"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <exception cref="InvalidCastException">The cast was invalid.</exception>
+    public static explicit operator CentralIntervalQuality(ImperfectableIntervalQuality quality)
+        => quality.IsCentral(out var cq) ? cq : throw IntervalQuality.DoesNotMatch(quality.ToString(), "central");
+
+    /// <summary>
+    /// Explicitly converts a <see cref="PerfectableIntervalQuality"/> to a <see cref="CentralIntervalQuality"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <exception cref="InvalidCastException">The cast was invalid.</exception>
+    public static explicit operator CentralIntervalQuality(PerfectableIntervalQuality quality)
+        => quality.IsCentral(out var cq) ? cq : throw IntervalQuality.DoesNotMatch(quality.ToString(), "central");
+    #endregion
+
+    #region ToString
+    /// <summary>
+    /// Gets a string that represents this instance.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+    {
+        if (IsMajor()) return IntervalQuality.MajorString;
+        else return IntervalQuality.MinorString;
+    }
+    #endregion
+}
+
+/// <summary>
+/// Represents a peripheral interval quality (augmented or diminished).
+/// </summary>
+public readonly record struct PeripheralIntervalQuality
+{
+    #region Properties
+    #region Conversion
+    /// <summary>
+    /// Gets a new <see cref="SimpleIntervalBase"/> representing a unison with this quality.
+    /// </summary>
+    public SimpleIntervalBase Unison
+        => SimpleIntervalBase.CreatePerfectable(this, SimpleIntervalNumber.Unison);
+
+    /// <summary>
+    /// Gets a new <see cref="SimpleIntervalBase"/> representing a second with this quality.
+    /// </summary>
+    public SimpleIntervalBase Second
+        => SimpleIntervalBase.CreateImperfectable(this, SimpleIntervalNumber.Second);
+
+    /// <summary>
+    /// Gets a new <see cref="SimpleIntervalBase"/> representing a third with this quality.
+    /// </summary>
+    public SimpleIntervalBase Third
+        => SimpleIntervalBase.CreateImperfectable(this, SimpleIntervalNumber.Third);
+
+    /// <summary>
+    /// Gets a new <see cref="SimpleIntervalBase"/> representing a fourth with this quality.
+    /// </summary>
+    public SimpleIntervalBase Fourth
+        => SimpleIntervalBase.CreatePerfectable(this, SimpleIntervalNumber.Fourth);
+
+    /// <summary>
+    /// Gets a new <see cref="SimpleIntervalBase"/> representing a fifth with this quality.
+    /// </summary>
+    public SimpleIntervalBase Fifth
+        => SimpleIntervalBase.CreatePerfectable(this, SimpleIntervalNumber.Fifth);
+
+    /// <summary>
+    /// Gets a new <see cref="SimpleIntervalBase"/> representing a sixth with this quality.
+    /// </summary>
+    public SimpleIntervalBase Sixth
+        => SimpleIntervalBase.CreateImperfectable(this, SimpleIntervalNumber.Sixth);
+
+    /// <summary>
+    /// Gets a new <see cref="SimpleIntervalBase"/> representing a seventh with this quality.
+    /// </summary>
+    public SimpleIntervalBase Seventh
+        => SimpleIntervalBase.CreateImperfectable(this, SimpleIntervalNumber.Seventh);
+    #endregion
+
+    /// <summary>
+    /// Gets an index that can be used to order <see cref="IntervalQuality"/> instances based on their positions in
+    /// the circle of fifths relative to <see cref="PerfectableIntervalQuality.Perfect"/>.
+    /// </summary>
+    public int CircleOfFifthsIndex => (int)Kind.Value;
+
+    /// <summary>
+    /// Gets the kind of this instance.
+    /// </summary>
+    public PeripheralIntervalQualityKind Kind { get; }
+
+    /// <summary>
+    /// Gets the degree of the modification represented by this instance (either diminished or augmented).
+    /// </summary>
+    public int Degree { get; }
+    #endregion
+
+    #region Constructor And Factory Methods
+    /// <summary>
+    /// Creates a new augmented <see cref="PeripheralIntervalQuality"/> with the given degree.
+    /// </summary>
+    /// <param name="Degree"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="Degree"/> was not positive.</exception>
+    public static PeripheralIntervalQuality Augmented([Positive] int Degree)
+        => Degree > 0
+            ? new(PeripheralIntervalQualityKind.Augmented, Degree)
+            : throw new ArgumentOutOfRangeException(nameof(Degree), Degree, "Degree must be positive.");
+
+    /// <summary>
+    /// Creates a new diminished <see cref="PeripheralIntervalQuality"/> with the given degree.
+    /// </summary>
+    /// <param name="Degree"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="Degree"/> was not positive.</exception>
+    public static PeripheralIntervalQuality Diminished([Positive] int Degree)
+        => Degree > 0
+            ? new(PeripheralIntervalQualityKind.Diminished, Degree)
+            : throw new ArgumentOutOfRangeException(nameof(Degree), Degree, "Degree must be positive.");
+
+    /// <summary>
+    /// Constructs a new <see cref="PeripheralIntervalQuality"/> with the given kind.
+    /// </summary>
+    /// <param name="kind"></param>
+    internal PeripheralIntervalQuality(PeripheralIntervalQualityKind kind, [Positive] int degree)
+    {
+        Kind = kind;
+        Degree = degree;
+    }
+
+    /// <summary>
+    /// Constructs a new <see cref="PeripheralIntervalQuality"/> with the given degree, using positive degrees
+    /// for augmented and negative degrees for diminished.
+    /// </summary>
+    /// <param name="degree"></param>
+    internal PeripheralIntervalQuality([NonZero] int degree)
+    {
+        if (degree > 0)
+        {
+            Kind = PeripheralIntervalQualityKind.Augmented;
+            Degree = degree;
+        }
+        else
+        {
+            Kind = PeripheralIntervalQualityKind.Diminished;
+            Degree = -degree;
+        }
+    }
+    #endregion
+
+    #region Classification
+    /// <summary>
+    /// Gets whether or not this instance represents the quality of an augmented interval.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsAugmented() => Kind == PeripheralIntervalQualityKind.Augmented;
+
+    /// <summary>
+    /// Gets whether or not this instance represents the quality of a diminished interval.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsDiminished() => Kind == PeripheralIntervalQualityKind.Diminished;
+    #endregion
+
+    #region Conversion
+    /// <summary>
+    /// Gets a new <see cref="Interval"/> with this quality and the specified number.
+    /// </summary>
+    /// <param name="number"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidCastException">
+    /// <paramref name="number"/> was not positive.
+    /// </exception>
+    public Interval WithNumber(int number) => WithNumber((IntervalNumber)number);
+
+    /// <summary>
+    /// Gets a new <see cref="Interval"/> with this quality and the specified number.
+    /// </summary>
+    /// <param name="number"></param>
+    /// <returns></returns>
+    public Interval WithNumber(IntervalNumber number) => Interval.Create(this, number);
+
+    /// <summary>
+    /// Explicitly converts an <see cref="IntervalQuality"/> to a <see cref="PeripheralIntervalQuality"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <exception cref="InvalidCastException">The cast was invalid.</exception>
+    public static explicit operator PeripheralIntervalQuality(IntervalQuality quality)
+        => quality.IsPeripheral(out var pq)
+            ? pq
+            : throw IntervalQuality.DoesNotMatch(quality.ToString(), "peripheral");
+
+    /// <summary>
+    /// Explicitly converts a <see cref="PerfectableIntervalQuality"/> to a <see cref="PeripheralIntervalQuality"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <exception cref="InvalidCastException">The cast was invalid.</exception>
+    public static explicit operator PeripheralIntervalQuality(PerfectableIntervalQuality quality)
+        => quality.IsPeripheral(out var pq)
+            ? pq
+            : throw IntervalQuality.DoesNotMatch(quality.ToString(), "peripheral");
+
+    /// <summary>
+    /// Explicitly converts an <see cref="ImperfectableIntervalQuality"/> to a <see cref="PeripheralIntervalQuality"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <exception cref="InvalidCastException">The cast was invalid.</exception>
+    public static explicit operator PeripheralIntervalQuality(ImperfectableIntervalQuality quality)
+        => quality.IsPeripheral(out var pq)
+            ? pq
+            : throw IntervalQuality.DoesNotMatch(quality.ToString(), "peripheral");
+    #endregion
+
+    #region ToString
+    /// <summary>
+    /// Gets a string that represents this instance.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+    {
+        if (IsAugmented()) return IntervalQuality.AugmentedString(Degree);
+        else return IntervalQuality.DiminishedString(Degree);
+    }
     #endregion
 }
 
@@ -608,10 +1126,38 @@ public readonly record struct PerfectableIntervalQuality
     /// <summary>
     /// A perfectable interval quality representing a perfect interval.
     /// </summary>
+    /// <remarks>This is the default value of this type.</remarks>
     public static readonly PerfectableIntervalQuality Perfect = new(0);
     #endregion
 
     #region Properties And Fields
+    #region Conversion
+    /// <summary>
+    /// Gets a new <see cref="SimpleIntervalBase"/> representing a unison with this quality.
+    /// </summary>
+    public SimpleIntervalBase Unison
+        => SimpleIntervalBase.CreatePerfectable(this, SimpleIntervalNumber.Unison);
+
+    /// <summary>
+    /// Gets a new <see cref="SimpleIntervalBase"/> representing a fourth with this quality.
+    /// </summary>
+    public SimpleIntervalBase Fourth
+        => SimpleIntervalBase.CreatePerfectable(this, SimpleIntervalNumber.Fourth);
+
+    /// <summary>
+    /// Gets a new <see cref="SimpleIntervalBase"/> representing a fifth with this quality.
+    /// </summary>
+    public SimpleIntervalBase Fifth
+        => SimpleIntervalBase.CreatePerfectable(this, SimpleIntervalNumber.Fifth);
+
+    private static CentralIntervalQuality UnsafeAsCentral => CentralIntervalQuality.Perfect;
+
+    private PeripheralIntervalQuality UnsafeAsPeripheral => new(PerfectBasedIndex);
+
+    private ImperfectableIntervalQuality UnsafeAsImperfectable
+        => PerfectBasedIndex < 0 ? new(PerfectBasedIndex - 1) : new(PerfectBasedIndex);
+    #endregion
+
     /// <summary>
     /// Gets the kind of this perfectable interval quality.
     /// </summary>
@@ -699,13 +1245,13 @@ public readonly record struct PerfectableIntervalQuality
     /// Gets whether or not this interval quality represents an augmented interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsAugmented() => Kind == PerfectableIntervalQualityKind.Augmented;
+    public bool IsAugmented() => PerfectBasedIndex > 0;
 
     /// <summary>
     /// Gets whether or not this interval quality represents a perfect interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsPerfect() => Kind == PerfectableIntervalQualityKind.Perfect;
+    public bool IsPerfect() => PerfectBasedIndex == 0;
 
     /// <summary>
     /// Gets whether or not this interval quality represents a diminished interval, setting the
@@ -720,7 +1266,143 @@ public readonly record struct PerfectableIntervalQuality
     /// Gets whether or not this interval quality represents a diminished interval.
     /// </summary>
     /// <returns></returns>
-    public bool IsDiminished() => Kind == PerfectableIntervalQualityKind.Diminished;
+    public bool IsDiminished() => PerfectBasedIndex < 0;
+    #endregion
+
+    #region Conversion
+    /// <summary>
+    /// Gets a new <see cref="Interval"/> with this quality and the specified number.
+    /// </summary>
+    /// <param name="number"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="number"/> was not perfectable.
+    /// </exception>
+    /// <exception cref="InvalidCastException">
+    /// <paramref name="number"/> was not positive.
+    /// </exception>
+    public Interval WithNumber(int number) => WithNumber((IntervalNumber)number);
+
+    /// <summary>
+    /// Gets a new <see cref="Interval"/> with this quality and the specified number.
+    /// </summary>
+    /// <param name="number"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="number"/> was not perfectable.
+    /// </exception>
+    public Interval WithNumber(IntervalNumber number) => Interval.Create(this, number);
+
+    /// <summary>
+    /// Determines whether or not this instance is imperfectable, setting the equivalent
+    /// <see cref="ImperfectableIntervalQuality"/> in an <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <returns></returns>
+    public bool IsImperfectable(out ImperfectableIntervalQuality quality)
+        => IsImperfectable() ? Try.Success(out quality, UnsafeAsImperfectable) : Try.Failure(out quality);
+
+    /// <summary>
+    /// Determines whether or not this instance is imperfectable.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsImperfectable() => PerfectBasedIndex != 0;
+
+    /// <summary>
+    /// Determines whether or not this instance is central, setting the equivalent
+    /// <see cref="CentralIntervalQuality"/> (<see cref="CentralIntervalQuality.Perfect"/>) in an
+    /// <see langword="out"/> parameter if so, and setting the equivalent <see cref="PeripheralIntervalQuality"/>
+    /// in an <see langword="out"/> parameter if not.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <param name="peripheralQuality"></param>
+    /// <returns></returns>
+    public bool IsCentral(out CentralIntervalQuality quality, out PeripheralIntervalQuality peripheralQuality)
+        => IsCentral()
+            ? Try.Success(out quality, UnsafeAsCentral, out peripheralQuality)
+            : Try.Failure(out quality, out peripheralQuality, UnsafeAsPeripheral);
+
+    /// <summary>
+    /// Determines whether or not this instance is central, setting the equivalent
+    /// <see cref="CentralIntervalQuality"/> (<see cref="CentralIntervalQuality.Perfect"/>) in an
+    /// <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <returns></returns>
+    public bool IsCentral(out CentralIntervalQuality quality)
+        => IsCentral() ? Try.Success(out quality, CentralIntervalQuality.Perfect) : Try.Failure(out quality);
+
+    /// <summary>
+    /// Determines whether or not this instance is central.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsCentral() => PerfectBasedIndex == 0;
+
+    /// <summary>
+    /// Determines whether or not this instance is peripheral, setting the equivalent
+    /// <see cref="PeripheralIntervalQuality"/> in an <see langword="out"/> parameter if so, and setting the
+    /// equivalent <see cref="CentralIntervalQuality"/> (<see cref="CentralIntervalQuality.Perfect"/>) in an
+    /// <see langword="out"/> parameter if not.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <param name="centralQuality"></param>
+    /// <returns></returns>
+    public bool IsPeripheral(out PeripheralIntervalQuality quality, out CentralIntervalQuality centralQuality)
+        => IsPeripheral()
+            ? Try.Success(out quality, UnsafeAsPeripheral, out centralQuality)
+            : Try.Failure(out quality, out centralQuality, UnsafeAsCentral);
+
+    /// <summary>
+    /// Determines whether or not this instance is peripheral, setting the equivalent
+    /// <see cref="PeripheralIntervalQuality"/> in an <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <returns></returns>
+    public bool IsPeripheral(out PeripheralIntervalQuality quality)
+        => IsPeripheral() ? Try.Success(out quality, UnsafeAsPeripheral) : Try.Failure(out quality);
+
+    /// <summary>
+    /// Determines whether this instance is peripheral.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPeripheral() => PerfectBasedIndex != 0;
+
+    /// <summary>
+    /// Implicitly converts a <see cref="PeripheralIntervalQuality"/> to a <see cref="PerfectableIntervalQuality"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    public static implicit operator PerfectableIntervalQuality(PeripheralIntervalQuality quality)
+        => new(quality.IsAugmented() ? quality.Degree : -quality.Degree);
+
+    /// <summary>
+    /// Explicitly converts an <see cref="IntervalQuality"/> to a <see cref="PerfectableIntervalQuality"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <exception cref="InvalidCastException">The cast was invalid.</exception>
+    public static explicit operator PerfectableIntervalQuality(IntervalQuality quality)
+        => quality.IsPerfectable(out var pq)
+            ? pq
+            : throw IntervalQuality.DoesNotMatch(quality.ToString(), "perfectable");
+
+    /// <summary>
+    /// Explicitly converts a <see cref="CentralIntervalQuality"/> to a <see cref="PerfectableIntervalQuality"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <exception cref="InvalidCastException">The cast was invalid.</exception>
+    public static explicit operator PerfectableIntervalQuality(CentralIntervalQuality quality)
+        => quality.IsPerfectable(out var pq)
+            ? pq
+            : throw IntervalQuality.DoesNotMatch(quality.ToString(), "perfectable");
+
+    /// <summary>
+    /// Explicitly converts a <see cref="CentralIntervalQuality"/> to a <see cref="PerfectableIntervalQuality"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <exception cref="InvalidCastException">The cast was invalid.</exception>
+    public static explicit operator PerfectableIntervalQuality(ImperfectableIntervalQuality quality)
+        => quality.IsPerfectable(out var pq)
+            ? pq
+            : throw IntervalQuality.DoesNotMatch(quality.ToString(), "perfectable");
     #endregion
 
     #region Computation
@@ -759,14 +1441,14 @@ public readonly record struct PerfectableIntervalQuality
 
     #region ToString
     /// <summary>
-    /// Gets a string that represents the current instance.
+    /// Gets a string that represents this instance.
     /// </summary>
     /// <returns></returns>
     public override string ToString()
     {
-        if (IsAugmented(out var augmentedDegree)) return $"Augmented {{ Degree = {augmentedDegree} }}";
-        else if (IsDiminished(out var diminishedDegree)) return $"Diminished {{ Degree = {diminishedDegree} }}";
-        else return "Perfect";
+        if (IsAugmented(out var augmentedDegree)) return IntervalQuality.AugmentedString(augmentedDegree);
+        else if (IsDiminished(out var diminishedDegree)) return IntervalQuality.DiminishedString(diminishedDegree);
+        else return IntervalQuality.PerfectString;
     }
     #endregion
     #endregion
@@ -793,15 +1475,52 @@ public readonly record struct ImperfectableIntervalQuality
     #endregion
 
     #region Properties And Fields
+    #region Conversion
+    /// <summary>
+    /// Gets a new <see cref="SimpleIntervalBase"/> representing a second with this quality.
+    /// </summary>
+    public SimpleIntervalBase Second
+        => SimpleIntervalBase.CreateImperfectable(this, SimpleIntervalNumber.Second);
+
+    /// <summary>
+    /// Gets a new <see cref="SimpleIntervalBase"/> representing a third with this quality.
+    /// </summary>
+    public SimpleIntervalBase Third
+        => SimpleIntervalBase.CreateImperfectable(this, SimpleIntervalNumber.Third);
+
+    /// <summary>
+    /// Gets a new <see cref="SimpleIntervalBase"/> representing a sixth with this quality.
+    /// </summary>
+    public SimpleIntervalBase Sixth
+        => SimpleIntervalBase.CreateImperfectable(this, SimpleIntervalNumber.Sixth);
+
+    /// <summary>
+    /// Gets a new <see cref="SimpleIntervalBase"/> representing a seventh with this quality.
+    /// </summary>
+    public SimpleIntervalBase Seventh
+        => SimpleIntervalBase.CreateImperfectable(this, SimpleIntervalNumber.Seventh);
+
+    internal CentralIntervalQuality UnsafeAsCentral
+        => new(MajorBasedIndex >= 0 ? MajorBasedIndex + 1 : MajorBasedIndex);
+
+    internal PeripheralIntervalQuality UnsafeAsPeripheral
+        => MajorBasedIndex > 0
+            ? new(PeripheralIntervalQualityKind.Augmented, MajorBasedIndex)
+            : new(PeripheralIntervalQualityKind.Diminished, -MajorBasedIndex - 1);
+
+    internal PerfectableIntervalQuality UnsafeAsPerfectable
+        => MajorBasedIndex > 0 ? new(MajorBasedIndex) : new(MajorBasedIndex + 1);
+    #endregion
+
     /// <summary>
     /// Gets the kind of this imperfectable interval quality.
     /// </summary>
     public ImperfectableIntervalQualityKind Kind => MajorBasedIndex switch
     {
         < -1 => ImperfectableIntervalQualityKind.Diminished,
-        -1 => ImperfectableIntervalQualityKind.Minor,
-        0 => ImperfectableIntervalQualityKind.Major,
         > 0 => ImperfectableIntervalQualityKind.Augmented,
+        0 => ImperfectableIntervalQualityKind.Major,
+        -1 => ImperfectableIntervalQualityKind.Minor,
     };
 
     /// <summary>
@@ -825,7 +1544,11 @@ public readonly record struct ImperfectableIntervalQuality
     #endregion
 
     #region Constructor
-    internal ImperfectableIntervalQuality(int NumericalValue) { MajorBasedIndex = NumericalValue; }
+    /// <summary>
+    /// Constructs a new <see cref="ImperfectableIntervalQuality"/> with the given major-based index.
+    /// </summary>
+    /// <param name="MajorBasedIndex"></param>
+    internal ImperfectableIntervalQuality(int MajorBasedIndex) { this.MajorBasedIndex = MajorBasedIndex; }
     #endregion
 
     #region Methods
@@ -868,6 +1591,29 @@ public readonly record struct ImperfectableIntervalQuality
     #endregion
 
     #region Computation
+    /// <summary>
+    /// Gets a new <see cref="Interval"/> with this quality and the specified number.
+    /// </summary>
+    /// <param name="number"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="number"/> was not imperfectable.
+    /// </exception>
+    /// <exception cref="InvalidCastException">
+    /// <paramref name="number"/> was not positive.
+    /// </exception>
+    public Interval WithNumber(int number) => WithNumber((IntervalNumber)number);
+
+    /// <summary>
+    /// Gets a new <see cref="Interval"/> with this quality and the specified number.
+    /// </summary>
+    /// <param name="number"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="number"/> was not imperfectable.
+    /// </exception>
+    public Interval WithNumber(IntervalNumber number) => Interval.Create(this, number);
+
     /// <summary>
     /// Returns an interval quality equivalent to this one shifted by a given integer degree.
     /// </summary>
@@ -945,16 +1691,131 @@ public readonly record struct ImperfectableIntervalQuality
     public bool IsDiminished() => Kind == ImperfectableIntervalQualityKind.Diminished;
     #endregion
 
+    #region Conversion
+    /// <summary>
+    /// Determines whether or not this instance is perfectable, setting the equivalent
+    /// <see cref="PerfectableIntervalQuality"/> in an <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <returns></returns>
+    public bool IsPerfectable(out PerfectableIntervalQuality quality)
+        => IsPerfectable() ? Try.Success(out quality, UnsafeAsPerfectable) : Try.Failure(out quality);
+
+    /// <summary>
+    /// Determines whether this instance is perfectable.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPerfectable() => MajorBasedIndex is not (0 or -1);
+
+    /// <summary>
+    /// Determines whether or not this instance is central, setting the equivalent
+    /// <see cref="CentralIntervalQuality"/> (<see cref="CentralIntervalQuality.Perfect"/>) in an
+    /// <see langword="out"/> parameter if so, and setting the equivalent <see cref="PeripheralIntervalQuality"/>
+    /// in an <see langword="out"/> parameter if not.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <param name="peripheralQuality"></param>
+    /// <returns></returns>
+    public bool IsCentral(out CentralIntervalQuality quality, out PeripheralIntervalQuality peripheralQuality)
+        => IsCentral()
+            ? Try.Success(out quality, UnsafeAsCentral, out peripheralQuality)
+            : Try.Failure(out quality, out peripheralQuality, UnsafeAsPeripheral);
+
+    /// <summary>
+    /// Determines whether or not this instance is central, setting the equivalent
+    /// <see cref="CentralIntervalQuality"/> (<see cref="CentralIntervalQuality.Perfect"/>) in an
+    /// <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <returns></returns>
+    public bool IsCentral(out CentralIntervalQuality quality)
+        => IsCentral()
+            ? Try.Success(out quality, UnsafeAsCentral)
+            : Try.Failure(out quality);
+
+    /// <summary>
+    /// Determines whether or not this instance is central.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsCentral() => MajorBasedIndex is 0 or -1;
+
+    /// <summary>
+    /// Determines whether or not this instance is peripheral, setting the equivalent
+    /// <see cref="PeripheralIntervalQuality"/> in an <see langword="out"/> parameter if so, and setting the
+    /// equivalent <see cref="CentralIntervalQuality"/> in an <see langword="out"/> parameter if not.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <param name="centralQuality"></param>
+    /// <returns></returns>
+    public bool IsPeripheral(out PeripheralIntervalQuality quality, out CentralIntervalQuality centralQuality)
+        => IsPeripheral()
+            ? Try.Success(out quality, UnsafeAsPeripheral, out centralQuality)
+            : Try.Failure(out quality, out centralQuality, UnsafeAsCentral);
+
+    /// <summary>
+    /// Determines whether or not this instance is peripheral, setting the equivalent
+    /// <see cref="PeripheralIntervalQuality"/> in an <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <returns></returns>
+    public bool IsPeripheral(out PeripheralIntervalQuality quality)
+        => IsPeripheral() ? Try.Success(out quality, UnsafeAsPeripheral) : Try.Failure(out quality);
+
+    /// <summary>
+    /// Determines whether this instance is peripheral.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPeripheral() => MajorBasedIndex is not (0 or -1);
+
+    /// <summary>
+    /// Implicitly converts a <see cref="PeripheralIntervalQuality"/> to
+    /// an <see cref="ImperfectableIntervalQuality"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    public static implicit operator ImperfectableIntervalQuality(PeripheralIntervalQuality quality)
+        => quality.IsAugmented() ? new(quality.Degree) : new(-quality.Degree - 1);
+
+    /// <summary>
+    /// Explicitly converts an <see cref="IntervalQuality"/> to an <see cref="ImperfectableIntervalQuality"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    public static explicit operator ImperfectableIntervalQuality(IntervalQuality quality)
+        => quality.IsImperfectable(out var iq)
+            ? iq
+            : throw IntervalQuality.DoesNotMatch(quality.ToString(), "imperfectable");
+
+    /// <summary>
+    /// Explicitly converts a <see cref="CentralIntervalQuality"/> to an <see cref="ImperfectableIntervalQuality"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <exception cref="InvalidCastException">The cast was invalid.</exception>
+    public static explicit operator ImperfectableIntervalQuality(CentralIntervalQuality quality)
+        => quality.IsImperfectable(out var iq)
+            ? iq
+            : throw IntervalQuality.DoesNotMatch(quality.ToString(), "imperfectable");
+
+    /// <summary>
+    /// Explicitly converts a <see cref="PerfectableIntervalQuality"/> to
+    /// an <see cref="ImperfectableIntervalQuality"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <exception cref="InvalidCastException">The cast was invalid.</exception>
+    public static explicit operator ImperfectableIntervalQuality(PerfectableIntervalQuality quality)
+        => quality.IsImperfectable(out var iq)
+            ? iq
+            : throw IntervalQuality.DoesNotMatch(quality.ToString(), "imperfectable");
+    #endregion
+
     #region ToString
     /// <summary>
-    /// Gets a string that represents the current instance.
+    /// Gets a string that represents this instance.
     /// </summary>
     /// <returns></returns>
     public override string ToString()
     {
-        if (IsAugmented(out var augmentedDegree)) return $"Augmented {{ Degree = {augmentedDegree} }}";
-        else if (IsDiminished(out var diminishedDegree)) return $"Diminished {{ Degree = {diminishedDegree} }}";
-        else return MajorBasedIndex == 0 ? "Major" : "Minor";
+        if (IsAugmented(out var augmentedDegree)) return IntervalQuality.AugmentedString(augmentedDegree);
+        else if (IsDiminished(out var diminishedDegree)) return IntervalQuality.DiminishedString(diminishedDegree);
+        else return MajorBasedIndex == 0 ? IntervalQuality.MajorString : IntervalQuality.MinorString;
     }
     #endregion
     #endregion

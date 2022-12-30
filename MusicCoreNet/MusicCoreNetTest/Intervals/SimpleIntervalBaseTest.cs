@@ -21,11 +21,11 @@ public class SimpleIntervalBaseTest
     {
         // This should not fail
         Assert.AreEqual(
-            Interval.Augmented().Fifth(),
+            Interval.Augmented().Fifth,
             SimpleIntervalBase.Create(IntervalQuality.Augmented(), SimpleIntervalNumber.Fifth));
 
         Assert.AreEqual(
-            Interval.Minor().Third(),
+            Interval.Minor.Third,
             SimpleIntervalBase.Create(IntervalQuality.Minor, SimpleIntervalNumber.Third));
 
         // These should fail (as they are mismatched)
@@ -43,10 +43,10 @@ public class SimpleIntervalBaseTest
         = ImmutableArray.CreateRange(new (SimpleIntervalBase, int)[]
         {
             (SimpleIntervalBase.PerfectUnison, 0),
-            (Interval.Minor().Second(), -5),
-            (Interval.Major().Second(), 2),
-            (Interval.Augmented(2).Sixth(), 17),
-            (Interval.Diminished().Third(), -10),
+            (Interval.Minor.Second, -5),
+            (Interval.Major.Second, 2),
+            (Interval.Augmented(2).Sixth, 17),
+            (Interval.Diminished().Third, -10),
         });
 
     /// <summary>
@@ -83,10 +83,10 @@ public class SimpleIntervalBaseTest
     [TestMethod]
     public void TestNegation()
     {
-        TestInversionPair(Interval.Perfect().Fourth(), Interval.Perfect().Fifth());
-        TestInversionPair(Interval.Augmented(3).Second(), Interval.Diminished(3).Seventh());
-        TestInversionPair(Interval.Minor().Sixth(), Interval.Major().Third());
-        TestInversionPair(Interval.Augmented().Fourth(), Interval.Diminished().Fifth());
+        TestInversionPair(Interval.Perfect.Fourth, Interval.Perfect.Fifth);
+        TestInversionPair(Interval.Augmented(3).Second, Interval.Diminished(3).Seventh);
+        TestInversionPair(Interval.Minor.Sixth, Interval.Major.Third);
+        TestInversionPair(Interval.Augmented().Fourth, Interval.Diminished().Fifth);
     }
 
     private static void TestInversionPair(SimpleIntervalBase first, SimpleIntervalBase second)
@@ -101,11 +101,11 @@ public class SimpleIntervalBaseTest
     [TestMethod]
     public void TestAddition()
     {
-        TestAdditionPair(Interval.Major().Second(), Interval.Major().Second(), Interval.Major().Third());
-        TestAdditionPair(Interval.Perfect().Fourth(), Interval.Perfect().Fourth(), Interval.Minor().Seventh());
-        TestAdditionPair(Interval.Augmented(2).Third(), Interval.Diminished(2).Sixth(), Interval.Perfect().Unison());
-        TestAdditionPair(Interval.Major().Sixth(), Interval.Minor().Second(), Interval.Minor().Seventh());
-        TestAdditionPair(Interval.Major().Seventh(), Interval.Major().Sixth(), Interval.Augmented().Fifth());
+        TestAdditionPair(Interval.Major.Second, Interval.Major.Second, Interval.Major.Third);
+        TestAdditionPair(Interval.Perfect.Fourth, Interval.Perfect.Fourth, Interval.Minor.Seventh);
+        TestAdditionPair(Interval.Augmented(2).Third, Interval.Diminished(2).Sixth, Interval.Perfect.Unison);
+        TestAdditionPair(Interval.Major.Sixth, Interval.Minor.Second, Interval.Minor.Seventh);
+        TestAdditionPair(Interval.Major.Seventh, Interval.Major.Sixth, Interval.Augmented().Fifth);
     }
 
     private static void TestAdditionPair(

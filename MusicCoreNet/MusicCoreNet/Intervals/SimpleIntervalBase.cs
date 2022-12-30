@@ -22,17 +22,17 @@ public readonly record struct SimpleIntervalBase
     /// <summary>
     /// A <see cref="SimpleIntervalBase"/> representing a perfect fourth.
     /// </summary>
-    public static readonly SimpleIntervalBase PerfectFourth = Interval.Perfect().Fourth();
+    public static readonly SimpleIntervalBase PerfectFourth = Interval.Perfect.Fourth;
 
     /// <summary>
     /// A <see cref="SimpleIntervalBase"/> representing a perfect unison.
     /// </summary>
-    public static readonly SimpleIntervalBase PerfectUnison = Interval.Perfect().Unison();
+    public static readonly SimpleIntervalBase PerfectUnison = Interval.Perfect.Unison;
 
     /// <summary>
     /// A <see cref="SimpleIntervalBase"/> representing a perfect fifth.
     /// </summary>
-    public static readonly SimpleIntervalBase PerfectFifth = Interval.Perfect().Fifth();
+    public static readonly SimpleIntervalBase PerfectFifth = Interval.Perfect.Fifth;
     #endregion
 
     #region Properties
@@ -90,14 +90,9 @@ public readonly record struct SimpleIntervalBase
     /// The perfectabilities of the quality and number did not match.
     /// </exception>
     public static SimpleIntervalBase Create(IntervalQuality Quality, SimpleIntervalNumber Number)
-    {
-        if (!Quality.HasPerfectability(Number.Perfectability))
-        {
-            throw Interval.PerfectabilityMismatch(Number.Perfectability);
-        }
-
-        return new(Quality, Number);
-    }
+        => Quality.IsPerfectability(Number.Perfectability)
+            ? new(Quality, Number)
+            : throw Interval.PerfectabilityMismatch(Number.Perfectability);
 
     /// <summary>
     /// Creates a new <see cref="SimpleIntervalBase"/> spanning the number of half steps passed in with the simplest
@@ -140,9 +135,7 @@ public readonly record struct SimpleIntervalBase
     public static SimpleIntervalBase? SimplestWithHalfSteps(
         [NonNegative, LessThanInteger(NotePitchClass.ValuesCount)] int halfSteps)
         => IntervalQuality.OfSimplestIntervalWithHalfSteps(halfSteps) is IntervalQuality quality
-            ? new(
-                quality,
-                (SimpleIntervalNumber)SimpleIntervalNumber.OfSimplestIntervalWithHalfSteps(halfSteps)!)
+            ? new(quality, (SimpleIntervalNumber)SimpleIntervalNumber.OfSimplestIntervalWithHalfSteps(halfSteps)!)
             : null;
 
     /// <summary>
