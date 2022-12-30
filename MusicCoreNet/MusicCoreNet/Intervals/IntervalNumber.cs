@@ -20,30 +20,30 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
     /// <summary>
     /// Gets the integer value of this number.
     /// </summary>
-    [Positive] public int Value => Base.NumericalValue + AdditionalOctaves * SimpleIntervalNumber.ValuesCount;
+    [Positive] public int Value => SimpleBase.NumericalValue + AdditionalOctaves * SimpleIntervalNumber.ValuesCount;
 
     /// <summary>
     /// Gets the perfectability of this instance.
     /// </summary>
-    public IntervalPerfectability Perfectability => Base.Perfectability;
+    public IntervalPerfectability Perfectability => SimpleBase.Perfectability;
 
     /// <summary>
     /// Gets whether or not this instance is perfectable.
     /// </summary>
-    public bool IsPerfectable => Base.IsPerfectable();
+    public bool IsPerfectable => SimpleBase.IsPerfectable();
 
     /// <summary>
     /// Gets whether or not this instance is imperfectable.
     /// </summary>
-    public bool IsImperfectable => Base.IsImperfectable();
+    public bool IsImperfectable => SimpleBase.IsImperfectable();
 
     /// <summary>
     /// Gets the <see cref="SimpleIntervalNumber"/> base that this instance adds octaves to.
     /// </summary>
-    public SimpleIntervalNumber Base { get; }
+    public SimpleIntervalNumber SimpleBase { get; }
 
     /// <summary>
-    /// Gets the number of additional octaves added onto <see cref="Base"/>.
+    /// Gets the number of additional octaves added onto <see cref="SimpleBase"/>.
     /// </summary>
     [NonNegative] public int AdditionalOctaves { get; }
     #endregion
@@ -53,12 +53,12 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
     /// Constructs a new instance of the <see cref="IntervalNumber"/> struct representing a simple interval number
     /// with a non-negative number of octaves added.
     /// </summary>
-    /// <param name="Base"></param>
+    /// <param name="SimpleBase"></param>
     /// <param name="AdditionalOctaves"></param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="AdditionalOctaves"/> was negative.</exception>
-    public IntervalNumber(SimpleIntervalNumber Base, [NonNegative] int AdditionalOctaves = 0)
+    public IntervalNumber(SimpleIntervalNumber SimpleBase, [NonNegative] int AdditionalOctaves = 0)
     {
-        this.Base = Base;
+        this.SimpleBase = SimpleBase;
         this.AdditionalOctaves = Throw.IfArgNegative(AdditionalOctaves, nameof(AdditionalOctaves));
     }
 
@@ -71,7 +71,7 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
     {
         Throw.IfArgNotPositive(Value, nameof(Value));
         var valueMinus1 = Value - 1;
-        Base = SimpleIntervalNumber.FromNumericalValue(valueMinus1 % SimpleIntervalNumber.ValuesCount + 1);
+        SimpleBase = SimpleIntervalNumber.FromNumericalValue(valueMinus1 % SimpleIntervalNumber.ValuesCount + 1);
         AdditionalOctaves = valueMinus1 / SimpleIntervalNumber.ValuesCount;
     }
     #endregion
@@ -88,7 +88,7 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
     {
         if (IsSimple())
         {
-            Number = Base;
+            Number = SimpleBase;
             return true;
         }
         else
@@ -112,13 +112,13 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
     /// <param name="other"></param>
     /// <returns></returns>
     public bool Equals(IntervalNumber other)
-        => AdditionalOctaves == other.AdditionalOctaves && Base == other.Base;
+        => AdditionalOctaves == other.AdditionalOctaves && SimpleBase == other.SimpleBase;
 
     /// <summary>
     /// Gets a hash code for the current instance.
     /// </summary>
     /// <returns></returns>
-    public override int GetHashCode() => HashCode.Combine(Base, AdditionalOctaves);
+    public override int GetHashCode() => HashCode.Combine(SimpleBase, AdditionalOctaves);
 
     /// <summary>
     /// Determines if this instance has a value equal to the integer passed in.
