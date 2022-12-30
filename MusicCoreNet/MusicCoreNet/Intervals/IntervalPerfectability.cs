@@ -26,6 +26,11 @@ public readonly record struct IntervalPerfectability
     public static readonly IntervalPerfectability Imperfectable = new(Values.Imperfectable);
 
     /// <summary>
+    /// Gets the <see cref="IntervalPerfectability"/> that is the opposite of this instance.
+    /// </summary>
+    public IntervalPerfectability Opposite => Value == Values.Perfectable ? Imperfectable : Perfectable;
+
+    /// <summary>
     /// Gets a unique identifier for this value.
     /// </summary>
     [NameableEnum] public Values Value { get; }

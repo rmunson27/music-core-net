@@ -249,11 +249,8 @@ public readonly record struct Interval(SimpleIntervalBase Base, [NonNegative] in
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static ArgumentException PerfectabilityMismatch(IntervalPerfectability numberPerfectability)
         => new(
-            $"Quality perfectability ({Opposite(numberPerfectability).ToString().ToLower()}) did not match"
+            $"Quality perfectability ({numberPerfectability.Opposite.ToString().ToLower()}) did not match"
                 + $" number perfectability ({numberPerfectability.ToString().ToLower()}).");
-
-    private static IntervalPerfectability Opposite(IntervalPerfectability p)
-        => p == Perfectable ? Imperfectable : Perfectable;
     #endregion
     #endregion
 }
