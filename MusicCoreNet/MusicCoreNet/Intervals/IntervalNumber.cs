@@ -319,7 +319,7 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
     /// <exception cref="InvalidEnumArgumentException">
     /// The <see cref="PerfectableSimpleIntervalNumber"/> to convert was an unnamed enum value.
     /// </exception>
-    public static implicit operator IntervalNumber([NameableEnum] PerfectableSimpleIntervalNumber number)
+    public static implicit operator IntervalNumber(PerfectableSimpleIntervalNumber number)
         => new(number);
 
     /// <summary>
@@ -329,7 +329,7 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
     /// The <see cref="ImperfectableSimpleIntervalNumber"/> to convert was an unnamed enum value.
     /// </exception>
     /// <param name="number"></param>
-    public static implicit operator IntervalNumber([NameableEnum] ImperfectableSimpleIntervalNumber number)
+    public static implicit operator IntervalNumber(ImperfectableSimpleIntervalNumber number)
         => new(number);
 
     /// <summary>
