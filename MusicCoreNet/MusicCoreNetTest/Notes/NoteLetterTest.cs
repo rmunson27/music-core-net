@@ -24,7 +24,7 @@ public class NoteLetterTest
     }
 
     /// <summary>
-    /// Tests addition of a <see cref="SimpleIntervalBase"/> to a <see cref="NoteLetter"/>.
+    /// Tests addition of a <see cref="SimpleInterval"/> to a <see cref="NoteLetter"/>.
     /// </summary>
     [TestMethod]
     public void TestPlus()
@@ -35,7 +35,7 @@ public class NoteLetterTest
     }
 
     /// <summary>
-    /// Tests subtraction of a <see cref="SimpleIntervalBase"/> from a <see cref="NoteLetter"/>.
+    /// Tests subtraction of a <see cref="SimpleInterval"/> from a <see cref="NoteLetter"/>.
     /// </summary>
     [TestMethod]
     public void TestMinus()

@@ -223,14 +223,14 @@ public readonly record struct NoteLetter
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static SimpleIntervalBase operator -(NoteLetter lhs, NoteLetter rhs)
+    public static SimpleInterval operator -(NoteLetter lhs, NoteLetter rhs)
     {
         var halfSteps = (lhs.HalfStepsAboveC - rhs.HalfStepsAboveC + NotePitchClass.ValuesCount)
                             % NotePitchClass.ValuesCount;
-        return SimpleIntervalBase.SimplestWithHalfSteps(halfSteps) switch
+        return SimpleInterval.SimplestWithHalfSteps(halfSteps) switch
         {
             null => lhs == B ? Interval.Augmented().Fourth : Interval.Diminished().Fifth,
-            SimpleIntervalBase sib => sib,
+            SimpleInterval sib => sib,
         };
     }
 

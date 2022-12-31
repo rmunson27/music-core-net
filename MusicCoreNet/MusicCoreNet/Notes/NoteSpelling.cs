@@ -154,21 +154,21 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     #region Arithmetic
     /// <summary>
     /// Gets a <see cref="NoteSpelling"/> equivalent to the current instance with the supplied
-    /// <see cref="SimpleIntervalBase"/> subtracted.
+    /// <see cref="SimpleInterval"/> subtracted.
     /// </summary>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static NoteSpelling operator -(NoteSpelling lhs, SimpleIntervalBase rhs) => lhs + rhs.Inversion();
+    public static NoteSpelling operator -(NoteSpelling lhs, SimpleInterval rhs) => lhs + rhs.Inversion();
 
     /// <summary>
     /// Gets a <see cref="NoteSpelling"/> equivalent to the current instance with the supplied
-    /// <see cref="SimpleIntervalBase"/> added.
+    /// <see cref="SimpleInterval"/> added.
     /// </summary>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static NoteSpelling operator +(NoteSpelling lhs, SimpleIntervalBase rhs)
+    public static NoteSpelling operator +(NoteSpelling lhs, SimpleInterval rhs)
     {
         var newLetter = lhs.Letter.Plus(rhs.Number, out var differenceQuality);
         return new(
@@ -180,12 +180,12 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
 
     /// <summary>
     /// Gets the difference between the two <see cref="NoteSpelling"/> instances passed in as an instance
-    /// of <see cref="SimpleIntervalBase"/>.
+    /// of <see cref="SimpleInterval"/>.
     /// </summary>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static SimpleIntervalBase operator -(NoteSpelling lhs, NoteSpelling rhs)
+    public static SimpleInterval operator -(NoteSpelling lhs, NoteSpelling rhs)
     {
         var letterDifference = lhs.Letter - rhs.Letter;
         return letterDifference.WithQualityShiftedBy(lhs.Accidental.Modification - rhs.Accidental.Modification);

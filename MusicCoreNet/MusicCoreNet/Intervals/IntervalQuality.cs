@@ -763,7 +763,7 @@ public readonly record struct CentralIntervalQuality
     public CentralIntervalQualityKind Kind { get; }
     #endregion
 
-    #region Constructor
+    #region Constructors
     /// <summary>
     /// Constructs a new <see cref="CentralIntervalQuality"/> with the given kind.
     /// </summary>
@@ -923,46 +923,46 @@ public readonly record struct PeripheralIntervalQuality
     #region Properties
     #region Conversion
     /// <summary>
-    /// Gets a new <see cref="SimpleIntervalBase"/> representing a unison with this quality.
+    /// Gets a new <see cref="SimpleInterval"/> representing a unison with this quality.
     /// </summary>
-    public SimpleIntervalBase Unison
-        => SimpleIntervalBase.CreatePerfectable(this, SimpleIntervalNumber.Unison);
+    public SimpleInterval Unison
+        => SimpleInterval.CreatePerfectable(this, SimpleIntervalNumber.Unison);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleIntervalBase"/> representing a second with this quality.
+    /// Gets a new <see cref="SimpleInterval"/> representing a second with this quality.
     /// </summary>
-    public SimpleIntervalBase Second
-        => SimpleIntervalBase.CreateImperfectable(this, SimpleIntervalNumber.Second);
+    public SimpleInterval Second
+        => SimpleInterval.CreateImperfectable(this, SimpleIntervalNumber.Second);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleIntervalBase"/> representing a third with this quality.
+    /// Gets a new <see cref="SimpleInterval"/> representing a third with this quality.
     /// </summary>
-    public SimpleIntervalBase Third
-        => SimpleIntervalBase.CreateImperfectable(this, SimpleIntervalNumber.Third);
+    public SimpleInterval Third
+        => SimpleInterval.CreateImperfectable(this, SimpleIntervalNumber.Third);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleIntervalBase"/> representing a fourth with this quality.
+    /// Gets a new <see cref="SimpleInterval"/> representing a fourth with this quality.
     /// </summary>
-    public SimpleIntervalBase Fourth
-        => SimpleIntervalBase.CreatePerfectable(this, SimpleIntervalNumber.Fourth);
+    public SimpleInterval Fourth
+        => SimpleInterval.CreatePerfectable(this, SimpleIntervalNumber.Fourth);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleIntervalBase"/> representing a fifth with this quality.
+    /// Gets a new <see cref="SimpleInterval"/> representing a fifth with this quality.
     /// </summary>
-    public SimpleIntervalBase Fifth
-        => SimpleIntervalBase.CreatePerfectable(this, SimpleIntervalNumber.Fifth);
+    public SimpleInterval Fifth
+        => SimpleInterval.CreatePerfectable(this, SimpleIntervalNumber.Fifth);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleIntervalBase"/> representing a sixth with this quality.
+    /// Gets a new <see cref="SimpleInterval"/> representing a sixth with this quality.
     /// </summary>
-    public SimpleIntervalBase Sixth
-        => SimpleIntervalBase.CreateImperfectable(this, SimpleIntervalNumber.Sixth);
+    public SimpleInterval Sixth
+        => SimpleInterval.CreateImperfectable(this, SimpleIntervalNumber.Sixth);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleIntervalBase"/> representing a seventh with this quality.
+    /// Gets a new <see cref="SimpleInterval"/> representing a seventh with this quality.
     /// </summary>
-    public SimpleIntervalBase Seventh
-        => SimpleIntervalBase.CreateImperfectable(this, SimpleIntervalNumber.Seventh);
+    public SimpleInterval Seventh
+        => SimpleInterval.CreateImperfectable(this, SimpleIntervalNumber.Seventh);
     #endregion
 
     /// <summary>
@@ -1130,22 +1130,22 @@ public readonly record struct PerfectableIntervalQuality
     #region Properties And Fields
     #region Conversion
     /// <summary>
-    /// Gets a new <see cref="SimpleIntervalBase"/> representing a unison with this quality.
+    /// Gets a new <see cref="SimpleInterval"/> representing a unison with this quality.
     /// </summary>
-    public SimpleIntervalBase Unison
-        => SimpleIntervalBase.CreatePerfectable(this, SimpleIntervalNumber.Unison);
+    public SimpleInterval Unison
+        => SimpleInterval.CreatePerfectable(this, SimpleIntervalNumber.Unison);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleIntervalBase"/> representing a fourth with this quality.
+    /// Gets a new <see cref="SimpleInterval"/> representing a fourth with this quality.
     /// </summary>
-    public SimpleIntervalBase Fourth
-        => SimpleIntervalBase.CreatePerfectable(this, SimpleIntervalNumber.Fourth);
+    public SimpleInterval Fourth
+        => SimpleInterval.CreatePerfectable(this, SimpleIntervalNumber.Fourth);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleIntervalBase"/> representing a fifth with this quality.
+    /// Gets a new <see cref="SimpleInterval"/> representing a fifth with this quality.
     /// </summary>
-    public SimpleIntervalBase Fifth
-        => SimpleIntervalBase.CreatePerfectable(this, SimpleIntervalNumber.Fifth);
+    public SimpleInterval Fifth
+        => SimpleInterval.CreatePerfectable(this, SimpleIntervalNumber.Fifth);
 
     private static CentralIntervalQuality UnsafeAsCentral => CentralIntervalQuality.Perfect;
 
@@ -1404,6 +1404,26 @@ public readonly record struct PerfectableIntervalQuality
 
     #region Computation
     /// <summary>
+    /// Modifies the supplied <see cref="PerfectableIntervalQuality"/> by applying the
+    /// specified <see cref="Accidental"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <param name="accidental"></param>
+    /// <returns></returns>
+    public static PerfectableIntervalQuality operator +(PerfectableIntervalQuality quality, Accidental accidental)
+        => new(quality.PerfectBasedIndex + accidental.Modification);
+
+    /// <summary>
+    /// Gets the accidental representing the modification that yields the right-hand side when applied to the
+    /// left-hand side.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static Accidental operator -(PerfectableIntervalQuality lhs, PerfectableIntervalQuality rhs)
+        => new(lhs.PerfectBasedIndex - rhs.PerfectBasedIndex);
+
+    /// <summary>
     /// Returns an interval quality equivalent to this one shifted by a given integer degree.
     /// </summary>
     /// <remarks>
@@ -1474,28 +1494,28 @@ public readonly record struct ImperfectableIntervalQuality
     #region Properties And Fields
     #region Conversion
     /// <summary>
-    /// Gets a new <see cref="SimpleIntervalBase"/> representing a second with this quality.
+    /// Gets a new <see cref="SimpleInterval"/> representing a second with this quality.
     /// </summary>
-    public SimpleIntervalBase Second
-        => SimpleIntervalBase.CreateImperfectable(this, SimpleIntervalNumber.Second);
+    public SimpleInterval Second
+        => SimpleInterval.CreateImperfectable(this, SimpleIntervalNumber.Second);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleIntervalBase"/> representing a third with this quality.
+    /// Gets a new <see cref="SimpleInterval"/> representing a third with this quality.
     /// </summary>
-    public SimpleIntervalBase Third
-        => SimpleIntervalBase.CreateImperfectable(this, SimpleIntervalNumber.Third);
+    public SimpleInterval Third
+        => SimpleInterval.CreateImperfectable(this, SimpleIntervalNumber.Third);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleIntervalBase"/> representing a sixth with this quality.
+    /// Gets a new <see cref="SimpleInterval"/> representing a sixth with this quality.
     /// </summary>
-    public SimpleIntervalBase Sixth
-        => SimpleIntervalBase.CreateImperfectable(this, SimpleIntervalNumber.Sixth);
+    public SimpleInterval Sixth
+        => SimpleInterval.CreateImperfectable(this, SimpleIntervalNumber.Sixth);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleIntervalBase"/> representing a seventh with this quality.
+    /// Gets a new <see cref="SimpleInterval"/> representing a seventh with this quality.
     /// </summary>
-    public SimpleIntervalBase Seventh
-        => SimpleIntervalBase.CreateImperfectable(this, SimpleIntervalNumber.Seventh);
+    public SimpleInterval Seventh
+        => SimpleInterval.CreateImperfectable(this, SimpleIntervalNumber.Seventh);
 
     internal CentralIntervalQuality UnsafeAsCentral
         => new(MajorBasedIndex >= 0 ? MajorBasedIndex + 1 : MajorBasedIndex);

@@ -61,10 +61,10 @@ public class NoteSpellingTest
     }
 
     /// <summary>
-    /// A list of tuples containing two <see cref="NoteSpelling"/> instances and a <see cref="SimpleIntervalBase"/>
+    /// A list of tuples containing two <see cref="NoteSpelling"/> instances and a <see cref="SimpleInterval"/>
     /// representing the difference between the first and the second.
     /// </summary>
-    private static readonly ImmutableArray<(NoteSpelling First, NoteSpelling Second, SimpleIntervalBase Difference)> Differences
+    private static readonly ImmutableArray<(NoteSpelling First, NoteSpelling Second, SimpleInterval Difference)> Differences
         = ImmutableArray.CreateRange(new[]
         {
             (Note.A, Note.C, Interval.Major.Sixth),
@@ -75,7 +75,7 @@ public class NoteSpellingTest
         });
 
     /// <summary>
-    /// Tests the <see cref="NoteSpelling.operator +(NoteSpelling, SimpleIntervalBase)"/> method.
+    /// Tests the <see cref="NoteSpelling.operator +(NoteSpelling, SimpleInterval)"/> method.
     /// </summary>
     [TestMethod]
     public void TestAddition()
@@ -92,7 +92,7 @@ public class NoteSpellingTest
     }
 
     /// <summary>
-    /// Tests the <see cref="NoteSpelling.operator -(NoteSpelling, SimpleIntervalBase)"/> method.
+    /// Tests the <see cref="NoteSpelling.operator -(NoteSpelling, SimpleInterval)"/> method.
     /// </summary>
     [TestMethod]
     public void TestSubtraction()

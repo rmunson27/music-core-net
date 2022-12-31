@@ -110,21 +110,22 @@ public readonly record struct Accidental
     /// Constructs a new instance of this struct.
     /// </summary>
     /// <param name="Modification"></param>
-    private Accidental(int Modification) { this.Modification = Modification; }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal Accidental(int Modification) { this.Modification = Modification; }
     #endregion
 
     #region Methods
     #region Factory
     /// <summary>
-    /// Creates a new <see cref="Accidental"/> described by the magnitude and sign of the <see cref="int"/> passed in.
+    /// Creates a new <see cref="Accidental"/> representing the specified modification.
     /// </summary>
     /// <remarks>
-    /// The value returned will be a sharp if <paramref name="IntValue"/> is positive, natural if
-    /// <paramref name="IntValue"/> is zero, and flat if <paramref name="IntValue"/> is negative.
+    /// The value returned will be a sharp if <paramref name="Modification"/> is positive, natural if
+    /// <paramref name="Modification"/> is zero, and flat if <paramref name="Modification"/> is negative.
     /// </remarks>
-    /// <param name="IntValue"></param>
+    /// <param name="Modification"></param>
     /// <returns></returns>
-    public static Accidental FromIntValue(int IntValue) => new(IntValue);
+    public static Accidental FromModification(int Modification) => new(Modification);
 
     /// <summary>
     /// Creates a new <see cref="Accidental"/> representing a sharp with the given integer degree.

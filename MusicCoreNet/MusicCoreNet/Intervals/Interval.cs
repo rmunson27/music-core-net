@@ -19,18 +19,18 @@ namespace Rem.Music;
 /// <param name="AdditionalOctaves">
 /// The number of additional octaves added onto the base to make up the interval.
 /// </param>
-public readonly record struct Interval(SimpleIntervalBase Base, [NonNegative] int AdditionalOctaves)
+public readonly record struct Interval(SimpleInterval Base, [NonNegative] int AdditionalOctaves)
 {
     #region Constants
     /// <summary>
     /// An <see cref="Interval"/> representing a perfect unison.
     /// </summary>
-    public static readonly Interval PerfectUnison = SimpleIntervalBase.PerfectUnison;
+    public static readonly Interval PerfectUnison = SimpleInterval.PerfectUnison;
 
     /// <summary>
     /// An <see cref="Interval"/> representing a perfect octave.
     /// </summary>
-    public static readonly Interval PerfectOctave = new(SimpleIntervalBase.PerfectUnison, AdditionalOctaves: 1);
+    public static readonly Interval PerfectOctave = new(SimpleInterval.PerfectUnison, AdditionalOctaves: 1);
     #endregion
 
     #region Properties And Fields
@@ -79,7 +79,7 @@ public readonly record struct Interval(SimpleIntervalBase Base, [NonNegative] in
     /// The perfectability of the quality and number did not match.
     /// </exception>
     public static Interval Create(IntervalQuality Quality, IntervalNumber Number)
-        => new(SimpleIntervalBase.Create(Quality, Number.SimpleBase), Number.AdditionalOctaves);
+        => new(SimpleInterval.Create(Quality, Number.SimpleBase), Number.AdditionalOctaves);
     #endregion
 
     #region Equality
@@ -174,7 +174,7 @@ public readonly record struct Interval(SimpleIntervalBase Base, [NonNegative] in
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static void SubtractInPlace(
         in Interval lhs, in Interval rhs,
-        out SimpleIntervalBase newBase, out int newAdditionalOctaves)
+        out SimpleInterval newBase, out int newAdditionalOctaves)
     {
         newBase = lhs.Base.MinusWithUnderflow(rhs.Base, out var baseAdditionUnderflows);
 
@@ -185,10 +185,10 @@ public readonly record struct Interval(SimpleIntervalBase Base, [NonNegative] in
 
     #region Conversion
     /// <summary>
-    /// Implicitly converts a <see cref="SimpleIntervalBase"/> to an <see cref="Interval"/>.
+    /// Implicitly converts a <see cref="SimpleInterval"/> to an <see cref="Interval"/>.
     /// </summary>
     /// <param name="base"></param>
-    public static implicit operator Interval(SimpleIntervalBase @base) => new(@base, AdditionalOctaves: 0);
+    public static implicit operator Interval(SimpleInterval @base) => new(@base, AdditionalOctaves: 0);
     #endregion
 
     #region ToString

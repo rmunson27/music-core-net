@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 namespace RemTest.Music;
 
 /// <summary>
-/// Tests of the <see cref="SimpleIntervalBase"/> struct.
+/// Tests of the <see cref="SimpleInterval"/> struct.
 /// </summary>
 [TestClass]
-public class SimpleIntervalBaseTest
+public class SimpleIntervalTest
 {
     /// <summary>
-    /// Tests the <see cref="SimpleIntervalBase.Create(IntervalQuality, SimpleIntervalNumber)"/> method.
+    /// Tests the <see cref="SimpleInterval.Create(IntervalQuality, SimpleIntervalNumber)"/> method.
     /// </summary>
     [TestMethod]
     public void TestCreate()
@@ -22,27 +22,27 @@ public class SimpleIntervalBaseTest
         // This should not fail
         Assert.AreEqual(
             Interval.Augmented().Fifth,
-            SimpleIntervalBase.Create(IntervalQuality.Augmented(), SimpleIntervalNumber.Fifth));
+            SimpleInterval.Create(IntervalQuality.Augmented(), SimpleIntervalNumber.Fifth));
 
         Assert.AreEqual(
             Interval.Minor.Third,
-            SimpleIntervalBase.Create(IntervalQuality.Minor, SimpleIntervalNumber.Third));
+            SimpleInterval.Create(IntervalQuality.Minor, SimpleIntervalNumber.Third));
 
         // These should fail (as they are mismatched)
         Assert.ThrowsException<ArgumentException>(
-            () => SimpleIntervalBase.Create(IntervalQuality.Major, SimpleIntervalNumber.Fourth));
+            () => SimpleInterval.Create(IntervalQuality.Major, SimpleIntervalNumber.Fourth));
         Assert.ThrowsException<ArgumentException>(
-            () => SimpleIntervalBase.Create(IntervalQuality.Perfect, SimpleIntervalNumber.Third));
+            () => SimpleInterval.Create(IntervalQuality.Perfect, SimpleIntervalNumber.Third));
     }
 
     /// <summary>
-    /// A series of pairs of <see cref="SimpleIntervalBase"/> instances and their associated perfect-unison-based
+    /// A series of pairs of <see cref="SimpleInterval"/> instances and their associated perfect-unison-based
     /// circle of fifths indexes.
     /// </summary>
-    private static readonly ImmutableArray<(SimpleIntervalBase Interval, int Index)> CircleOfFifthsIndexPairs
-        = ImmutableArray.CreateRange(new (SimpleIntervalBase, int)[]
+    private static readonly ImmutableArray<(SimpleInterval Interval, int Index)> CircleOfFifthsIndexPairs
+        = ImmutableArray.CreateRange(new (SimpleInterval, int)[]
         {
-            (SimpleIntervalBase.PerfectUnison, 0),
+            (SimpleInterval.PerfectUnison, 0),
             (Interval.Minor.Second, -5),
             (Interval.Major.Second, 2),
             (Interval.Augmented(2).Sixth, 17),
@@ -50,7 +50,7 @@ public class SimpleIntervalBaseTest
         });
 
     /// <summary>
-    /// Tests the <see cref="SimpleIntervalBase.CircleOfFifthsIndex"/> property.
+    /// Tests the <see cref="SimpleInterval.CircleOfFifthsIndex"/> property.
     /// </summary>
     [TestMethod]
     public void TestPerfectUnisonBasedIndex()
@@ -59,12 +59,12 @@ public class SimpleIntervalBaseTest
         {
             Assert.AreEqual(
                 Index, Interval.CircleOfFifthsIndex,
-                $"Invalid '{Interval}' {nameof(SimpleIntervalBase.CircleOfFifthsIndex)} value.");
+                $"Invalid '{Interval}' {nameof(SimpleInterval.CircleOfFifthsIndex)} value.");
         }
     }
 
     /// <summary>
-    /// Tests the <see cref="SimpleIntervalBase.FromCircleOfFifthsIndex(int)"/> factory method.
+    /// Tests the <see cref="SimpleInterval.FromCircleOfFifthsIndex(int)"/> factory method.
     /// </summary>
     [TestMethod]
     public void TestFromCircleOfFifthsIndex()
@@ -72,13 +72,13 @@ public class SimpleIntervalBaseTest
         foreach (var (Interval, Index) in CircleOfFifthsIndexPairs)
         {
             Assert.AreEqual(
-                Interval, SimpleIntervalBase.FromCircleOfFifthsIndex(Index),
+                Interval, SimpleInterval.FromCircleOfFifthsIndex(Index),
                 $"Invalid {nameof(TestFromCircleOfFifthsIndex)}({Index}) result.");
         }
     }
 
     /// <summary>
-    /// Tests negation of <see cref="SimpleIntervalBase"/> instances.
+    /// Tests negation of <see cref="SimpleInterval"/> instances.
     /// </summary>
     [TestMethod]
     public void TestNegation()
@@ -89,14 +89,14 @@ public class SimpleIntervalBaseTest
         TestInversionPair(Interval.Augmented().Fourth, Interval.Diminished().Fifth);
     }
 
-    private static void TestInversionPair(SimpleIntervalBase first, SimpleIntervalBase second)
+    private static void TestInversionPair(SimpleInterval first, SimpleInterval second)
     {
         Assert.AreEqual(first, -second);
         Assert.AreEqual(second, -first);
     }
 
     /// <summary>
-    /// Tests addition of <see cref="SimpleIntervalBase"/> instances.
+    /// Tests addition of <see cref="SimpleInterval"/> instances.
     /// </summary>
     [TestMethod]
     public void TestAddition()
@@ -109,7 +109,7 @@ public class SimpleIntervalBaseTest
     }
 
     private static void TestAdditionPair(
-        SimpleIntervalBase first, SimpleIntervalBase second, SimpleIntervalBase expectedResult)
+        SimpleInterval first, SimpleInterval second, SimpleInterval expectedResult)
     {
         Assert.AreEqual(expectedResult, first + second);
         Assert.AreEqual(expectedResult, second + first);

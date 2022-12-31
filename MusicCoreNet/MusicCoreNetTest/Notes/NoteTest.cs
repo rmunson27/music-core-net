@@ -56,7 +56,7 @@ public class NoteTest
 
             (Note.C.WithOctave(3), Note.C.WithOctave(2), Interval.PerfectOctave),
 
-            (Note.C.WithOctave(3), Note.C.WithOctave(3), SimpleIntervalBase.PerfectUnison),
+            (Note.C.WithOctave(3), Note.C.WithOctave(3), SimpleInterval.PerfectUnison),
         });
 
     /// <summary>

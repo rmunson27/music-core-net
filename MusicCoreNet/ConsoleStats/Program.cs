@@ -14,7 +14,7 @@ var types = new[]
     LibraryTypeInfo.Create<ImperfectableSimpleIntervalNumber>(),
     LibraryTypeInfo.Create<SimpleIntervalNumber>(),
 
-    LibraryTypeInfo.Create<SimpleIntervalBase>(),
+    LibraryTypeInfo.Create<SimpleInterval>(),
 
     LibraryTypeInfo.Create<Interval>(),
     LibraryTypeInfo.Create<SignedInterval>(),

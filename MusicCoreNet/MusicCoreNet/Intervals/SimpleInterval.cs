@@ -10,29 +10,28 @@ using System.Threading.Tasks;
 namespace Rem.Music;
 
 /// <summary>
-/// A type representing a simple interval (spanning less than one octave) that is used as the base for
-/// general intervals and the difference between <see cref="NoteSpelling"/> instances.
+/// Represents a simple interval (spanning less than one octave).
 /// </summary>
 /// <remarks>
 /// The default value of this struct represents a perfect unison.
 /// </remarks>
-public readonly record struct SimpleIntervalBase
+public readonly record struct SimpleInterval
 {
     #region Constants
     /// <summary>
-    /// A <see cref="SimpleIntervalBase"/> representing a perfect fourth.
+    /// A <see cref="SimpleInterval"/> representing a perfect fourth.
     /// </summary>
-    public static readonly SimpleIntervalBase PerfectFourth = Interval.Perfect.Fourth;
+    public static readonly SimpleInterval PerfectFourth = Interval.Perfect.Fourth;
 
     /// <summary>
-    /// A <see cref="SimpleIntervalBase"/> representing a perfect unison.
+    /// A <see cref="SimpleInterval"/> representing a perfect unison.
     /// </summary>
-    public static readonly SimpleIntervalBase PerfectUnison = Interval.Perfect.Unison;
+    public static readonly SimpleInterval PerfectUnison = Interval.Perfect.Unison;
 
     /// <summary>
-    /// A <see cref="SimpleIntervalBase"/> representing a perfect fifth.
+    /// A <see cref="SimpleInterval"/> representing a perfect fifth.
     /// </summary>
-    public static readonly SimpleIntervalBase PerfectFifth = Interval.Perfect.Fifth;
+    public static readonly SimpleInterval PerfectFifth = Interval.Perfect.Fifth;
     #endregion
 
     #region Properties
@@ -66,12 +65,12 @@ public readonly record struct SimpleIntervalBase
 
     #region Constructor
     /// <summary>
-    /// Constructs a new instance of the <see cref="SimpleIntervalBase"/> struct with the quality and number
+    /// Constructs a new instance of the <see cref="SimpleInterval"/> struct with the quality and number
     /// passed in.
     /// </summary>
     /// <param name="Quality"></param>
     /// <param name="Number"></param>
-    internal SimpleIntervalBase(IntervalQuality Quality, SimpleIntervalNumber Number)
+    internal SimpleInterval(IntervalQuality Quality, SimpleIntervalNumber Number)
     {
         this.Quality = Quality;
         this.Number = Number;
@@ -81,7 +80,7 @@ public readonly record struct SimpleIntervalBase
     #region Methods
     #region Factory
     /// <summary>
-    /// Creates a new <see cref="SimpleIntervalBase"/> with the quality and number passed in.
+    /// Creates a new <see cref="SimpleInterval"/> with the quality and number passed in.
     /// </summary>
     /// <param name="Quality"></param>
     /// <param name="Number"></param>
@@ -89,13 +88,13 @@ public readonly record struct SimpleIntervalBase
     /// <exception cref="ArgumentException">
     /// The perfectabilities of the quality and number did not match.
     /// </exception>
-    public static SimpleIntervalBase Create(IntervalQuality Quality, SimpleIntervalNumber Number)
+    public static SimpleInterval Create(IntervalQuality Quality, SimpleIntervalNumber Number)
         => Quality.IsPerfectability(Number.Perfectability)
             ? new(Quality, Number)
             : throw Interval.PerfectabilityMismatch(Number.Perfectability);
 
     /// <summary>
-    /// Creates a new <see cref="SimpleIntervalBase"/> spanning the number of half steps passed in with the simplest
+    /// Creates a new <see cref="SimpleInterval"/> spanning the number of half steps passed in with the simplest
     /// possible interval quality (i.e. closest to perfect).
     /// </summary>
     /// <param name="halfSteps">The number of half steps to span.</param>
@@ -105,14 +104,14 @@ public readonly record struct SimpleIntervalBase
     /// This resolves the ambiguity between an augmented fourth and a diminished fifth.
     /// </param>
     /// <returns>
-    /// The <see cref="SimpleIntervalBase"/> spanning <paramref name="halfSteps"/> half steps with the simplest
+    /// The <see cref="SimpleInterval"/> spanning <paramref name="halfSteps"/> half steps with the simplest
     /// possible interval quality, or the result of applying <paramref name="tritoneQualityType"/> to a fourth or a
     /// fifth as appropriate if <paramref name="halfSteps"/> indicates a tritone.
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="halfSteps"/> was negative or spanned an octave or more.
     /// </exception>
-    public static SimpleIntervalBase SimplestWithHalfSteps(
+    public static SimpleInterval SimplestWithHalfSteps(
         [NonNegative, LessThanInteger(NotePitchClass.ValuesCount)] int halfSteps,
         PeripheralIntervalQualityKind tritoneQualityType)
         => new(
@@ -120,30 +119,30 @@ public readonly record struct SimpleIntervalBase
             SimpleIntervalNumber.OfSimplestIntervalWithHalfSteps(halfSteps, tritoneQualityType));
 
     /// <summary>
-    /// Creates a new <see cref="SimpleIntervalBase"/> spanning the number of half steps passed in with the simplest
+    /// Creates a new <see cref="SimpleInterval"/> spanning the number of half steps passed in with the simplest
     /// possible interval quality (i.e. closest to perfect).
     /// </summary>
     /// <param name="halfSteps">The number of half steps to span.</param>
     /// <returns>
-    /// The <see cref="SimpleIntervalBase"/> spanning <paramref name="halfSteps"/> half steps with the simplest
+    /// The <see cref="SimpleInterval"/> spanning <paramref name="halfSteps"/> half steps with the simplest
     /// possible interval quality, or <see langword="null"/> if <paramref name="halfSteps"/> is equal to 6 (a tritone,
     /// as this case is ambiguous between an augmented fourth and a diminished fifth).
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="halfSteps"/> was negative or spanned an octave or more.
     /// </exception>
-    public static SimpleIntervalBase? SimplestWithHalfSteps(
+    public static SimpleInterval? SimplestWithHalfSteps(
         [NonNegative, LessThanInteger(NotePitchClass.ValuesCount)] int halfSteps)
         => IntervalQuality.OfSimplestIntervalWithHalfSteps(halfSteps) is IntervalQuality quality
             ? new(quality, (SimpleIntervalNumber)SimpleIntervalNumber.OfSimplestIntervalWithHalfSteps(halfSteps)!)
             : null;
 
     /// <summary>
-    /// Creates a new <see cref="SimpleIntervalBase"/> from its perfect-unison-based circle of fifths index.
+    /// Creates a new <see cref="SimpleInterval"/> from its perfect-unison-based circle of fifths index.
     /// </summary>
     /// <param name="Index"></param>
     /// <returns></returns>
-    public static SimpleIntervalBase FromCircleOfFifthsIndex(int Index)
+    public static SimpleInterval FromCircleOfFifthsIndex(int Index)
     {
         // Find the quality and number circle of fifths indexes
         // Need to adjust for the fact that a perfect fourth has index -1 with respect to a perfect unison
@@ -166,7 +165,7 @@ public readonly record struct SimpleIntervalBase
     /// <param name="Quality"></param>
     /// <param name="Number"></param>
     /// <returns></returns>
-    public static SimpleIntervalBase CreatePerfectable(
+    public static SimpleInterval CreatePerfectable(
         PerfectableIntervalQuality Quality, PerfectableSimpleIntervalNumber Number)
         => new(Quality, Number);
 
@@ -176,7 +175,7 @@ public readonly record struct SimpleIntervalBase
     /// <param name="Quality"></param>
     /// <param name="Number"></param>
     /// <returns></returns>
-    public static SimpleIntervalBase CreateImperfectable(
+    public static SimpleInterval CreateImperfectable(
         ImperfectableIntervalQuality Quality, ImperfectableSimpleIntervalNumber Number)
         => new(Quality, Number);
     #endregion
@@ -309,12 +308,12 @@ public readonly record struct SimpleIntervalBase
 
     #region Computation
     /// <summary>
-    /// Gets a <see cref="SimpleIntervalBase"/> equivalent to this instance with the quality shifted by the degree
+    /// Gets a <see cref="SimpleInterval"/> equivalent to this instance with the quality shifted by the degree
     /// passed in.
     /// </summary>
     /// <param name="Degree"></param>
     /// <returns></returns>
-    public SimpleIntervalBase WithQualityShiftedBy(int Degree)
+    public SimpleInterval WithQualityShiftedBy(int Degree)
         => IsPerfectable()
             ? new(Quality.UnsafeAsPerfectable.ShiftedBy(Degree), Number)
             : new(Quality.UnsafeAsImperfectable.ShiftedBy(Degree), Number);
@@ -322,14 +321,14 @@ public readonly record struct SimpleIntervalBase
 
     #region Arithmetic
     /// <summary>
-    /// Computes the difference between this <see cref="SimpleIntervalBase"/> and another, collapsing the result into a
-    /// <see cref="SimpleIntervalBase"/> and setting whether or not the subtraction underflows past a unison in an
+    /// Computes the difference between this <see cref="SimpleInterval"/> and another, collapsing the result into a
+    /// <see cref="SimpleInterval"/> and setting whether or not the subtraction underflows past a unison in an
     /// <see langword="out"/> parameter.
     /// </summary>
     /// <param name="other"></param>
     /// <param name="underflows"></param>
     /// <returns></returns>
-    internal SimpleIntervalBase MinusWithUnderflow(SimpleIntervalBase other, out bool underflows)
+    internal SimpleInterval MinusWithUnderflow(SimpleInterval other, out bool underflows)
     {
         // Subtraction underflows past a unison depending on the difference between the interval numbers
         // Add 1 to the difference, as for example, a third (3) minus a unison (1) is a third (3), not a second (2).
@@ -339,26 +338,26 @@ public readonly record struct SimpleIntervalBase
     }
 
     /// <summary>
-    /// Subtracts the two <see cref="SimpleIntervalBase"/> instances.
+    /// Subtracts the two <see cref="SimpleInterval"/> instances.
     /// </summary>
     /// <remarks>
-    /// This method collapses the result into an instance of <see cref="SimpleIntervalBase"/> by adding or removing
+    /// This method collapses the result into an instance of <see cref="SimpleInterval"/> by adding or removing
     /// octaves so that the return value is less than an octave.
     /// </remarks>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static SimpleIntervalBase operator -(SimpleIntervalBase lhs, SimpleIntervalBase rhs) => lhs + (-rhs);
+    public static SimpleInterval operator -(SimpleInterval lhs, SimpleInterval rhs) => lhs + (-rhs);
 
     /// <summary>
-    /// Computes the sum of this <see cref="SimpleIntervalBase"/> and another, collapsing the result into a
-    /// <see cref="SimpleIntervalBase"/> and setting whether or not the addition overflows past an octave in an
+    /// Computes the sum of this <see cref="SimpleInterval"/> and another, collapsing the result into a
+    /// <see cref="SimpleInterval"/> and setting whether or not the addition overflows past an octave in an
     /// <see langword="out"/> parameter.
     /// </summary>
     /// <param name="other"></param>
     /// <param name="overflows"></param>
     /// <returns></returns>
-    internal SimpleIntervalBase PlusWithOverflow(SimpleIntervalBase other, out bool overflows)
+    internal SimpleInterval PlusWithOverflow(SimpleInterval other, out bool overflows)
     {
         // Addition overflows past an octave depending on the sum of the interval numbers
         // Subtract 1 from the sum, as for example, a unison (1) plus a unison (1) is a unison (1), not a second (2). 
@@ -368,16 +367,16 @@ public readonly record struct SimpleIntervalBase
     }
 
     /// <summary>
-    /// Adds the two <see cref="SimpleIntervalBase"/> instances.
+    /// Adds the two <see cref="SimpleInterval"/> instances.
     /// </summary>
     /// <remarks>
-    /// This method collapses the result into an instance of <see cref="SimpleIntervalBase"/> by adding or removing
+    /// This method collapses the result into an instance of <see cref="SimpleInterval"/> by adding or removing
     /// octaves so that the return value is less than an octave.
     /// </remarks>
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static SimpleIntervalBase operator +(SimpleIntervalBase lhs, SimpleIntervalBase rhs)
+    public static SimpleInterval operator +(SimpleInterval lhs, SimpleInterval rhs)
     {
         #region Number
         var newUnisonBasedNumberIndex = lhs.Number.CircleOfFifthsIndex + rhs.Number.CircleOfFifthsIndex;
@@ -401,17 +400,17 @@ public readonly record struct SimpleIntervalBase
     }
 
     /// <summary>
-    /// Gets the inversion of the <see cref="SimpleIntervalBase"/> instance passed in.
+    /// Gets the inversion of the <see cref="SimpleInterval"/> instance passed in.
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    public static SimpleIntervalBase operator -(SimpleIntervalBase value) => value.Inversion();
+    public static SimpleInterval operator -(SimpleInterval value) => value.Inversion();
 
     /// <summary>
-    /// Gets a <see cref="SimpleIntervalBase"/> equivalent to the inversion of the current instance.
+    /// Gets a <see cref="SimpleInterval"/> equivalent to the inversion of the current instance.
     /// </summary>
     /// <returns></returns>
-    public SimpleIntervalBase Inversion() => new(Quality.Inversion(), Number.Inversion());
+    public SimpleInterval Inversion() => new(Quality.Inversion(), Number.Inversion());
     #endregion
 
     #region Equality
@@ -420,7 +419,7 @@ public readonly record struct SimpleIntervalBase
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
-    public bool Equals(SimpleIntervalBase other) => Quality == other.Quality && Number == other.Number;
+    public bool Equals(SimpleInterval other) => Quality == other.Quality && Number == other.Number;
 
     /// <summary>
     /// Gets a hash code for the current instance.
@@ -444,7 +443,7 @@ public readonly record struct SimpleIntervalBase
     /// Gets a string that represents the current instance.
     /// </summary>
     /// <returns></returns>
-    public override string ToString() => $"{nameof(SimpleIntervalBase)} {{ Quality = {Quality}, Number = {Number} }}";
+    public override string ToString() => $"{nameof(SimpleInterval)} {{ Quality = {Quality}, Number = {Number} }}";
     #endregion
     #endregion
 }
