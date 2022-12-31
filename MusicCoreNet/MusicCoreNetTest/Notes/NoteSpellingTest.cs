@@ -19,7 +19,7 @@ public class NoteSpellingTest
     [TestMethod]
     public void TestDefault()
     {
-        Assert.AreEqual(Note.C().Natural(), default);
+        Assert.AreEqual(Note.C.Natural(), default);
     }
 
     /// <summary>
@@ -28,17 +28,17 @@ public class NoteSpellingTest
     [TestMethod]
     public void TestHalfStepsAboveC()
     {
-        Assert.AreEqual(8, Note.A().Flat().HalfStepsAboveC);
-        Assert.AreEqual(6, Note.F().Sharp().HalfStepsAboveC);
-        Assert.AreEqual(0, Note.C().Natural().HalfStepsAboveC);
+        Assert.AreEqual(8, Note.A.Flat().HalfStepsAboveC);
+        Assert.AreEqual(6, Note.F.Sharp().HalfStepsAboveC);
+        Assert.AreEqual(0, Note.C.Natural().HalfStepsAboveC);
 
         // Should be in the negative range
-        Assert.AreEqual(-1, Note.C().Flat().HalfStepsAboveC);
-        Assert.AreEqual(-2, Note.D().Flat(4).HalfStepsAboveC);
+        Assert.AreEqual(-1, Note.C.Flat().HalfStepsAboveC);
+        Assert.AreEqual(-2, Note.D.Flat(4).HalfStepsAboveC);
 
         // Should be out of range of the octave
-        Assert.AreEqual(12, Note.B().Sharp().HalfStepsAboveC);
-        Assert.AreEqual(13, Note.A().Sharp(4).HalfStepsAboveC);
+        Assert.AreEqual(12, Note.B.Sharp().HalfStepsAboveC);
+        Assert.AreEqual(13, Note.A.Sharp(4).HalfStepsAboveC);
     }
 
     /// <summary>
@@ -47,17 +47,17 @@ public class NoteSpellingTest
     [TestMethod]
     public void TestHalfStepsBelowC()
     {
-        Assert.AreEqual(4, Note.A().Flat().HalfStepsBelowC);
-        Assert.AreEqual(6, Note.F().Sharp().HalfStepsBelowC);
-        Assert.AreEqual(0, Note.C().Natural().HalfStepsBelowC);
+        Assert.AreEqual(4, Note.A.Flat().HalfStepsBelowC);
+        Assert.AreEqual(6, Note.F.Sharp().HalfStepsBelowC);
+        Assert.AreEqual(0, Note.C.Natural().HalfStepsBelowC);
 
         // Should be out of range of the octave
-        Assert.AreEqual(12, Note.E().Flat(4).HalfStepsBelowC);
-        Assert.AreEqual(13, Note.D().Flat(3).HalfStepsBelowC);
+        Assert.AreEqual(12, Note.E.Flat(4).HalfStepsBelowC);
+        Assert.AreEqual(13, Note.D.Flat(3).HalfStepsBelowC);
 
         // Should be in the negative range
-        Assert.AreEqual(-1, Note.B().Sharp(2).HalfStepsBelowC);
-        Assert.AreEqual(-2, Note.A().Sharp(5).HalfStepsBelowC);
+        Assert.AreEqual(-1, Note.B.Sharp(2).HalfStepsBelowC);
+        Assert.AreEqual(-2, Note.A.Sharp(5).HalfStepsBelowC);
     }
 
     /// <summary>
@@ -67,11 +67,11 @@ public class NoteSpellingTest
     private static readonly ImmutableArray<(NoteSpelling First, NoteSpelling Second, SimpleIntervalBase Difference)> Differences
         = ImmutableArray.CreateRange(new[]
         {
-            (Note.A(), Note.C(), Interval.Major.Sixth),
-            (Note.F().Sharp(), Note.C(), Interval.Augmented().Fourth),
-            (Note.G().Sharp(), Note.B().Flat(), Interval.Augmented().Sixth),
-            (Note.B().Sharp(), Note.D().Flat(), Interval.Augmented(2).Sixth),
-            (Note.E(), Note.G().Sharp(), Interval.Minor.Sixth),
+            (Note.A, Note.C, Interval.Major.Sixth),
+            (Note.F.Sharp(), Note.C, Interval.Augmented().Fourth),
+            (Note.G.Sharp(), Note.B.Flat(), Interval.Augmented().Sixth),
+            (Note.B.Sharp(), Note.D.Flat(), Interval.Augmented(2).Sixth),
+            (Note.E, Note.G.Sharp(), Interval.Minor.Sixth),
         });
 
     /// <summary>
@@ -111,10 +111,10 @@ public class NoteSpellingTest
     private static readonly ImmutableArray<(NoteSpelling First, NoteSpelling Second)> EnharmonicEquivalentPairs
         = ImmutableArray.CreateRange(new[]
         {
-            (Note.A(), Note.B().Flat(2)),
-            (Note.A(), Note.G().Sharp(2)),
-            (Note.C().Sharp(), Note.D().Flat()),
-            (Note.G(), Note.A().Flat(2)),
+            (Note.A, Note.B.Flat(2)),
+            (Note.A, Note.G.Sharp(2)),
+            (Note.C.Sharp(), Note.D.Flat()),
+            (Note.G, Note.A.Flat(2)),
         });
 
     /// <summary>
@@ -151,9 +151,9 @@ public class NoteSpellingTest
     [TestMethod]
     public void TestPitchClass()
     {
-        Assert.AreEqual(NotePitchClass.A, Note.A().Natural().PitchClass);
-        Assert.AreEqual(NotePitchClass.A, Note.B().Flat(2).PitchClass);
-        Assert.AreEqual(NotePitchClass.G, Note.A().Flat(2).PitchClass);
+        Assert.AreEqual(NotePitchClass.A, Note.A.Natural().PitchClass);
+        Assert.AreEqual(NotePitchClass.A, Note.B.Flat(2).PitchClass);
+        Assert.AreEqual(NotePitchClass.G, Note.A.Flat(2).PitchClass);
     }
 
     /// <summary>
@@ -162,10 +162,10 @@ public class NoteSpellingTest
     [TestMethod]
     public void TestSimplifyAccidental()
     {
-        Assert.AreEqual(NoteLetter.A, Note.B().Flat(2).SimplifyAccidental());
-        Assert.AreEqual(NoteLetter.B, Note.C().Flat().SimplifyAccidental());
-        Assert.AreEqual(Note.A().Sharp(), Note.G().Sharp(3).SimplifyAccidental());
-        Assert.AreEqual(Note.B().Flat(), Note.C().Flat(2).SimplifyAccidental());
+        Assert.AreEqual(NoteLetter.A, Note.B.Flat(2).SimplifyAccidental());
+        Assert.AreEqual(NoteLetter.B, Note.C.Flat().SimplifyAccidental());
+        Assert.AreEqual(Note.A.Sharp(), Note.G.Sharp(3).SimplifyAccidental());
+        Assert.AreEqual(Note.B.Flat(), Note.C.Flat(2).SimplifyAccidental());
     }
 
     /// <summary>
@@ -174,14 +174,14 @@ public class NoteSpellingTest
     [TestMethod]
     public void TestLetterShiftedBy()
     {
-        Assert.AreEqual(Note.D().Sharp(), Note.A().Sharp().LetterShiftedBy(3));
-        Assert.AreEqual(Note.E().Sharp(), Note.A().Sharp().LetterShiftedBy(-3));
+        Assert.AreEqual(Note.D.Sharp(), Note.A.Sharp().LetterShiftedBy(3));
+        Assert.AreEqual(Note.E.Sharp(), Note.A.Sharp().LetterShiftedBy(-3));
 
-        Assert.AreEqual(Note.A().Flat(), Note.A().Flat().LetterShiftedBy(7));
-        Assert.AreEqual(Note.A().Flat(), Note.A().Flat().LetterShiftedBy(-7));
+        Assert.AreEqual(Note.A.Flat(), Note.A.Flat().LetterShiftedBy(7));
+        Assert.AreEqual(Note.A.Flat(), Note.A.Flat().LetterShiftedBy(-7));
 
-        Assert.AreEqual(Note.A().Flat(), Note.A().Flat().LetterShiftedBy(14));
-        Assert.AreEqual(Note.A().Flat(), Note.A().Flat().LetterShiftedBy(-14));
+        Assert.AreEqual(Note.A.Flat(), Note.A.Flat().LetterShiftedBy(14));
+        Assert.AreEqual(Note.A.Flat(), Note.A.Flat().LetterShiftedBy(-14));
     }
 
     /// <summary>

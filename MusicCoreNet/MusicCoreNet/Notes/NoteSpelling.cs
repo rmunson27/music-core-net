@@ -77,11 +77,11 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
 
         return PitchClass.Value switch
         {
-            NotePitchClass.Values.AB => sharpResult ? Note.A().Sharp() : Note.B().Flat(),
-            NotePitchClass.Values.CD => sharpResult ? Note.C().Sharp() : Note.D().Flat(),
-            NotePitchClass.Values.DE => sharpResult ? Note.D().Sharp() : Note.E().Flat(),
-            NotePitchClass.Values.FG => sharpResult ? Note.F().Sharp() : Note.G().Flat(),
-            NotePitchClass.Values.GA => sharpResult ? Note.G().Sharp() : Note.A().Flat(),
+            NotePitchClass.Values.AB => sharpResult ? Note.A.Sharp() : Note.B.Flat(),
+            NotePitchClass.Values.CD => sharpResult ? Note.C.Sharp() : Note.D.Flat(),
+            NotePitchClass.Values.DE => sharpResult ? Note.D.Sharp() : Note.E.Flat(),
+            NotePitchClass.Values.FG => sharpResult ? Note.F.Sharp() : Note.G.Flat(),
+            NotePitchClass.Values.GA => sharpResult ? Note.G.Sharp() : Note.A.Flat(),
 
             var x when x <= NotePitchClass.Values.E => new(new((NoteLetter.Values)((int)x >> 1))),
             var x => unchecked(new(new((NoteLetter.Values)(((int)x + 1) >> 1)))),

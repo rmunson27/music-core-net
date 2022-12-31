@@ -358,44 +358,44 @@ public readonly record struct Note(NoteSpelling Spelling, int Octave)
     /// Gets a <see cref="NoteLetter"/> representing an 'A' note.
     /// </summary>
     /// <returns></returns>
-    public static NoteLetter A() => NoteLetter.A;
+    public static NoteLetter A => NoteLetter.A;
 
     /// <summary>
     /// Gets a <see cref="NoteLetter"/> representing a 'B' note.
     /// </summary>
     /// <returns></returns>
-    public static NoteLetter B() => NoteLetter.B;
+    public static NoteLetter B => NoteLetter.B;
 
     /// <summary>
     /// Gets a <see cref="NoteLetter"/> representing a 'C' note.
     /// </summary>
     /// <returns></returns>
-    public static NoteLetter C() => NoteLetter.C;
+    public static NoteLetter C => NoteLetter.C;
 
     /// <summary>
     /// Gets a <see cref="NoteLetter"/> representing a 'D' note.
     /// </summary>
     /// <returns></returns>
-    public static NoteLetter D() => NoteLetter.D;
+    public static NoteLetter D => NoteLetter.D;
 
     /// <summary>
     /// Gets a <see cref="NoteLetter"/> representing an 'E' note.
     /// </summary>
     /// <returns></returns>
-    public static NoteLetter E() => NoteLetter.E;
+    public static NoteLetter E => NoteLetter.E;
 
     /// <summary>
     /// Gets a <see cref="NoteLetter"/> representing an 'F' note.
     /// given accidental.
     /// </summary>
     /// <returns></returns>
-    public static NoteLetter F() => NoteLetter.F;
+    public static NoteLetter F => NoteLetter.F;
 
     /// <summary>
     /// Gets a <see cref="NoteLetter"/> representing a 'G' note.
     /// </summary>
     /// <returns></returns>
-    public static NoteLetter G() => NoteLetter.G;
+    public static NoteLetter G => NoteLetter.G;
     #endregion
     #endregion
 }
