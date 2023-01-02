@@ -1,4 +1,5 @@
 ﻿using Rem.Core.Attributes;
+using Rem.Core.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -217,48 +218,26 @@ public readonly record struct SimpleIntervalNumber
     #region Classification
     #region Perfectable
     /// <summary>
-    /// Gets whether or not this instance is perfectable, setting <paramref name="Perfectable"/> to the perfectable
-    /// number value if so and setting <paramref name="Imperfectable"/> to the imperfectable value otherwise.
+    /// Gets whether or not this instance is perfectable, setting <paramref name="number"/> to the perfectable
+    /// number value if so and setting <paramref name="imperfectableNumber"/> to the imperfectable value otherwise.
     /// </summary>
-    /// <param name="Perfectable"></param>
-    /// <param name="Imperfectable"></param>
+    /// <param name="number"></param>
+    /// <param name="imperfectableNumber"></param>
     /// <returns></returns>
     public bool IsPerfectable(
-        out PerfectableSimpleIntervalNumber Perfectable, out ImperfectableSimpleIntervalNumber Imperfectable)
-    {
-        if (IsPerfectable())
-        {
-            Perfectable = InternalNumber.Perfectable;
-            Imperfectable = default;
-            return true;
-        }
-        else
-        {
-            Perfectable = default;
-            Imperfectable = InternalNumber.Imperfectable;
-            return false;
-        }
-    }
+        out PerfectableSimpleIntervalNumber number, out ImperfectableSimpleIntervalNumber imperfectableNumber)
+        => IsPerfectable()
+            ? Try.Success(out number, InternalNumber.Perfectable, out imperfectableNumber)
+            : Try.Failure(out number, out imperfectableNumber, InternalNumber.Imperfectable);
 
     /// <summary>
     /// Gets whether or not this instance is perfectable, setting the perfectable number value in an
     /// <see langword="out"/> parameter if so.
     /// </summary>
-    /// <param name="Number"></param>
+    /// <param name="number"></param>
     /// <returns></returns>
-    public bool IsPerfectable(out PerfectableSimpleIntervalNumber Number)
-    {
-        if (IsPerfectable())
-        {
-            Number = InternalNumber.Perfectable;
-            return true;
-        }
-        else
-        {
-            Number = default;
-            return false;
-        }
-    }
+    public bool IsPerfectable(out PerfectableSimpleIntervalNumber number)
+        => IsPerfectable() ? Try.Success(out number, InternalNumber.Perfectable) : Try.Failure(out number);
 
     /// <summary>
     /// Gets whether or not this instance is perfectable.
@@ -269,24 +248,26 @@ public readonly record struct SimpleIntervalNumber
 
     #region Imperfectable
     /// <summary>
+    /// Gets whether or not this instance is imperfectable, setting the equivalent imperfectable number value in an
+    /// <see langword="out"/> parameter if so and setting the equivalent perfectable number in an
+    /// <see langword="out"/> parameter if not.
+    /// </summary>
+    /// <param name="number"></param>
+    /// <returns></returns>
+    public bool IsImperfectable(
+        out ImperfectableSimpleIntervalNumber number, out PerfectableSimpleIntervalNumber perfectableNumber)
+        => IsImperfectable()
+            ? Try.Success(out number, InternalNumber.Imperfectable, out perfectableNumber)
+            : Try.Failure(out number, out perfectableNumber, InternalNumber.Perfectable);
+
+    /// <summary>
     /// Gets whether or not this instance is imperfectable, setting the imperfectable number value in an
     /// <see langword="out"/> parameter if so.
     /// </summary>
-    /// <param name="Number"></param>
+    /// <param name="number"></param>
     /// <returns></returns>
-    public bool IsImperfectable(out ImperfectableSimpleIntervalNumber Number)
-    {
-        if (IsImperfectable())
-        {
-            Number = InternalNumber.Imperfectable;
-            return true;
-        }
-        else
-        {
-            Number = default;
-            return false;
-        }
-    }
+    public bool IsImperfectable(out ImperfectableSimpleIntervalNumber number)
+        => IsImperfectable() ? Try.Success(out number, InternalNumber.Imperfectable) : Try.Failure(out number);
 
     /// <summary>
     /// Gets whether or not this instance is imperfectable.
@@ -622,7 +603,8 @@ public readonly record struct SimpleIntervalNumber
     public static explicit operator PerfectableSimpleIntervalNumber(SimpleIntervalNumber number)
         => number.IsPerfectable()
             ? number.InternalNumber.Perfectable
-            : throw new InvalidCastException("NumericalValue did not represent a perfectable simple interval number.");
+            : throw new InvalidCastException(
+                "Numerical value did not represent a perfectable simple interval number.");
 
     /// <summary>
     /// Explicitly converts an instance of this struct to a <see cref="ImperfectableSimpleIntervalNumber"/>.
@@ -634,7 +616,8 @@ public readonly record struct SimpleIntervalNumber
     public static explicit operator ImperfectableSimpleIntervalNumber(SimpleIntervalNumber number)
         => number.IsImperfectable()
             ? number.InternalNumber.Imperfectable
-            : throw new InvalidCastException("NumericalValue did not represent an imperfectable simple interval number.");
+            : throw new InvalidCastException(
+                "Numerical value did not represent an imperfectable simple interval number.");
     #endregion
 
     #region ToString
@@ -868,6 +851,9 @@ public readonly record struct PerfectableSimpleIntervalNumber
 /// <summary>
 /// Represents the number of an imperfectable simple interval.
 /// </summary>
+/// <remarks>
+/// The default value of this struct represents a second.
+/// </remarks>
 public readonly record struct ImperfectableSimpleIntervalNumber
 {
     #region Constants

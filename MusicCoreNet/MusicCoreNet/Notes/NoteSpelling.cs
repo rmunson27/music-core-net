@@ -186,10 +186,7 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     /// <param name="rhs"></param>
     /// <returns></returns>
     public static SimpleInterval operator -(NoteSpelling lhs, NoteSpelling rhs)
-    {
-        var letterDifference = lhs.Letter - rhs.Letter;
-        return letterDifference.WithQualityShiftedBy(lhs.Accidental.Modification - rhs.Accidental.Modification);
-    }
+        => lhs.Letter - rhs.Letter + (lhs.Accidental - rhs.Accidental);
     #endregion
 
     #region Equality

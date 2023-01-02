@@ -1830,6 +1830,16 @@ public readonly record struct ImperfectableIntervalQuality
     /// <returns></returns>
     public static ImperfectableIntervalQuality operator +(ImperfectableIntervalQuality quality, Accidental accidental)
         => new(quality.MajorBasedIndex + accidental.Modification);
+
+    /// <summary>
+    /// Gets the accidental representing the modification that yields the right-hand side when applied to the
+    /// left-hand side.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static Accidental operator -(ImperfectableIntervalQuality lhs, ImperfectableIntervalQuality rhs)
+        => new(lhs.MajorBasedIndex - rhs.MajorBasedIndex);
     #endregion
 
     #region ToString

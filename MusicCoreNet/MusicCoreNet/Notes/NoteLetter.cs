@@ -226,11 +226,10 @@ public readonly record struct NoteLetter
     {
         var halfSteps = (lhs.HalfStepsAboveC - rhs.HalfStepsAboveC + NotePitchClass.ValuesCount)
                             % NotePitchClass.ValuesCount;
-        return SimpleInterval.SimplestWithHalfSteps(halfSteps) switch
-        {
-            null => lhs == B ? Interval.Augmented().Fourth : Interval.Diminished().Fifth,
-            SimpleInterval sib => sib,
-        };
+
+        return SimpleInterval.SimplestWithHalfSteps(halfSteps) is SimpleInterval si
+                ? si
+                : lhs == B ? Interval.Augmented().Fourth : Interval.Diminished().Fifth;
     }
 
     /// <summary>
