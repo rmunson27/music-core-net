@@ -16,6 +16,13 @@ namespace Rem.Music;
 /// </remarks>
 public readonly record struct IntervalNumber : IEquatable<int>, IComparable<IntervalNumber>, IComparable<int>
 {
+    #region Constants
+    /// <summary>
+    /// Represents an octave.
+    /// </summary>
+    public static readonly IntervalNumber Octave = new(SimpleIntervalNumber.Unison, 1);
+    #endregion
+
     #region Properties
     /// <summary>
     /// Gets the integer value of this number.
@@ -38,6 +45,11 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
     public bool IsImperfectable => SimpleBase.IsImperfectable();
 
     /// <summary>
+    /// Gets the numerical value of this instance.
+    /// </summary>
+    public int NumericalValue => SimpleBase.NumericalValue + 7 * AdditionalOctaves;
+
+    /// <summary>
     /// Gets the <see cref="SimpleIntervalNumber"/> base that this instance adds octaves to.
     /// </summary>
     public SimpleIntervalNumber SimpleBase { get; }
@@ -48,7 +60,15 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
     [NonNegative] public int AdditionalOctaves { get; }
     #endregion
 
-    #region Constructors
+    #region Constructors And Factory Methods
+    /// <summary>
+    /// Creates a new <see cref="IntervalNumber"/> representing the specified number of octaves.
+    /// </summary>
+    /// <param name="count"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> was negative.</exception>
+    public static IntervalNumber Octaves([NonNegative] int count) => new(SimpleIntervalNumber.Unison, count);
+
     /// <summary>
     /// Constructs a new instance of the <see cref="IntervalNumber"/> struct representing a simple interval number
     /// with a non-negative number of octaves added.
