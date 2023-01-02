@@ -71,6 +71,16 @@ public readonly record struct SimpleIntervalNumber
         => IsPerfectable() ? new(InternalNumber.Perfectable.Inversion) : new(InternalNumber.Imperfectable.Inversion);
 
     /// <summary>
+    /// Gets an abbreviation representing this instance.
+    /// </summary>
+    /// <remarks>
+    /// Unisons cannot be abbreviated, so the string "Unison" will be returned when this property is accessed.
+    /// </remarks>
+    public string Abbreviation => IsPerfectable()
+                                    ? InternalNumber.Perfectable.Abbreviation
+                                    : InternalNumber.Imperfectable.Abbreviation;
+
+    /// <summary>
     /// Gets the number of half steps in a perfect or major interval numbered with this instance depending on whether
     /// or not it is perfectable.
     /// </summary>
@@ -688,6 +698,19 @@ public readonly record struct PerfectableSimpleIntervalNumber
 
     #region Properties
     /// <summary>
+    /// Gets an abbreviation representing this instance.
+    /// </summary>
+    /// <remarks>
+    /// Unisons cannot be abbreviated, so the string "Unison" will be returned when this property is accessed.
+    /// </remarks>
+    public string Abbreviation => Value switch
+    {
+        Values.Fourth => "4th",
+        Values.Fifth => "5th",
+        _ => "Unison",
+    };
+
+    /// <summary>
     /// Gets the circle of fifths index of a perfect interval numbered with this instance relative to a
     /// perfect unison.
     /// </summary>
@@ -891,6 +914,17 @@ public readonly record struct ImperfectableSimpleIntervalNumber
     #endregion
 
     #region Properties
+    /// <summary>
+    /// Gets an abbreviation representing this instance.
+    /// </summary>
+    public string Abbreviation => Value switch
+    {
+        Values.Second => "2nd",
+        Values.Third => "3rd",
+        Values.Sixth => "6th",
+        _ => "7th",
+    };
+
     /// <summary>
     /// Gets the circle of fifths index of a perfect interval numbered with this instance relative to a
     /// perfect unison.

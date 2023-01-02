@@ -35,4 +35,45 @@ public class IntervalNumberTest
         Assert.ThrowsException<ArgumentOutOfRangeException>(() => new IntervalNumber(0));
         Assert.ThrowsException<ArgumentOutOfRangeException>(() => new IntervalNumber(-1));
     }
+
+    /// <summary>
+    /// Tests the <see cref="IntervalNumber.Abbreviation"/> property.
+    /// </summary>
+    [TestMethod]
+    public void TestAbbreviation()
+    {
+        Assert.AreEqual("Unison", ((IntervalNumber)1).Abbreviation);
+
+        Assert.AreEqual("8ve", IntervalNumber.Octave.Abbreviation);
+
+        foreach (var octaves in new[] { 2, 3, 4, 5, 16 })
+        {
+            Assert.AreEqual($"{octaves} * 8ve", IntervalNumber.Octaves(octaves).Abbreviation);
+        }
+
+        foreach (var number in new[] { 11, 111, 12, 112, 13, 213 })
+        {
+            Assert.AreEqual($"{number}th", new IntervalNumber(number).Abbreviation);
+        }
+
+        foreach (var number in new[] { 3, 33, 53, 103 })
+        {
+            Assert.AreEqual($"{number}rd", ((IntervalNumber)number).Abbreviation);
+        }
+
+        foreach (var number in new[] { 2, 32, 42, 102 })
+        {
+            Assert.AreEqual($"{number}nd", ((IntervalNumber)number).Abbreviation);
+        }
+
+        foreach (var number in new[] { 21, 31, 101 })
+        {
+            Assert.AreEqual($"{number}st", ((IntervalNumber)number).Abbreviation);
+        }
+
+        foreach (var number in new[] { 4, 14, 24, 104, 5, 25, 105, 6, 26, 116, 7, 27, 107 })
+        {
+            Assert.AreEqual($"{number}th", ((IntervalNumber)number).Abbreviation);
+        }
+    }
 }

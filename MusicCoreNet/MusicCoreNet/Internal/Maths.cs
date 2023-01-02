@@ -12,6 +12,30 @@ namespace Rem.Music.Internal;
 internal static class Maths
 {
     /// <summary>
+    /// Gets the ordinal suffix for the current <see cref="int"/>.
+    /// </summary>
+    /// <param name="number"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="number"/> was negative.</exception>
+    public static string OrdinalSuffix(this int number) => number switch
+    {
+        < 0 => throw new ArgumentOutOfRangeException(nameof(number), number, "Number must be non-negative."),
+        _ => (number % 100) switch
+        {
+            11 => "th",
+            12 => "th",
+            13 => "th",
+            _ => (number % 10) switch
+            {
+                1 => "st",
+                2 => "nd",
+                3 => "rd",
+                _ => "th",
+            },
+        },
+    };
+
+    /// <summary>
     /// Computes the floor division of the numerator and denominator passed in, returning the floor remainder in
     /// an <see langword="out"/> parameter.
     /// </summary>

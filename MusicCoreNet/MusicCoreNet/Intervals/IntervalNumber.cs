@@ -1,4 +1,5 @@
 ﻿using Rem.Core.Attributes;
+using Rem.Music.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +18,8 @@ namespace Rem.Music;
 public readonly record struct IntervalNumber : IEquatable<int>, IComparable<IntervalNumber>, IComparable<int>
 {
     #region Constants
+    private const string OctaveAbbreviation = "8ve";
+
     /// <summary>
     /// Represents an octave.
     /// </summary>
@@ -43,6 +46,29 @@ public readonly record struct IntervalNumber : IEquatable<int>, IComparable<Inte
     /// Gets whether or not this instance is imperfectable.
     /// </summary>
     public bool IsImperfectable => SimpleBase.IsImperfectable();
+
+    /// <summary>
+    /// Gets an abbreviation representing this instance.
+    /// </summary>
+    /// <remarks>
+    /// Unisons cannot be abbreviated, so the string "Unison" will be returned when this property is accessed.
+    /// </remarks>
+    public string Abbreviation
+    {
+        get
+        {
+            if (AdditionalOctaves == 0) return SimpleBase.Abbreviation; // Simple interval number
+            else if (SimpleBase == SimpleIntervalNumber.Unison) // Octave multiple
+            {
+                return AdditionalOctaves == 1 ? OctaveAbbreviation : $"{AdditionalOctaves} * {OctaveAbbreviation}"; 
+            }
+            else
+            {
+                var numericalValue = NumericalValue;
+                return $"{numericalValue}{numericalValue.OrdinalSuffix()}";
+            }
+        }
+    }
 
     /// <summary>
     /// Gets the numerical value of this instance.
