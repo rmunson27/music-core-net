@@ -185,16 +185,6 @@ public readonly record struct SignedInterval
     }
     #endregion
 
-    #region Computation
-    /// <summary>
-    /// Gets a <see cref="SignedInterval"/> equivalent to the current instance with the quality shifted by the degree
-    /// passed in.
-    /// </summary>
-    /// <param name="Degree"></param>
-    /// <returns></returns>
-    public SignedInterval WithQualityShift(int Degree) => new(_interval.WithQualityShift(Degree), Sign);
-    #endregion
-
     #region Conversion
     /// <summary>
     /// Implicitly converts a <see cref="Music.Interval"/> to a positive <see cref="SignedInterval"/>.

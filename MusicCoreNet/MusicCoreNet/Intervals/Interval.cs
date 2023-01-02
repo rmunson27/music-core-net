@@ -189,6 +189,23 @@ public readonly record struct Interval(SimpleInterval Base, [NonNegative] int Ad
     /// </summary>
     /// <param name="base"></param>
     public static implicit operator Interval(SimpleInterval @base) => new(@base, AdditionalOctaves: 0);
+
+    /// <summary>
+    /// Determines whether this instance represents a simple interval, setting the equivalent
+    /// <see cref="SimpleInterval"/> in an <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="simpleInterval"></param>
+    /// <returns></returns>
+    public bool IsSimple(out SimpleInterval simpleInterval)
+        => Number.IsSimple(out var simpleNumber)
+            ? Try.Success(out simpleInterval, new(Quality, simpleNumber))
+            : Try.Failure(out simpleInterval);
+
+    /// <summary>
+    /// Determines whether this instance represents a simple interval.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsSimple() => AdditionalOctaves == 0;
     #endregion
 
     #region ToString
