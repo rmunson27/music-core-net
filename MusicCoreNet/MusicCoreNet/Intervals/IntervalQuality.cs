@@ -1404,8 +1404,8 @@ public readonly record struct PerfectableIntervalQuality
 
     #region Computation
     /// <summary>
-    /// Modifies the supplied <see cref="PerfectableIntervalQuality"/> by applying the
-    /// specified <see cref="Accidental"/>.
+    /// Returns a new <see cref="PerfectableIntervalQuality"/> equivalent to the supplied value modified by the
+    /// supplied <see cref="Accidental"/>.
     /// </summary>
     /// <param name="quality"></param>
     /// <param name="accidental"></param>
@@ -1821,6 +1821,18 @@ public readonly record struct ImperfectableIntervalQuality
         => quality.IsImperfectable(out var iq)
             ? iq
             : throw IntervalQuality.DoesNotMatch(quality.ToString(), "imperfectable");
+    #endregion
+
+    #region Arithmetic
+    /// <summary>
+    /// Returns a new <see cref="ImperfectableIntervalQuality"/> equivalent to the supplied value modified by the
+    /// supplied <see cref="Accidental"/>.
+    /// </summary>
+    /// <param name="quality"></param>
+    /// <param name="accidental"></param>
+    /// <returns></returns>
+    public static ImperfectableIntervalQuality operator +(ImperfectableIntervalQuality quality, Accidental accidental)
+        => new(quality.MajorBasedIndex + accidental.Modification);
     #endregion
 
     #region ToString
