@@ -212,6 +212,34 @@ public readonly record struct Accidental
     /// <param name="Amount"></param>
     /// <returns></returns>
     public Accidental ShiftedBy(int Amount) => new(Modification + Amount);
+
+    /// <summary>
+    /// Computes the sum of the two accidentals.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static Accidental operator +(Accidental lhs, Accidental rhs) => new(lhs.Modification + rhs.Modification);
+
+    /// <summary>
+    /// Computes the accidental that can be added to the right-hand side to get the left-hand side.
+    /// </summary>
+    /// <param name="lhs"></param>
+    /// <param name="rhs"></param>
+    /// <returns></returns>
+    public static Accidental operator -(Accidental lhs, Accidental rhs) => new(lhs.Modification - rhs.Modification);
+
+    /// <summary>
+    /// Gets a value equivalent to the specified <see cref="Accidental"/> negated (switching flats for sharps and
+    /// vice-versa).
+    /// </summary>
+    /// <param name="accidental"></param>
+    /// <returns>
+    /// A sharp with the flat degree of <paramref name="accidental"/> if it is flat,
+    /// a flat with the sharp degree of <paramref name="accidental"/> if it is sharp,
+    /// or a natural if <paramref name="accidental"/> is natural.
+    /// </returns>
+    public static Accidental operator -(Accidental accidental) => new(-accidental.Modification);
     #endregion
 
     #region Equality
