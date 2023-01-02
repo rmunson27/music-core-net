@@ -49,7 +49,11 @@ public readonly record struct SignedInterval
     /// <summary>
     /// Gets the interval this instance represents.
     /// </summary>
-    public Interval Interval => _interval;
+    public Interval Interval
+    {
+        get => _interval;
+        init => _interval = value;
+    }
     internal readonly Interval _interval;
 
     /// <summary>
@@ -60,6 +64,7 @@ public readonly record struct SignedInterval
     #endregion
 
     #region Constructor
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private SignedInterval(in Interval Interval, int Sign)
     {
         _interval = Interval;
@@ -196,7 +201,7 @@ public readonly record struct SignedInterval
     /// Implicitly converts a <see cref="SimpleInterval"/> to a positive <see cref="SignedInterval"/>.
     /// </summary>
     /// <param name="interval"></param>
-    public static implicit operator SignedInterval(SimpleInterval interval) => new(interval, 1);
+    public static implicit operator SignedInterval(in SimpleInterval interval) => new(interval, 1);
     #endregion
 
     #region ToString
