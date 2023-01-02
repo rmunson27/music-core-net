@@ -36,6 +36,12 @@ public readonly record struct SimpleInterval
 
     #region Properties
     /// <summary>
+    /// Gets a <see cref="SimpleInterval"/> equivalent to the inversion of the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public SimpleInterval Inversion => new(Quality.Inversion, Number.Inversion);
+
+    /// <summary>
     /// Gets the number of the interval represented by this instance.
     /// </summary>
     public SimpleIntervalNumber Number { get; }
@@ -404,13 +410,8 @@ public readonly record struct SimpleInterval
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    public static SimpleInterval operator -(SimpleInterval value) => value.Inversion();
+    public static SimpleInterval operator -(SimpleInterval value) => value.Inversion;
 
-    /// <summary>
-    /// Gets a <see cref="SimpleInterval"/> equivalent to the inversion of the current instance.
-    /// </summary>
-    /// <returns></returns>
-    public SimpleInterval Inversion() => new(Quality.Inversion(), Number.Inversion());
     #endregion
 
     #region Equality

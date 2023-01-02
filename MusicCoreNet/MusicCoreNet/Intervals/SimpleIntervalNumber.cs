@@ -64,6 +64,12 @@ public readonly record struct SimpleIntervalNumber
 
     #region Properties And Fields
     /// <summary>
+    /// Gets the inversion of this instance.
+    /// </summary>
+    public SimpleIntervalNumber Inversion
+        => IsPerfectable() ? new(InternalNumber.Perfectable.Inversion) : new(InternalNumber.Imperfectable.Inversion);
+
+    /// <summary>
     /// Gets the number of half steps in a perfect or major interval numbered with this instance depending on whether
     /// or not it is perfectable.
     /// </summary>
@@ -288,16 +294,6 @@ public readonly record struct SimpleIntervalNumber
     /// <returns></returns>
     public bool IsImperfectable() => Perfectability == Imperfectable;
     #endregion
-    #endregion
-
-    #region Computation
-    /// <summary>
-    /// Gets the inversion of the current instance.
-    /// </summary>
-    /// <returns></returns>
-    public SimpleIntervalNumber Inversion() => IsPerfectable()
-                                                ? new(InternalNumber.Perfectable.Inversion)
-                                                : new(InternalNumber.Imperfectable.Inversion);
     #endregion
 
     #region Equality

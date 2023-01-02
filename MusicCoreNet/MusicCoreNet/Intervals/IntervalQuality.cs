@@ -38,6 +38,16 @@ public readonly record struct IntervalQuality
 
     #region Properties And Fields
     /// <summary>
+    /// Gets the inversion of this instance.
+    /// </summary>
+    public IntervalQuality Inversion => _storageType switch
+    {
+        StorageType.Perfectable => new(_quality.Perfectable.Inversion),
+        StorageType.Imperfectable => new(_quality.Imperfectable.Inversion),
+        _ => new(-_quality.PeripheralDegree),
+    };
+
+    /// <summary>
     /// Gets an index that can be used to order <see cref="IntervalQuality"/> instances based on their positions in
     /// the circle of fifths relative to <see cref="PerfectableIntervalQuality.Perfect"/>.
     /// </summary>
@@ -603,17 +613,6 @@ public readonly record struct IntervalQuality
                 // Remove 1 to make room for minor
                 : (_quality.PeripheralDegree < 0 ? _quality.PeripheralDegree - 1 : _quality.PeripheralDegree),
     };
-
-    /// <summary>
-    /// Returns an interval quality equivalent to the inversion of the current instance.
-    /// </summary>
-    /// <returns></returns>
-    public IntervalQuality Inversion() => _storageType switch
-    {
-        StorageType.Perfectable => new(_quality.Perfectable.Inversion()),
-        StorageType.Imperfectable => new(_quality.Imperfectable.Inversion()),
-        _ => new(-_quality.PeripheralDegree),
-    };
     #endregion
 
     #region ToString
@@ -1156,6 +1155,11 @@ public readonly record struct PerfectableIntervalQuality
     #endregion
 
     /// <summary>
+    /// Gets the inversion of this instance.
+    /// </summary>
+    public PerfectableIntervalQuality Inversion => new(-PerfectBasedIndex);
+
+    /// <summary>
     /// Gets the kind of this perfectable interval quality.
     /// </summary>
     public PerfectableIntervalQualityKind Kind => PerfectBasedIndex switch
@@ -1433,12 +1437,6 @@ public readonly record struct PerfectableIntervalQuality
     /// <param name="degree"></param>
     /// <returns></returns>
     public PerfectableIntervalQuality ShiftedBy(int degree) => new(degree + PerfectBasedIndex);
-
-    /// <summary>
-    /// Returns an interval quality equivalent to the inversion of the current instance.
-    /// </summary>
-    /// <returns></returns>
-    public PerfectableIntervalQuality Inversion() => new(-PerfectBasedIndex);
     #endregion
 
     #region Equality
@@ -1516,6 +1514,11 @@ public readonly record struct ImperfectableIntervalQuality
     /// </summary>
     public SimpleInterval Seventh
         => SimpleInterval.CreateImperfectable(this, SimpleIntervalNumber.Seventh);
+
+    /// <summary>
+    /// Gets the inversion of this instance.
+    /// </summary>
+    public ImperfectableIntervalQuality Inversion => new(-MajorBasedIndex - 1);
 
     internal CentralIntervalQuality UnsafeAsCentral
         => new(MajorBasedIndex >= 0 ? MajorBasedIndex + 1 : MajorBasedIndex);
@@ -1641,12 +1644,6 @@ public readonly record struct ImperfectableIntervalQuality
     /// <param name="degree"></param>
     /// <returns></returns>
     public ImperfectableIntervalQuality ShiftedBy(int degree) => new(degree + MajorBasedIndex);
-
-    /// <summary>
-    /// Returns an interval quality equivalent to the inversion of the current instance.
-    /// </summary>
-    /// <returns></returns>
-    public ImperfectableIntervalQuality Inversion() => new(-MajorBasedIndex - 1);
     #endregion
 
     #region Equality

@@ -204,8 +204,7 @@ public readonly record struct NoteLetter
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static NoteLetter operator -(NoteLetter lhs, SimpleIntervalNumber rhs)
-        => lhs + rhs.Inversion();
+    public static NoteLetter operator -(NoteLetter lhs, SimpleIntervalNumber rhs) => lhs + rhs.Inversion;
 
     /// <summary>
     /// Gets a <see cref="NoteLetter"/> equivalent to the value passed in with the <see cref="SimpleIntervalNumber"/>
@@ -245,8 +244,8 @@ public readonly record struct NoteLetter
     /// <returns></returns>
     internal NoteLetter Minus(SimpleIntervalNumber number, out IntervalQuality differenceQuality)
     {
-        var sum = Plus(number.Inversion(), out differenceQuality);
-        differenceQuality = differenceQuality.Inversion(); // Invert since we are going down instead of up
+        var sum = Plus(number.Inversion, out differenceQuality);
+        differenceQuality = differenceQuality.Inversion; // Invert since we are going down instead of up
         return sum;
     }
 

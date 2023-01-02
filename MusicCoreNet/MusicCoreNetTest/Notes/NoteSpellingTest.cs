@@ -86,8 +86,8 @@ public class NoteSpellingTest
                 First, Second + Difference,
                 $"Invalid {Second.ToASCIIMusicalNotationString()} + {Difference} result.");
             Assert.AreEqual(
-                Second, First + Difference.Inversion(),
-                $"Invalid {First.ToASCIIMusicalNotationString()} + {Difference.Inversion()} result.");
+                Second, First + Difference.Inversion,
+                $"Invalid {First.ToASCIIMusicalNotationString()} + {Difference.Inversion} result.");
         }
     }
 
@@ -103,8 +103,8 @@ public class NoteSpellingTest
                 Second, First - Difference,
                 $"Invalid {First.ToASCIIMusicalNotationString()} - {Difference} result.");
             Assert.AreEqual(
-                First, Second - Difference.Inversion(),
-                $"Invalid {Second.ToASCIIMusicalNotationString()} + {Difference.Inversion()} result.");
+                First, Second - Difference.Inversion,
+                $"Invalid {Second.ToASCIIMusicalNotationString()} + {Difference.Inversion} result.");
         }
     }
 
@@ -243,7 +243,7 @@ public class NoteSpellingTest
                 Difference, First - Second,
                 $"Invalid {First.ToASCIIMusicalNotationString()} - {Second.ToASCIIMusicalNotationString()} result.");
             Assert.AreEqual(
-                Difference.Inversion(),
+                Difference.Inversion,
                 Second - First,
                 $"Invalid {Second.ToASCIIMusicalNotationString()} - {First.ToASCIIMusicalNotationString()} result.");
         }

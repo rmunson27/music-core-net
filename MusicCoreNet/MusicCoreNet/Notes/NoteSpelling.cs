@@ -159,7 +159,7 @@ public readonly record struct NoteSpelling(NoteLetter Letter, Accidental Acciden
     /// <param name="lhs"></param>
     /// <param name="rhs"></param>
     /// <returns></returns>
-    public static NoteSpelling operator -(NoteSpelling lhs, SimpleInterval rhs) => lhs + rhs.Inversion();
+    public static NoteSpelling operator -(NoteSpelling lhs, SimpleInterval rhs) => lhs + rhs.Inversion;
 
     /// <summary>
     /// Gets a <see cref="NoteSpelling"/> equivalent to the current instance with the supplied

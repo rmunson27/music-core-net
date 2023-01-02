@@ -200,15 +200,15 @@ public class IntervalQualityTest
     [TestMethod, TestCategory(nameof(ImperfectableIntervalQuality))]
     public void TestImperfectableInversion()
     {
-        Assert.AreEqual(IntervalQuality.Major, IntervalQuality.Minor.Inversion());
-        Assert.AreEqual(IntervalQuality.Perfect, IntervalQuality.Perfect.Inversion());
-        Assert.AreEqual(IntervalQuality.Minor, IntervalQuality.Major.Inversion());
+        Assert.AreEqual(IntervalQuality.Major, IntervalQuality.Minor.Inversion);
+        Assert.AreEqual(IntervalQuality.Perfect, IntervalQuality.Perfect.Inversion);
+        Assert.AreEqual(IntervalQuality.Minor, IntervalQuality.Major.Inversion);
 
         var randomDegree = Random.Next(1, 10);
         var randomDiminished = ImperfectableIntervalQuality.Diminished(randomDegree);
         var randomAugmented = ImperfectableIntervalQuality.Augmented(randomDegree);
-        Assert.AreEqual(randomDiminished, randomAugmented.Inversion());
-        Assert.AreEqual(randomAugmented, randomDiminished.Inversion());
+        Assert.AreEqual(randomDiminished, randomAugmented.Inversion);
+        Assert.AreEqual(randomAugmented, randomDiminished.Inversion);
     }
     #endregion
 
