@@ -1426,17 +1426,6 @@ public readonly record struct PerfectableIntervalQuality
     /// <returns></returns>
     public static Accidental operator -(PerfectableIntervalQuality lhs, PerfectableIntervalQuality rhs)
         => new(lhs.PerfectBasedIndex - rhs.PerfectBasedIndex);
-
-    /// <summary>
-    /// Returns an interval quality equivalent to this one shifted by a given integer degree.
-    /// </summary>
-    /// <remarks>
-    /// Positive <paramref name="degree"/> values will cause the result to be more augmented, whereas negative
-    /// <paramref name="degree"/> values will cause the result to be more diminished.
-    /// </remarks>
-    /// <param name="degree"></param>
-    /// <returns></returns>
-    public PerfectableIntervalQuality ShiftedBy(int degree) => new(degree + PerfectBasedIndex);
     #endregion
 
     #region Equality
@@ -1633,17 +1622,6 @@ public readonly record struct ImperfectableIntervalQuality
     /// <paramref name="number"/> was not imperfectable.
     /// </exception>
     public Interval WithNumber(IntervalNumber number) => Interval.Create(this, number);
-
-    /// <summary>
-    /// Returns an interval quality equivalent to this one shifted by a given integer degree.
-    /// </summary>
-    /// <remarks>
-    /// Positive <paramref name="degree"/> values will cause the result to be more augmented, whereas negative
-    /// <paramref name="degree"/> values will cause the result to be more diminished.
-    /// </remarks>
-    /// <param name="degree"></param>
-    /// <returns></returns>
-    public ImperfectableIntervalQuality ShiftedBy(int degree) => new(degree + MajorBasedIndex);
     #endregion
 
     #region Equality

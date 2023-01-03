@@ -1,13 +1,137 @@
 ﻿using Rem.Core.Attributes;
+using Rem.Core.ComponentModel;
 using Rem.Music.Internal;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Rem.Music;
+
+/// <summary>
+/// Represents a perfectable simple interval (spanning less than one octave).
+/// </summary>
+/// <remarks>
+/// The default value of this struct represents a perfect unison.
+/// </remarks>
+/// <param name="Number">The number of the interval.</param>
+/// <param name="Quality">The quality of the interval.</param>
+public readonly record struct PerfectableSimpleInterval(
+    PerfectableSimpleIntervalNumber Number, PerfectableIntervalQuality Quality)
+{
+    /// <summary>
+    /// Gets the circle of fifths index of this instance relative to a perfect unison.
+    /// </summary>
+    public int CircleOfFifthsIndex => Number.CircleOfFifthsIndex
+                                        + Quality.PerfectBasedIndex * SimpleIntervalNumber.ValuesCount;
+
+    /// <summary>
+    /// Gets the number of half steps spanning this instance.
+    /// </summary>
+    public int HalfSteps => Number.PerfectHalfSteps + Quality.PerfectBasedIndex;
+
+    /// <summary>
+    /// Returns a new <see cref="PerfectableSimpleInterval"/> equivalent to the supplied value modified by the
+    /// supplied <see cref="Accidental"/>.
+    /// </summary>
+    /// <param name="interval"></param>
+    /// <param name="accidental"></param>
+    /// <returns></returns>
+    public static PerfectableSimpleInterval operator +(PerfectableSimpleInterval interval, Accidental accidental)
+        => interval with { Quality = interval.Quality + accidental };
+
+    /// <summary>
+    /// Explicitly converts a <see cref="SimpleInterval"/> to an <see cref="ImperfectableSimpleInterval"/>.
+    /// </summary>
+    /// <param name="interval"></param>
+    /// <exception cref="InvalidCastException">The cast was invalid.</exception>
+    public static explicit operator PerfectableSimpleInterval(SimpleInterval interval)
+        => interval.IsPerfectable(out var p)
+            ? p
+            : throw new InvalidCastException($"Simple interval '{interval}' is not perfectable.");
+
+    /// <summary>
+    /// Determines if this instance equals another <see cref="ImperfectableSimpleInterval"/>.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool Equals(PerfectableSimpleInterval other) => Quality == other.Quality && Number == other.Number;
+
+    /// <summary>
+    /// Gets a hash code for this instance.
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode() => HashCode.Combine(Quality, Number);
+
+    /// <summary>
+    /// Gets a string that represents this instance.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString() => Interval.ToString(Quality.ToString(), Number.Abbreviation);
+}
+
+/// <summary>
+/// Represents an imperfectable simple interval (spanning less than one octave).
+/// </summary>
+/// <remarks>
+/// The default value of this struct represents a major second.
+/// </remarks>
+/// <param name="Number">The number of the interval.</param>
+/// <param name="Quality">The quality of the interval.</param>
+public readonly record struct ImperfectableSimpleInterval(
+    ImperfectableSimpleIntervalNumber Number, ImperfectableIntervalQuality Quality)
+{
+    /// <summary>
+    /// Gets the circle of fifths index of this instance relative to a perfect unison.
+    /// </summary>
+    public int CircleOfFifthsIndex => Number.MajorCircleOfFifthsIndex
+                                        + Quality.MajorBasedIndex * SimpleIntervalNumber.ValuesCount;
+
+    /// <summary>
+    /// Gets the number of half steps spanning this instance.
+    /// </summary>
+    public int HalfSteps => Number.MajorHalfSteps + Quality.MajorBasedIndex;
+
+    /// <summary>
+    /// Returns a new <see cref="ImperfectableSimpleInterval"/> equivalent to the supplied value modified by the
+    /// supplied <see cref="Accidental"/>.
+    /// </summary>
+    /// <param name="interval"></param>
+    /// <param name="accidental"></param>
+    /// <returns></returns>
+    public static ImperfectableSimpleInterval operator +(ImperfectableSimpleInterval interval, Accidental accidental)
+        => interval with { Quality = interval.Quality + accidental };
+
+    /// <summary>
+    /// Explicitly converts a <see cref="SimpleInterval"/> to an <see cref="ImperfectableSimpleInterval"/>.
+    /// </summary>
+    /// <param name="interval"></param>
+    /// <exception cref="InvalidCastException">The cast was invalid.</exception>
+    public static explicit operator ImperfectableSimpleInterval(SimpleInterval interval)
+        => interval.IsImperfectable(out var ip)
+            ? ip
+            : throw new InvalidCastException($"Simple interval '{interval}' is not imperfectable.");
+
+    /// <summary>
+    /// Determines if this instance equals another <see cref="ImperfectableSimpleInterval"/>.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool Equals(ImperfectableSimpleInterval other) => Quality == other.Quality && Number == other.Number;
+
+    /// <summary>
+    /// Gets a hash code for this instance.
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode() => HashCode.Combine(Quality, Number);
+
+    /// <summary>
+    /// Gets a string that represents this instance.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString() => Interval.ToString(Quality.ToString(), Number.Abbreviation);
+}
 
 /// <summary>
 /// Represents a simple interval (spanning less than one octave).
@@ -164,168 +288,21 @@ public readonly record struct SimpleInterval
                                     : ImperfectableIntervalQuality.FromMajorBasedIndex(qualityCircleOfFifthsIndex);
         return new(quality, number);
     }
-
-    /// <summary>
-    /// Creates a new perfectable instance of this struct with the supplied quality and number.
-    /// </summary>
-    /// <param name="Quality"></param>
-    /// <param name="Number"></param>
-    /// <returns></returns>
-    public static SimpleInterval CreatePerfectable(
-        PerfectableIntervalQuality Quality, PerfectableSimpleIntervalNumber Number)
-        => new(Quality, Number);
-
-    /// <summary>
-    /// Creates a new imperfectable instance of this struct with the supplied quality and number.
-    /// </summary>
-    /// <param name="Quality"></param>
-    /// <param name="Number"></param>
-    /// <returns></returns>
-    public static SimpleInterval CreateImperfectable(
-        ImperfectableIntervalQuality Quality, ImperfectableSimpleIntervalNumber Number)
-        => new(Quality, Number);
-    #endregion
-
-    #region Classification
-    #region Perfectability
-    /// <summary>
-    /// Gets whether or not this instance represents a perfectable interval, returning the perfectable quality and
-    /// number in <see langword="out"/> parameters if so and returning the imperfectable quality and number in
-    /// <see langword="out"/> parameters if not.
-    /// </summary>
-    /// <param name="PerfectableQuality"></param>
-    /// <param name="PerfectableNumber"></param>
-    /// <param name="ImperfectableQuality"></param>
-    /// <param name="ImperfectableNumber"></param>
-    /// <returns></returns>
-    public bool IsPerfectable(
-        out PerfectableIntervalQuality PerfectableQuality,
-        out PerfectableSimpleIntervalNumber PerfectableNumber,
-        out ImperfectableIntervalQuality ImperfectableQuality,
-        out ImperfectableSimpleIntervalNumber ImperfectableNumber)
-    {
-        if (IsPerfectable())
-        {
-            PerfectableQuality = (PerfectableIntervalQuality)Quality;
-            PerfectableNumber = (PerfectableSimpleIntervalNumber)Number;
-            (ImperfectableQuality, ImperfectableNumber) = (default, default);
-            return true;
-        }
-        else
-        {
-            (PerfectableQuality, PerfectableNumber) = (default, default);
-            ImperfectableQuality = (ImperfectableIntervalQuality)Quality;
-            ImperfectableNumber = (ImperfectableSimpleIntervalNumber)Number;
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Gets whether or not this instance represents a perfectable interval, returning the perfectable quality and
-    /// number in <see langword="out"/> parameters if so.
-    /// </summary>
-    /// <param name="Quality"></param>
-    /// <param name="Number"></param>
-    /// <returns></returns>
-    public bool IsPerfectable(
-        out PerfectableIntervalQuality Quality, out PerfectableSimpleIntervalNumber Number)
-    {
-        if (this.Quality.IsPerfectable(out var pQuality) && this.Number.IsPerfectable(out var pNumber))
-        {
-            Quality = pQuality;
-            Number = pNumber;
-            return true;
-        }
-        else
-        {
-            Quality = default;
-            Number = default;
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Gets whether or not this instance represents a perfectable interval.
-    /// </summary>
-    /// <returns></returns>
-    public bool IsPerfectable() => Perfectability == IntervalPerfectability.Perfectable;
-
-    /// <summary>
-    /// Gets whether or not this instance represents an imperfectable interval, returning the imperfectable quality
-    /// and number in <see langword="out"/> parameters if so.
-    /// </summary>
-    /// <param name="Quality"></param>
-    /// <param name="Number"></param>
-    /// <returns></returns>
-    public bool IsImperfectable(
-        out ImperfectableIntervalQuality Quality, out ImperfectableSimpleIntervalNumber Number)
-    {
-        if (this.Quality.IsImperfectable(out var npQuality) && this.Number.IsImperfectable(out var npNumber))
-        {
-            Quality = npQuality;
-            Number = npNumber;
-            return true;
-        }
-        else
-        {
-            Quality = default;
-            Number = default;
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Gets whether or not this instance represents an imperfectable interval.
-    /// </summary>
-    /// <returns></returns>
-    public bool IsImperfectable() => Perfectability == IntervalPerfectability.Imperfectable;
-    #endregion
-
-    #region Specific Qualities
-    /// <summary>
-    /// Gets whether or not this interval is augmented, setting <paramref name="Degree"/> to the degree to which it
-    /// is if so.
-    /// </summary>
-    /// <param name="Degree"></param>
-    /// <returns></returns>
-    public bool IsAugmented([NonZero] out int Degree) => Quality.IsAugmented(out Degree);
-
-    /// <summary>
-    /// Gets whether or not this interval base is augmented.
-    /// </summary>
-    /// <returns></returns>
-    public bool IsAugmented() => Quality.IsAugmented();
-
-    /// <summary>
-    /// Gets whether or not this interval is diminished, setting <paramref name="Degree"/> to the degree to which it
-    /// is if so.
-    /// </summary>
-    /// <param name="Degree"></param>
-    /// <returns></returns>
-    public bool IsDiminished([NonZero] out int Degree) => Quality.IsDiminished(out Degree);
-
-    /// <summary>
-    /// Gets whether or not this interval base is diminished.
-    /// </summary>
-    /// <returns></returns>
-    public bool IsDiminished() => Quality.IsDiminished();
-    #endregion
-    #endregion
-
-    #region Computation
-    /// <summary>
-    /// Gets a <see cref="SimpleInterval"/> equivalent to this instance with the quality shifted by the degree
-    /// passed in.
-    /// </summary>
-    /// <param name="Degree"></param>
-    /// <returns></returns>
-    public SimpleInterval WithQualityShiftedBy(int Degree)
-        => IsPerfectable()
-            ? new(Quality.UnsafeAsPerfectable.ShiftedBy(Degree), Number)
-            : new(Quality.UnsafeAsImperfectable.ShiftedBy(Degree), Number);
     #endregion
 
     #region Arithmetic
+    /// <summary>
+    /// Returns a new <see cref="SimpleInterval"/> equivalent to the supplied instance modified by the
+    /// supplied <see cref="Accidental"/>.
+    /// </summary>
+    /// <param name="interval"></param>
+    /// <param name="accidental"></param>
+    /// <returns></returns>
+    public static SimpleInterval operator +(SimpleInterval interval, Accidental accidental)
+        => interval.IsPerfectable(out var p, out var ip)
+            ? p + accidental
+            : ip + accidental;
+
     /// <summary>
     /// Computes the difference between this <see cref="SimpleInterval"/> and another, collapsing the result into a
     /// <see cref="SimpleInterval"/> and setting whether or not the subtraction underflows past a unison in an
@@ -437,6 +414,93 @@ public readonly record struct SimpleInterval
     /// <returns></returns>
     public Interval WithAdditionalOctaves([NonNegative] int AdditionalOctaves)
         => new(this, Throw.IfArgNegative(AdditionalOctaves, nameof(AdditionalOctaves)));
+
+    /// <summary>
+    /// Determines whether this instance is imperfectable, setting the equivalent
+    /// <see cref="ImperfectableSimpleInterval"/> in an <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="interval"></param>
+    /// <returns></returns>
+    public bool IsImperfectable(
+        out ImperfectableSimpleInterval interval, out PerfectableSimpleInterval perfectableInterval)
+        => Number.IsImperfectable(out var imperfectableNumber, out var perfectableNumber)
+            ? Try.Success(out interval, new(imperfectableNumber, Quality.UnsafeAsImperfectable),
+                          out perfectableInterval)
+            : Try.Failure(out interval, out perfectableInterval, new(perfectableNumber, Quality.UnsafeAsPerfectable));
+
+    /// <summary>
+    /// Determines whether this instance is imperfectable, setting the equivalent
+    /// <see cref="ImperfectableSimpleInterval"/> in an <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="interval"></param>
+    /// <returns></returns>
+    public bool IsImperfectable(out ImperfectableSimpleInterval interval)
+        => Number.IsImperfectable(out var imperfectableNumber)
+            ? Try.Success(out interval, new(imperfectableNumber, Quality.UnsafeAsImperfectable))
+            : Try.Failure(out interval);
+
+    /// <summary>
+    /// Determines whether this instance is imperfectable.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsImperfectable() => Number.IsImperfectable();
+
+    /// <summary>
+    /// Determines whether this instance is perfectable, setting the equivalent
+    /// <see cref="PerfectableSimpleInterval"/> in an <see langword="out"/> parameter if so and setting the equivalent
+    /// <see cref="ImperfectableSimpleInterval"/> in an <see langword="out"/> parameter if not.
+    /// </summary>
+    /// <param name="interval"></param>
+    /// <param name="imperfectableInterval"></param>
+    /// <returns></returns>
+    public bool IsPerfectable(
+        out PerfectableSimpleInterval interval, out ImperfectableSimpleInterval imperfectableInterval)
+        => Number.IsPerfectable(out var perfectableNumber, out var imperfectableNumber)
+            ? Try.Success(out interval, new(perfectableNumber, Quality.UnsafeAsPerfectable),
+                          out imperfectableInterval)
+            : Try.Failure(out interval,
+                          out imperfectableInterval, new(imperfectableNumber, Quality.UnsafeAsImperfectable));
+
+    /// <summary>
+    /// Determines whether this instance is perfectable, setting the equivalent
+    /// <see cref="PerfectableSimpleInterval"/> in an <see langword="out"/> parameter if so.
+    /// </summary>
+    /// <param name="interval"></param>
+    /// <returns></returns>
+    public bool IsPerfectable(out PerfectableSimpleInterval interval)
+        => Number.IsPerfectable(out var perfectableNumber)
+            ? Try.Success(out interval, new(perfectableNumber, Quality.UnsafeAsPerfectable))
+            : Try.Failure(out interval);
+
+    /// <summary>
+    /// Determines whether this instance is perfectable.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPerfectable() => Number.IsPerfectable();
+
+    /// <summary>
+    /// Explicitly converts an <see cref="Interval"/> to a <see cref="SimpleInterval"/>.
+    /// </summary>
+    /// <param name="interval"></param>
+    /// <exception cref="InvalidCastException">The cast was invalid.</exception>
+    public static explicit operator SimpleInterval(Interval interval)
+        => interval.Number.IsSimple(out var simpleNumber)
+            ? new(interval.Quality, simpleNumber)
+            : throw new InvalidCastException($"Interval {interval} is not simple.");
+
+    /// <summary>
+    /// Implicitly converts a <see cref="PerfectableSimpleInterval"/> to a <see cref="SimpleInterval"/>.
+    /// </summary>
+    /// <param name="interval"></param>
+    public static implicit operator SimpleInterval(PerfectableSimpleInterval interval)
+        => new(interval.Quality, interval.Number);
+
+    /// <summary>
+    /// Implicitly converts an <see cref="ImperfectableSimpleInterval"/> to a <see cref="SimpleInterval"/>.
+    /// </summary>
+    /// <param name="interval"></param>
+    public static implicit operator SimpleInterval(ImperfectableSimpleInterval interval)
+        => new(interval.Quality, interval.Number);
     #endregion
 
     #region ToString

@@ -98,7 +98,7 @@ public readonly record struct SimpleIntervalNumber
     /// <returns></returns>
     internal int CircleOfFifthsIndex => IsPerfectable()
                                             ? InternalNumber.Perfectable.CircleOfFifthsIndex
-                                            : InternalNumber.Imperfectable.CircleOfFifthsIndex;
+                                            : InternalNumber.Imperfectable.MajorCircleOfFifthsIndex;
 
     /// <summary>
     /// Gets the numerical value of this instance.
@@ -926,11 +926,11 @@ public readonly record struct ImperfectableSimpleIntervalNumber
     };
 
     /// <summary>
-    /// Gets the circle of fifths index of a perfect interval numbered with this instance relative to a
+    /// Gets the circle of fifths index of a major interval numbered with this instance relative to a
     /// perfect unison.
     /// </summary>
     [GreaterThanOrEqualToInteger(2), LessThanOrEqualToInteger(5)]
-    internal int CircleOfFifthsIndex => Value switch
+    internal int MajorCircleOfFifthsIndex => Value switch
     {
         Values.Second => 2,
         Values.Third => 4,
