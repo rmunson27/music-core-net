@@ -213,7 +213,7 @@ public readonly record struct Interval(SimpleInterval Base, [NonNegative] int Ad
     /// Gets a string that represents the current instance.
     /// </summary>
     /// <returns></returns>
-    public override string ToString() => $"{nameof(Interval)} {{ Quality = {Quality}, Number = {Number} }}";
+    public override string ToString() => ToString(Quality.ToString(), Number.Abbreviation);
     #endregion
 
     #region Qualities
@@ -268,6 +268,16 @@ public readonly record struct Interval(SimpleInterval Base, [NonNegative] int Ad
         => new(
             $"Quality perfectability ({numberPerfectability.Opposite.ToString().ToLower()}) did not match"
                 + $" number perfectability ({numberPerfectability.ToString().ToLower()}).");
+
+    /// <summary>
+    /// Gets a string representing the interval described by the strings passed in.
+    /// </summary>
+    /// <param name="qualityStr"></param>
+    /// <param name="numberStr"></param>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static string ToString(string qualityStr, string numberStr)
+        => $"Interval {{ Quality = {qualityStr}, Number = {numberStr} }}";
     #endregion
     #endregion
 }

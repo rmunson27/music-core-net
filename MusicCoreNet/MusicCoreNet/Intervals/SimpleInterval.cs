@@ -441,10 +441,10 @@ public readonly record struct SimpleInterval
 
     #region ToString
     /// <summary>
-    /// Gets a string that represents the current instance.
+    /// Gets a string that represents this instance.
     /// </summary>
     /// <returns></returns>
-    public override string ToString() => $"{nameof(SimpleInterval)} {{ Quality = {Quality}, Number = {Number} }}";
+    public override string ToString() => Interval.ToString(Quality.ToString(), Number.Abbreviation);
     #endregion
     #endregion
 }
