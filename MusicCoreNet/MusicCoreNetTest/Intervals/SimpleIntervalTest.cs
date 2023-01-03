@@ -42,7 +42,7 @@ public class SimpleIntervalTest
     private static readonly ImmutableArray<(SimpleInterval Interval, int Index)> CircleOfFifthsIndexPairs
         = ImmutableArray.CreateRange(new (SimpleInterval, int)[]
         {
-            (SimpleInterval.PerfectUnison, 0),
+            (Interval.Perfect.Unison, 0),
             (Interval.Minor.Second, -5),
             (Interval.Major.Second, 2),
             (Interval.Augmented(2).Sixth, 17),

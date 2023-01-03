@@ -63,7 +63,7 @@ public class SignedIntervalTest
     [TestMethod]
     public void TestAddition()
     {
-        TestAdditionPair(Interval.Major.Sixth, Interval.Minor.Third, Interval.PerfectOctave);
+        TestAdditionPair(Interval.Major.Sixth, Interval.Minor.Third, Interval.Perfect.Octave);
         TestAdditionPair(
             new Interval(Interval.Major.Second, AdditionalOctaves: 1),
             SignedInterval.Negative(Interval.Perfect.Fourth),
@@ -75,7 +75,7 @@ public class SignedIntervalTest
         TestAdditionPair(
             Interval.Perfect.Fourth,
             SignedInterval.Negative(new(Interval.Perfect.Fourth, AdditionalOctaves: 1)),
-            SignedInterval.Negative(Interval.PerfectOctave));
+            SignedInterval.Negative(Interval.Perfect.Octave));
     }
 
     private static void TestAdditionPair(SignedInterval first, SignedInterval second, SignedInterval expectedResult)
@@ -90,7 +90,7 @@ public class SignedIntervalTest
     [TestMethod]
     public void TestSubtraction()
     {
-        TestDifferencePair(Interval.PerfectOctave, Interval.Major.Sixth, Interval.Minor.Third);
+        TestDifferencePair(Interval.Perfect.Octave, Interval.Major.Sixth, Interval.Minor.Third);
         TestDifferencePair(
             Interval.Major.Sixth,
             new Interval(Interval.Major.Second, AdditionalOctaves: 1),
@@ -100,7 +100,7 @@ public class SignedIntervalTest
             Interval.Minor.Second,
             SignedInterval.Negative(Interval.Perfect.Fifth));
         TestDifferencePair(
-            SignedInterval.Negative(Interval.PerfectOctave),
+            SignedInterval.Negative(Interval.Perfect.Octave),
             Interval.Perfect.Fourth,
             SignedInterval.Negative(new(Interval.Perfect.Fourth, AdditionalOctaves: 1)));
     }

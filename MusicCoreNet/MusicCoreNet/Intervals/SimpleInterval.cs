@@ -52,6 +52,14 @@ public readonly record struct PerfectableSimpleInterval(
             : throw new InvalidCastException($"Simple interval '{interval}' is not perfectable.");
 
     /// <summary>
+    /// Gets the <see cref="Interval"/> equivalent to this instance with the number of additional octaves passed in.
+    /// </summary>
+    /// <param name="octaves"></param>
+    /// <returns></returns>
+    public Interval PlusOctaves([NonNegative] int octaves)
+        => new(this, Throw.IfArgNegative(octaves, nameof(octaves)));
+
+    /// <summary>
     /// Determines if this instance equals another <see cref="ImperfectableSimpleInterval"/>.
     /// </summary>
     /// <param name="other"></param>
@@ -114,6 +122,14 @@ public readonly record struct ImperfectableSimpleInterval(
             : throw new InvalidCastException($"Simple interval '{interval}' is not imperfectable.");
 
     /// <summary>
+    /// Gets the <see cref="Interval"/> equivalent to this instance with the number of additional octaves passed in.
+    /// </summary>
+    /// <param name="octaves"></param>
+    /// <returns></returns>
+    public Interval PlusOctaves([NonNegative] int octaves)
+        => new(this, Throw.IfArgNegative(octaves, nameof(octaves)));
+
+    /// <summary>
     /// Determines if this instance equals another <see cref="ImperfectableSimpleInterval"/>.
     /// </summary>
     /// <param name="other"></param>
@@ -141,23 +157,6 @@ public readonly record struct ImperfectableSimpleInterval(
 /// </remarks>
 public readonly record struct SimpleInterval
 {
-    #region Constants
-    /// <summary>
-    /// A <see cref="SimpleInterval"/> representing a perfect fourth.
-    /// </summary>
-    public static readonly SimpleInterval PerfectFourth = Interval.Perfect.Fourth;
-
-    /// <summary>
-    /// A <see cref="SimpleInterval"/> representing a perfect unison.
-    /// </summary>
-    public static readonly SimpleInterval PerfectUnison = Interval.Perfect.Unison;
-
-    /// <summary>
-    /// A <see cref="SimpleInterval"/> representing a perfect fifth.
-    /// </summary>
-    public static readonly SimpleInterval PerfectFifth = Interval.Perfect.Fifth;
-    #endregion
-
     #region Properties
     /// <summary>
     /// Gets a <see cref="SimpleInterval"/> equivalent to the inversion of the current instance.
@@ -410,10 +409,10 @@ public readonly record struct SimpleInterval
     /// <summary>
     /// Gets the <see cref="Interval"/> equivalent to this instance with the number of additional octaves passed in.
     /// </summary>
-    /// <param name="AdditionalOctaves"></param>
+    /// <param name="octaves"></param>
     /// <returns></returns>
-    public Interval WithAdditionalOctaves([NonNegative] int AdditionalOctaves)
-        => new(this, Throw.IfArgNegative(AdditionalOctaves, nameof(AdditionalOctaves)));
+    public Interval PlusOctaves([NonNegative] int octaves)
+        => new(this, Throw.IfArgNegative(octaves, nameof(octaves)));
 
     /// <summary>
     /// Determines whether this instance is imperfectable, setting the equivalent

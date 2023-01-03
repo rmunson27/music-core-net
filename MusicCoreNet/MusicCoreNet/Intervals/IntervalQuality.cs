@@ -922,46 +922,44 @@ public readonly record struct PeripheralIntervalQuality
     #region Properties
     #region Conversion
     /// <summary>
-    /// Gets a new <see cref="SimpleInterval"/> representing a unison with this quality.
+    /// Gets an octave with this quality.
     /// </summary>
-    public SimpleInterval Unison
-        => SimpleInterval.CreatePerfectable(this, SimpleIntervalNumber.Unison);
+    public Interval Octave => new(Unison, AdditionalOctaves: 1);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleInterval"/> representing a second with this quality.
+    /// Gets a new <see cref="PerfectableSimpleInterval"/> representing a unison with this quality.
     /// </summary>
-    public SimpleInterval Second
-        => SimpleInterval.CreateImperfectable(this, SimpleIntervalNumber.Second);
+    public PerfectableSimpleInterval Unison => new(this, SimpleIntervalNumber.Unison);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleInterval"/> representing a third with this quality.
+    /// Gets a new <see cref="ImperfectableSimpleInterval"/> representing a second with this quality.
     /// </summary>
-    public SimpleInterval Third
-        => SimpleInterval.CreateImperfectable(this, SimpleIntervalNumber.Third);
+    public ImperfectableSimpleInterval Second => new(this, SimpleIntervalNumber.Second);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleInterval"/> representing a fourth with this quality.
+    /// Gets a new <see cref="ImperfectableSimpleInterval"/> representing a third with this quality.
     /// </summary>
-    public SimpleInterval Fourth
-        => SimpleInterval.CreatePerfectable(this, SimpleIntervalNumber.Fourth);
+    public ImperfectableSimpleInterval Third => new(this, SimpleIntervalNumber.Third);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleInterval"/> representing a fifth with this quality.
+    /// Gets a new <see cref="PerfectableSimpleInterval"/> representing a fourth with this quality.
     /// </summary>
-    public SimpleInterval Fifth
-        => SimpleInterval.CreatePerfectable(this, SimpleIntervalNumber.Fifth);
+    public PerfectableSimpleInterval Fourth => new(this, SimpleIntervalNumber.Fourth);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleInterval"/> representing a sixth with this quality.
+    /// Gets a new <see cref="PerfectableSimpleInterval"/> representing a fifth with this quality.
     /// </summary>
-    public SimpleInterval Sixth
-        => SimpleInterval.CreateImperfectable(this, SimpleIntervalNumber.Sixth);
+    public PerfectableSimpleInterval Fifth => new(this, SimpleIntervalNumber.Fifth);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleInterval"/> representing a seventh with this quality.
+    /// Gets a new <see cref="ImperfectableSimpleInterval"/> representing a sixth with this quality.
     /// </summary>
-    public SimpleInterval Seventh
-        => SimpleInterval.CreateImperfectable(this, SimpleIntervalNumber.Seventh);
+    public ImperfectableSimpleInterval Sixth => new(this, SimpleIntervalNumber.Sixth);
+
+    /// <summary>
+    /// Gets a new <see cref="ImperfectableSimpleInterval"/> representing a seventh with this quality.
+    /// </summary>
+    public ImperfectableSimpleInterval Seventh => new(this, SimpleIntervalNumber.Seventh);
     #endregion
 
     /// <summary>
@@ -1050,6 +1048,14 @@ public readonly record struct PeripheralIntervalQuality
 
     #region Conversion
     /// <summary>
+    /// Creates a new <see cref="Interval"/> representing the specified number of octaves of this quality.
+    /// </summary>
+    /// <param name="count"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> was negative.</exception>
+    public Interval Octaves(int count) => new(Unison, AdditionalOctaves: count);
+
+    /// <summary>
     /// Gets a new <see cref="Interval"/> with this quality and the specified number.
     /// </summary>
     /// <param name="number"></param>
@@ -1129,22 +1135,24 @@ public readonly record struct PerfectableIntervalQuality
     #region Properties And Fields
     #region Conversion
     /// <summary>
-    /// Gets a new <see cref="SimpleInterval"/> representing a unison with this quality.
+    /// Gets an octave with this quality.
     /// </summary>
-    public SimpleInterval Unison
-        => SimpleInterval.CreatePerfectable(this, SimpleIntervalNumber.Unison);
+    public Interval Octave => new(Unison, AdditionalOctaves: 1);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleInterval"/> representing a fourth with this quality.
+    /// Gets a new <see cref="PerfectableSimpleInterval"/> representing a unison with this quality.
     /// </summary>
-    public SimpleInterval Fourth
-        => SimpleInterval.CreatePerfectable(this, SimpleIntervalNumber.Fourth);
+    public PerfectableSimpleInterval Unison => new(this, SimpleIntervalNumber.Unison);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleInterval"/> representing a fifth with this quality.
+    /// Gets a new <see cref="PerfectableSimpleInterval"/> representing a fourth with this quality.
     /// </summary>
-    public SimpleInterval Fifth
-        => SimpleInterval.CreatePerfectable(this, SimpleIntervalNumber.Fifth);
+    public PerfectableSimpleInterval Fourth => new(this, SimpleIntervalNumber.Fourth);
+
+    /// <summary>
+    /// Gets a new <see cref="PerfectableSimpleInterval"/> representing a fifth with this quality.
+    /// </summary>
+    public PerfectableSimpleInterval Fifth => new(this, SimpleIntervalNumber.Fifth);
 
     private static CentralIntervalQuality UnsafeAsCentral => CentralIntervalQuality.Perfect;
 
@@ -1271,6 +1279,14 @@ public readonly record struct PerfectableIntervalQuality
     #endregion
 
     #region Conversion
+    /// <summary>
+    /// Creates a new <see cref="Interval"/> representing the specified number of octaves of this quality.
+    /// </summary>
+    /// <param name="count"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> was negative.</exception>
+    public Interval Octaves(int count) => new(Unison, AdditionalOctaves: count);
+
     /// <summary>
     /// Gets a new <see cref="Interval"/> with this quality and the specified number.
     /// </summary>
@@ -1481,28 +1497,24 @@ public readonly record struct ImperfectableIntervalQuality
     #region Properties And Fields
     #region Conversion
     /// <summary>
-    /// Gets a new <see cref="SimpleInterval"/> representing a second with this quality.
+    /// Gets a new <see cref="ImperfectableSimpleInterval"/> representing a second with this quality.
     /// </summary>
-    public SimpleInterval Second
-        => SimpleInterval.CreateImperfectable(this, SimpleIntervalNumber.Second);
+    public ImperfectableSimpleInterval Second => new(this, SimpleIntervalNumber.Second);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleInterval"/> representing a third with this quality.
+    /// Gets a new <see cref="ImperfectableSimpleInterval"/> representing a third with this quality.
     /// </summary>
-    public SimpleInterval Third
-        => SimpleInterval.CreateImperfectable(this, SimpleIntervalNumber.Third);
+    public ImperfectableSimpleInterval Third => new(this, SimpleIntervalNumber.Third);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleInterval"/> representing a sixth with this quality.
+    /// Gets a new <see cref="ImperfectableSimpleInterval"/> representing a sixth with this quality.
     /// </summary>
-    public SimpleInterval Sixth
-        => SimpleInterval.CreateImperfectable(this, SimpleIntervalNumber.Sixth);
+    public ImperfectableSimpleInterval Sixth => new(this, SimpleIntervalNumber.Sixth);
 
     /// <summary>
-    /// Gets a new <see cref="SimpleInterval"/> representing a seventh with this quality.
+    /// Gets a new <see cref="ImperfectableSimpleInterval"/> representing a seventh with this quality.
     /// </summary>
-    public SimpleInterval Seventh
-        => SimpleInterval.CreateImperfectable(this, SimpleIntervalNumber.Seventh);
+    public ImperfectableSimpleInterval Seventh => new(this, SimpleIntervalNumber.Seventh);
 
     /// <summary>
     /// Gets the inversion of this instance.

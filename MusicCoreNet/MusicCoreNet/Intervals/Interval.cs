@@ -21,18 +21,6 @@ namespace Rem.Music;
 /// </param>
 public readonly record struct Interval(SimpleInterval Base, [NonNegative] int AdditionalOctaves)
 {
-    #region Constants
-    /// <summary>
-    /// An <see cref="Interval"/> representing a perfect unison.
-    /// </summary>
-    public static readonly Interval PerfectUnison = SimpleInterval.PerfectUnison;
-
-    /// <summary>
-    /// An <see cref="Interval"/> representing a perfect octave.
-    /// </summary>
-    public static readonly Interval PerfectOctave = new(SimpleInterval.PerfectUnison, AdditionalOctaves: 1);
-    #endregion
-
     #region Properties And Fields
     /// <summary>
     /// Gets the number of this interval.

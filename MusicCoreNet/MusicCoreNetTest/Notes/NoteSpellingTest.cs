@@ -65,7 +65,7 @@ public class NoteSpellingTest
     /// representing the difference between the first and the second.
     /// </summary>
     private static readonly ImmutableArray<(NoteSpelling First, NoteSpelling Second, SimpleInterval Difference)> Differences
-        = ImmutableArray.CreateRange(new[]
+        = ImmutableArray.CreateRange(new (NoteSpelling, NoteSpelling, SimpleInterval)[]
         {
             (Note.A, Note.C, Interval.Major.Sixth),
             (Note.F.Sharp(), Note.C, Interval.Augmented().Fourth),
