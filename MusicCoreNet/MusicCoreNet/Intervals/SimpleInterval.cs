@@ -15,10 +15,10 @@ namespace Rem.Music;
 /// <remarks>
 /// The default value of this struct represents a perfect unison.
 /// </remarks>
-/// <param name="Number">The number of the interval.</param>
 /// <param name="Quality">The quality of the interval.</param>
+/// <param name="Number">The number of the interval.</param>
 public readonly record struct PerfectableSimpleInterval(
-    PerfectableSimpleIntervalNumber Number, PerfectableIntervalQuality Quality)
+    PerfectableIntervalQuality Quality, PerfectableSimpleIntervalNumber Number)
 {
     /// <summary>
     /// Gets the circle of fifths index of this instance relative to a perfect unison.
@@ -77,10 +77,10 @@ public readonly record struct PerfectableSimpleInterval(
 /// <remarks>
 /// The default value of this struct represents a major second.
 /// </remarks>
-/// <param name="Number">The number of the interval.</param>
 /// <param name="Quality">The quality of the interval.</param>
+/// <param name="Number">The number of the interval.</param>
 public readonly record struct ImperfectableSimpleInterval(
-    ImperfectableSimpleIntervalNumber Number, ImperfectableIntervalQuality Quality)
+    ImperfectableIntervalQuality Quality, ImperfectableSimpleIntervalNumber Number)
 {
     /// <summary>
     /// Gets the circle of fifths index of this instance relative to a perfect unison.
@@ -424,9 +424,9 @@ public readonly record struct SimpleInterval
     public bool IsImperfectable(
         out ImperfectableSimpleInterval interval, out PerfectableSimpleInterval perfectableInterval)
         => Number.IsImperfectable(out var imperfectableNumber, out var perfectableNumber)
-            ? Try.Success(out interval, new(imperfectableNumber, Quality.UnsafeAsImperfectable),
+            ? Try.Success(out interval, new(Quality.UnsafeAsImperfectable, imperfectableNumber),
                           out perfectableInterval)
-            : Try.Failure(out interval, out perfectableInterval, new(perfectableNumber, Quality.UnsafeAsPerfectable));
+            : Try.Failure(out interval, out perfectableInterval, new(Quality.UnsafeAsPerfectable, perfectableNumber));
 
     /// <summary>
     /// Determines whether this instance is imperfectable, setting the equivalent
@@ -436,7 +436,7 @@ public readonly record struct SimpleInterval
     /// <returns></returns>
     public bool IsImperfectable(out ImperfectableSimpleInterval interval)
         => Number.IsImperfectable(out var imperfectableNumber)
-            ? Try.Success(out interval, new(imperfectableNumber, Quality.UnsafeAsImperfectable))
+            ? Try.Success(out interval, new(Quality.UnsafeAsImperfectable, imperfectableNumber))
             : Try.Failure(out interval);
 
     /// <summary>
@@ -456,10 +456,10 @@ public readonly record struct SimpleInterval
     public bool IsPerfectable(
         out PerfectableSimpleInterval interval, out ImperfectableSimpleInterval imperfectableInterval)
         => Number.IsPerfectable(out var perfectableNumber, out var imperfectableNumber)
-            ? Try.Success(out interval, new(perfectableNumber, Quality.UnsafeAsPerfectable),
+            ? Try.Success(out interval, new(Quality.UnsafeAsPerfectable, perfectableNumber),
                           out imperfectableInterval)
             : Try.Failure(out interval,
-                          out imperfectableInterval, new(imperfectableNumber, Quality.UnsafeAsImperfectable));
+                          out imperfectableInterval, new(Quality.UnsafeAsImperfectable, imperfectableNumber));
 
     /// <summary>
     /// Determines whether this instance is perfectable, setting the equivalent
@@ -469,7 +469,7 @@ public readonly record struct SimpleInterval
     /// <returns></returns>
     public bool IsPerfectable(out PerfectableSimpleInterval interval)
         => Number.IsPerfectable(out var perfectableNumber)
-            ? Try.Success(out interval, new(perfectableNumber, Quality.UnsafeAsPerfectable))
+            ? Try.Success(out interval, new(Quality.UnsafeAsPerfectable, perfectableNumber))
             : Try.Failure(out interval);
 
     /// <summary>
