@@ -18,23 +18,6 @@ namespace Rem.Music;
 /// </remarks>
 public readonly record struct SignedInterval
 {
-    #region Constants
-    /// <summary>
-    /// A <see cref="SignedInterval"/> representing a perfect octave.
-    /// </summary>
-    public static readonly SignedInterval PerfectOctave = Interval.PerfectOctave;
-
-    /// <summary>
-    /// A <see cref="SignedInterval"/> representing a perfect unison.
-    /// </summary>
-    public static readonly SignedInterval PerfectUnison = Interval.PerfectUnison;
-
-    /// <summary>
-    /// A <see cref="SignedInterval"/> representing a negative perfect octave.
-    /// </summary>
-    public static readonly SignedInterval NegativePerfectOctave = Negative(Interval.PerfectOctave);
-    #endregion
-
     #region Properties And Fields
     /// <summary>
     /// Gets the perfectability of this instance.
