@@ -709,7 +709,7 @@ public readonly record struct IntervalQuality
     /// <param name="degree"></param>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static string AugmentedString(int degree) => $"Augmented {{ Degree == {degree} }}";
+    internal static string AugmentedString(int degree) => $"Augmented {{ Degree = {degree} }}";
     #endregion
     #endregion
 }
