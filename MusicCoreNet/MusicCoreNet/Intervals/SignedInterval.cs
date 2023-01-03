@@ -202,6 +202,18 @@ public readonly record struct SignedInterval
     /// </summary>
     /// <param name="interval"></param>
     public static implicit operator SignedInterval(in SimpleInterval interval) => new(interval, 1);
+
+    /// <summary>
+    /// Implicitly converts a <see cref="PerfectableSimpleInterval"/> to a positive <see cref="SignedInterval"/>.
+    /// </summary>
+    /// <param name="interval"></param>
+    public static implicit operator SignedInterval(PerfectableSimpleInterval interval) => new(interval, 1);
+
+    /// <summary>
+    /// Implicitly converts an <see cref="ImperfectableSimpleInterval"/> to a positive <see cref="SignedInterval"/>.
+    /// </summary>
+    /// <param name="interval"></param>
+    public static implicit operator SignedInterval(ImperfectableSimpleInterval interval) => new(interval, 1);
     #endregion
 
     #region ToString

@@ -192,6 +192,20 @@ public readonly record struct Interval(SimpleInterval Base, [NonNegative] int Ad
     public static implicit operator Interval(SimpleInterval interval) => new(interval, AdditionalOctaves: 0);
 
     /// <summary>
+    /// Implicitly converts a <see cref="PerfectableSimpleInterval"/> to an <see cref="Interval"/>.
+    /// </summary>
+    /// <param name="interval"></param>
+    public static implicit operator Interval(PerfectableSimpleInterval interval)
+        => new(interval, AdditionalOctaves: 0);
+
+    /// <summary>
+    /// Implicitly converts an <see cref="ImperfectableSimpleInterval"/> to an <see cref="Interval"/>.
+    /// </summary>
+    /// <param name="interval"></param>
+    public static implicit operator Interval(ImperfectableSimpleInterval interval)
+        => new(interval, AdditionalOctaves: 0);
+
+    /// <summary>
     /// Determines whether this instance represents a simple interval, setting the equivalent
     /// <see cref="SimpleInterval"/> in an <see langword="out"/> parameter if so.
     /// </summary>
